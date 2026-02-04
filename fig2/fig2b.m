@@ -1,107 +1,77 @@
-%% Fig2b.m - Control Input Signal for CSTR Sliding Mode Control
-%  This script simulates a Continuous Stirred Tank Reactor (CSTR) system
-%  and plots the sliding mode control input signal over time.
-%  Plots: Control input u (full view and zoomed view showing chattering).
+x(1)=0.;
+t(1)=0;
+y(1)=0.;
 
-%% ==================== Initial Conditions ====================
-x(1)=0.;              % Initial concentration (x1)
-t(1)=0;               % Initial time
-y(1)=0.;              % Initial temperature (x2, using y as variable name)
+n=45000;
+tmax=45;
+dt=tmax/n;
 
-%% ==================== Simulation Parameters ====================
-n=45000;              % Number of simulation steps
-tmax=45;              % Total simulation time (seconds)
-dt=tmax/n;            % Time step size (delta t)
+Q=10;
+R=0.01;
 
-%% ==================== Cost Function Weights (unused in this script) ====================
-Q=10;                 % State weighting matrix coefficient
-R=0.01;               % Control input weighting coefficient
+m(1)=1;
+alpha=1;
+betta=100;
+lambda=0.3;
+gamma=20;
+B=1;
+Da=0.072;
 
-%% ==================== System and Controller Parameters ====================
-m(1)=1;               % Step counter initialization
-alpha=1;              % System decay rate coefficient
-betta=100;            % Sliding mode control gain (reaching law parameter)
-lambda=0.3;           % Control input gain (g2 coefficient)
-gamma=20;             % Activation energy parameter for reaction kinetics
-B=1;                  % Heat of reaction coefficient
-Da=0.072;             % Damkohler number (ratio of reaction rate to flow rate)
+r1(1)=0.;
+r2(1)=0.;
 
-%% ==================== Reference Signal Initialization ====================
-r1(1)=0.;             % Initial reference for x1 (concentration)
-r2(1)=0.;             % Initial reference for x2 (temperature)
+e1(1)=x(1)-r1(1);
+e2(1)=y(1)-r2(1);
 
-%% ==================== Tracking Error Initialization ====================
-e1(1)=x(1)-r1(1);     % Initial tracking error for concentration
-e2(1)=y(1)-r2(1);     % Initial tracking error for temperature
+u(1)=0;
 
-%% ==================== Control Input Initialization ====================
-u(1)=0;               % Initial control input
-
-%% ==================== Main Simulation Loop ====================
 for i=1:n-1,
 
-m(i+1)=m(i)+1;        % Increment step counter
+m(i+1)=m(i)+1;
 
-%% ---------- Control Input Coefficients (Affine System: x_dot = f + g*u) ----------
-g1(i)=0;              % Control coefficient for x1 equation (no direct control)
-g2(i)=lambda;         % Control coefficient for x2 equation
+g1(i)=0;
+g2(i)=lambda;
 
-%% ---------- System Dynamics (Euler Discretization of CSTR Model) ----------
-% f1: Concentration dynamics with reaction term (Arrhenius kinetics)
 f1(i)=x(i)+dt*(-alpha*x(i)+Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
 
-% f2: Temperature dynamics with reaction heat generation
 f2(i)=y(i)+dt*(-alpha*y(i)+B*Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
 
-%% ---------- Time Update ----------
 t(i+1)=t(i)+dt;
 
-%% ---------- Piecewise Constant Reference for x1 (Concentration) ----------
-% Reference changes at t=15s and t=30s to test tracking performance
    if 0<=t(i+1) & t(i+1)<=15
-    r1(i+1)=0.4472;           % Low concentration setpoint
+    r1(i+1)=0.4472;
     elseif 15<t(i+1) & t(i+1)<30
-    r1(i+1)=0.7646;           % High concentration setpoint
+    r1(i+1)=0.7646;
     elseif 30<=t(i+1) & t(i+1)<tmax
-    r1(i+1)=0.4472;           % Return to low concentration
+    r1(i+1)=0.4472;
     end
 
-%% ---------- Piecewise Constant Reference for x2 (Temperature) ----------
    if 0<=t(i+1) & t(i+1)<=15
-    r2(i+1)=2.752;            % Low temperature setpoint
+    r2(i+1)=2.752;
     elseif 15<t(i+1) & t(i+1)<30
-    r2(i+1)=4.7052;           % High temperature setpoint
+    r2(i+1)=4.7052;
     elseif 30<=t(i+1) & t(i+1)<tmax
-    r2(i+1)=2.752;            % Return to low temperature
+    r2(i+1)=2.752;
    end
 
-%% ---------- Sliding Surface Sign Function ----------
-% S(i) = sign(e2) determines the switching control action
 if (y(i)-r2(i))>0
-S(i)=1;                       % Error positive: above reference
+S(i)=1;
 elseif (y(i)-r2(i))<0
-S(i)=-1;                      % Error negative: below reference
+S(i)=-1;
 else
-S(i)=0;                       % On the sliding surface
+S(i)=0;
 end
 
-%% ---------- Sliding Mode Control Law ----------
-% u = -g2^(-1) * (-beta*sign(e) + r_dot - f)
-% This implements the reaching law to drive the state to the sliding surface
 u(i)=-1/g2(i)*(-betta*S(i)+r2(i+1)-r2(i)-f2(i));
 
-%% ---------- State Update (Closed-Loop Dynamics) ----------
-x(i+1)=f1(i);                 % Concentration evolves according to open-loop dynamics
-y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i));  % Temperature with sliding mode control
+x(i+1)=f1(i);
+y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i));
 
-%% ---------- Tracking Error Update ----------
-e1(i+1)=x(i+1)-r1(i+1);       % Concentration tracking error
-e2(i+1)=y(i+1)-r2(i+1);       % Temperature tracking error
+e1(i+1)=x(i+1)-r1(i+1);
+e2(i+1)=y(i+1)-r2(i+1);
 
 end
 
-%% ==================== Final Step Sign Function ====================
-% Compute sign function for the last time step
 if (y(n)-r2(n))>0
 S(n)=1;
 elseif (y(n)-r2(n))<0
@@ -110,33 +80,21 @@ else
 S(n)=0;
 end
 
-% Note: Final control input calculation (commented out)
-%g2(n)=lambda;
-%u(n)=-1/g2(n)*(-betta*S(n)+r2(n+1)-r2(n)-f2(n));
-
-%% ==================== Prepare Time Vector for Plotting ====================
-% Create time vector matching control input dimensions (n-1 elements)
 for j=1:n-1,
     tt(j)=t(j);
 end
 
-%% ==================== Plotting Results ====================
-% Upper subplot: Full view of control input over entire simulation
 subplot(2,1,1), plot(tt,u,'b-')
 ylabel('u')
 xlabel('Time (s)')
-axis([0 tmax -350 400])       % Wide y-axis to capture control magnitude
+axis([0 tmax -350 400])
 grid
 hold on;
 
-% Lower subplot: Zoomed view showing chattering behavior
-% Time window [0.25, 0.5]s reveals high-frequency switching (chattering)
-% characteristic of sliding mode control
 subplot(2,1,2), plot(tt,u,'b-')
 ylabel('u')
 xlabel('Time (s)')
-axis([0.25 0.5 -350 400])     % Zoomed time window
+axis([0.25 0.5 -350 400])
 grid
 
-%% ==================== Cleanup ====================
 clear all;
