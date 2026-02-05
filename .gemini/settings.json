@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "e2b-remote-mcp": {
+      "url": "https://server.smithery.ai/@tech-ibaad/e2b-remote-mcp/mcp",
+      "type": "http"
+    }
+  }
+}
