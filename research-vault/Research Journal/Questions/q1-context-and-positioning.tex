@@ -1,0 +1,67 @@
+\section{How Does My Paper Relate to the ACC/IDS Problem?}
+
+\begin{contextbox}{Background: The Chain of Papers}
+	The existing research establishes:
+	\begin{enumerate}[label=\textbf{\arabic*.}]
+		\item \textbf{Adaptive Cruise Control (ACC)} regulates vehicle speed and
+		      following distance using a PID controller. The PID computes a
+		      control signal from the speed error:
+		      \[
+			      u(t) = K_p\, e(t) + K_i \int_0^t e(\tau)\,d\tau + K_d \frac{de(t)}{dt}
+		      \]
+		      where $e(t) = S_t(t) - S_c(t)$ is the difference between target speed
+		      and current (sensor-reported) speed.
+		      
+		\item \textbf{The Intrusion Detection System (IDS)} is a passive
+		      extension to the ACC. It monitors the \textbf{Control Area Network(CAN)}
+		      bus for spoofed speed messages using machine learning. When it
+		      detects an attack, it raises a flag.
+		      
+		\item \textbf{Paper \cite{jedh2023improvement}} investigates the impact of \textbf{cold braking}
+		      as a mitigation strategy.
+	\end{enumerate}
+\end{contextbox}
+
+\begin{questionbox}{Question: What does my paper do differently?}
+	My paper investigates an alternative mitigation approach.
+	Instead of cold braking when the IDS detects an attack, I propose:
+	
+	\begin{enumerate}[label=(\alph*)]
+		\item Using the \textbf{tracking control equation}\textsubscript{\cite{tymoshchuk2024tracking}} to continuously track the error between the expected speed (what the vehicle should be doing based on the reference trajectory) and the reported speed (what the potentially-spoofed sensor claims).
+		      
+		\item \textbf{Correcting for the error} using the designed control function $u(k)$\textsubscript{\cite{tymoshchuk2024tracking}},
+		      which computes the input needed to drive the system state back toward the reference trajectory.
+		      
+		\item Performing a \textbf{mode switch} if the tracking error exceeds a threshold,
+		      i.e. if the discrepancy between expected and reported speed grows too large,
+		      the system can escalate its response (e.g., increase correction aggressiveness
+		      or fall back to emergency braking).
+	\end{enumerate}
+	
+	Additionally, I \textbf{simulate the attack scenarios} to demonstrate that the tracking controller successfully corrects for injected speed errors, showing convergence of the tracking error to zero (or near-zero) even under adversarial perturbation.
+\end{questionbox}
+
+\begin{contextbox}{Summary of Positioning}
+	\begin{center}
+		\renewcommand{\arraystretch}{1.4}
+		\begin{tabular}{|l|l|l|}
+			\hline
+			\textbf{Component} & \textbf{Paper \cite{jedh2023improvement} Approach} & \textbf{My Approach}               \\
+			\hline
+			Detection          & ML-based IDS on CAN bus                            & Same (IDS flags the attack)        \\
+			\hline
+			Mitigation         & Cold brake (binary)                                & Tracking control correction        \\
+			\hline
+			Error model        & PID speed error $e(t)$                             & Discrete-time $e(k) = r(k) - x(k)$ \\
+			\hline
+			Correction         & None (just stop)                                   & $u(k)$ drives $e(k) \to 0$         \\
+			\hline
+			Escalation         & N/A                                                & Mode switch if $\|e(k)\| > \theta$ \\
+			\hline
+		\end{tabular}
+	\end{center}
+\end{contextbox}
+
+\bibliographystyle{ieeetr}
+
+\bibliography{references}

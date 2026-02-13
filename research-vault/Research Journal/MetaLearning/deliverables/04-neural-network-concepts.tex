@@ -1,0 +1,138 @@
+\section{Neural Network Concepts}
+
+\begin{purposebox}
+\textbf{Purpose:} Demonstrate understanding of the NN structure used for tracking control. This is \textbf{not} a deep learning NN---it is a control-theoretic neural network with specific architectural components.
+
+\textbf{When complete:} You can describe every component of the functional block diagram and explain why the architecture is called a ``neural network.''
+\end{purposebox}
+
+%──────────────────────────────────────────────────
+\subsection{Basic NN Architecture}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Not Deep Learning}
+This tracking control NN is fundamentally different from a deep learning neural network. Explain:
+\begin{itemize}[nosep]
+  \item In what sense is it called a ``neural network''?
+  \item What plays the role of activation functions?
+  \item What plays the role of weights/learning?
+  \item What acts as the ``teacher'' signal (supervised learning interpretation)?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Signum Activation Function}
+Write the definition of the signum function:
+\[
+  \operatorname{sgn}(e) =
+  \begin{cases}
+    \phantom{-}?\; & \text{if } e > 0 \\
+    \phantom{-}?\; & \text{if } e = 0 \\
+    \phantom{-}?\; & \text{if } e < 0
+  \end{cases}
+\]
+How does this create ``variable structure'' behavior? Compare it to smooth activation functions (sigmoid, ReLU) used in deep learning.
+
+\begin{answerbox}\end{answerbox}
+
+\question{Learning Rate Parameter $\beta$}
+The parameter $\beta$ controls convergence speed. Explain:
+\begin{itemize}[nosep]
+  \item What happens if $\beta$ is too large?
+  \item What happens if $\beta$ is too small?
+  \item How is this analogous to learning rate in gradient descent?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Supervised Learning Interpretation}
+The reference trajectory $r(k)$ acts as the ``teacher signal.'' Explain how the tracking control loop mirrors supervised learning:
+\begin{itemize}[nosep]
+  \item Training data = ?
+  \item Prediction = ?
+  \item Error signal = ?
+  \item Update rule = ?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection{Functional Block Diagram (Fig.~1)}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Component Inventory}
+The block diagram contains:
+\begin{itemize}[nosep]
+  \item $3n$ adders
+  \item $n$ controlled switches (signum)
+  \item $n$ amplifiers ($\beta$)
+  \item $n$ digital differentiators ($\Delta$)
+  \item $n$ blocks for $f(x)$
+  \item $n \times m$ blocks for $g(x)$
+  \item $n$ NN solvers (LAESS)
+\end{itemize}
+For a system with $n=2$ states and $m=1$ input, calculate the total number of each component.
+
+\begin{answerbox}\end{answerbox}
+
+\question{Key Components}
+Match each component to its mathematical function:
+
+\medskip
+\begin{tabularx}{\textwidth}{l c X}
+\toprule
+\textbf{Component} & \textbf{Symbol} & \textbf{What it computes} \\
+\midrule
+Adder ($+$)          & & \\[0.8em]
+Sign ($S$)           & & \\[0.8em]
+Amplifier ($\beta$)  & & \\[0.8em]
+Differentiator ($\Delta$) & & \\
+\bottomrule
+\end{tabularx}
+
+\begin{answerbox}\end{answerbox}
+
+\question{LAESS---Linear Algebraic Equation Solver}
+The LAESS solves for $u(k)$ from the control equation. Explain:
+\begin{itemize}[nosep]
+  \item What equation does it solve?
+  \item Why can it be implemented as a sub-network?
+  \item What inputs does it need and what output does it produce?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Signal Flow}
+Trace the signal flow through the block diagram for one time step:
+\begin{enumerate}[nosep]
+  \item Input: current state $x(k)$ and reference $r(k)$
+  \item[\textrm{2--$N$.}] \emph{Fill in each processing step.}
+  \item[$N{+}1$.] Output: next state $x(k+1)$
+\end{enumerate}
+
+\begin{largeanswer}\end{largeanswer}
+
+\question{Draw Your Own}
+In the space below, sketch or describe a simplified version of the block diagram for $n=1$, $m=1$. Label every block and connection.
+
+\begin{largeanswer}[after upper={\vspace{72pt}}]\end{largeanswer}
+
+%──────────────────────────────────────────────────
+\subsection*{Self-Assessment Checklist}
+%──────────────────────────────────────────────────
+
+\begin{itemize}[leftmargin=2em, label=$\square$]
+  \item I can explain why this is called a ``neural network'' despite not being deep learning
+  \item I can define the signum activation function and explain its variable structure effect
+  \item I can explain the role of $\beta$ as a learning rate parameter
+  \item I can list all components in the functional block diagram
+  \item I can trace signal flow through the block diagram for one time step
+  \item I can explain the LAESS sub-network and its purpose
+  \item I can draw a simplified block diagram for a scalar system
+\end{itemize}
+
+\begin{notesbox}\end{notesbox}

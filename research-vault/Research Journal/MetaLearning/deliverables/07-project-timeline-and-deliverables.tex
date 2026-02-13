@@ -1,0 +1,166 @@
+\section{Project Timeline \& Deliverables}
+
+\begin{purposebox}
+\textbf{Purpose:} Demonstrate understanding of the overall research plan, how the metalearning steps map to milestones, and what each deliverable requires.
+
+\textbf{When complete:} You can explain how every week's work builds on previous weeks, and you know exactly what ``done'' looks like for each milestone.
+\end{purposebox}
+
+%──────────────────────────────────────────────────
+\subsection{Milestone Mapping}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Milestone-to-Metalearning Map}
+For each milestone, identify which metalearning steps (1--6) provide the background knowledge needed:
+
+\medskip
+{\small
+\begin{tabularx}{\textwidth}{l c X X}
+\toprule
+\textbf{Milestone} & \textbf{Due} & \textbf{Required Steps} & \textbf{Why} \\
+\midrule
+Description of tracking control NN   & Feb 2  & & \\[0.6em]
+Existence \& uniqueness              & Feb 9  & & \\[0.6em]
+Stability \& convergence             & Feb 16 & & \\[0.6em]
+Functional block diagram             & Mar 2  & & \\[0.6em]
+Implementation                       & Mar 9  & & \\[0.6em]
+Midterm report                       & Mar 16 & & \\[0.6em]
+Compare implementations              & Mar 23 & & \\[0.6em]
+Compare with analogs                 & Mar 30 & & \\[0.6em]
+Simulations (noise injection)        & Apr 6  & & \\[0.6em]
+Final report \& poster               & Apr 10 & & \\
+\bottomrule
+\end{tabularx}
+}
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection{Deliverable Definitions}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{``Description of Tracking Control NN'' (Feb~2)---\textsc{completed}}
+Describe what this deliverable contains. What equations, variables, and parameters must be presented? What does ``by the difference equation with variable structure'' mean concretely?
+
+\begin{answerbox}\end{answerbox}
+
+\question{``Existence \& Uniqueness Analysis'' (Feb~9)---\textsc{in progress}}
+What specific claims must this deliverable prove or demonstrate?
+\begin{itemize}[nosep]
+  \item Existence of steady states means: ?
+  \item Uniqueness means: ?
+  \item ``In the presence of adversarial attacks'' adds what constraint?
+\end{itemize}
+What format should this take (proof sketch, narrative explanation, mathematical derivation)?
+
+\begin{answerbox}\end{answerbox}
+
+\question{``Stability \& Convergence Analysis'' (Feb~16)}
+What are the two separate claims in this deliverable?
+\begin{enumerate}[nosep]
+  \item ``Globally stable'' means: ?
+  \item ``Globally convergent in a finite number of steps'' means: ?
+\end{enumerate}
+How does Lemma~2 provide the convergence bound?
+
+\begin{answerbox}\end{answerbox}
+
+\question{``Functional Block Diagram'' (Mar~2)}
+What should the block diagram show?
+\begin{itemize}[nosep]
+  \item All components from Step~4.2
+  \item Signal flow for: ?
+  \item The defending part specifically includes: ?
+\end{itemize}
+What tool will you use to create it?
+
+\begin{answerbox}\end{answerbox}
+
+\question{``Compare with Analogs'' (Mar~30)}
+What are ``competitive analogs''? What dimensions of comparison does the research plan specify?
+\begin{itemize}[nosep]
+  \item Computational complexity: ?
+  \item Hardware implementation complexity: ?
+  \item What other analogs exist in the literature (Refs.~[1]--[3] of the research plan)?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{``Simulations---Noise Injection'' (Apr~6)}
+This is the project's novelty. Describe:
+\begin{itemize}[nosep]
+  \item What noise injection means in this context
+  \item What the simulations should demonstrate
+  \item What plots/figures you expect to produce
+  \item How you will compare simulation results with theoretical predictions
+\end{itemize}
+
+\begin{largeanswer}\end{largeanswer}
+
+%──────────────────────────────────────────────────
+\subsection{Risk Assessment}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Dependencies \& Bottlenecks}
+Identify which milestones are most at risk:
+\begin{itemize}[nosep]
+  \item Which milestone depends most heavily on understanding from previous milestones?
+  \item Which milestone has the most technical uncertainty?
+  \item What is your backup plan if CUDA implementation proves too complex?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Weekly Planning}
+For the current week (week of Feb~10), write your specific plan:
+\begin{itemize}[nosep]
+  \item What must be completed?
+  \item What questions need to be answered?
+  \item What will you read/study?
+  \item What will you write/code?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection{Research Communication}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Student Log / Research Journal}
+The CAHSI program requires a student log. For each weekly entry, what should you include?
+\begin{itemize}[nosep]
+  \item Plan language (verbatim from research plan): ?
+  \item Your own explanation (avoiding plagiarism): ?
+  \item Questions-forward draft: ?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Elevator Pitch}
+In 3--4 sentences, explain the entire research project to someone with a CS background but no control theory knowledge. Cover: the problem, the approach, the novelty, and the expected outcome.
+
+\begin{largeanswer}\end{largeanswer}
+
+%──────────────────────────────────────────────────
+\subsection*{Self-Assessment Checklist}
+%──────────────────────────────────────────────────
+
+\begin{itemize}[leftmargin=2em, label=$\square$]
+  \item I can map each milestone to its required background knowledge
+  \item I can define what ``done'' looks like for each deliverable
+  \item I understand the existence/uniqueness deliverable requirements (current focus)
+  \item I know what the functional block diagram must contain
+  \item I can explain the noise injection simulation plan
+  \item I can identify project risks and dependencies
+  \item I can explain the entire project in a 30-second elevator pitch
+\end{itemize}
+
+\begin{notesbox}\end{notesbox}

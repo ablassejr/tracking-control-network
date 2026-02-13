@@ -1,0 +1,71 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+
+\tcbuselibrary{breakable, skins}
+
+\definecolor{questionbg}{HTML}{FFF8E1}
+\definecolor{questionframe}{HTML}{F9A825}
+\definecolor{contextbg}{HTML}{E3F2FD}
+\definecolor{contextframe}{HTML}{1565C0}
+\definecolor{mathbg}{HTML}{F3E5F5}
+\definecolor{mathframe}{HTML}{7B1FA2}
+
+\newtcolorbox{questionbox}[1]{
+  colback=questionbg,
+  colframe=questionframe,
+  fonttitle=\bfseries,
+  title={#1},
+  breakable,
+  enhanced
+}
+
+\newtcolorbox{contextbox}[1]{
+  colback=contextbg,
+  colframe=contextframe,
+  fonttitle=\bfseries,
+  title={#1},
+  breakable,
+  enhanced
+}
+
+\newtcolorbox{mathbox}[1]{
+  colback=mathbg,
+  colframe=mathframe,
+  fonttitle=\bfseries,
+  title={#1},
+  breakable,
+  enhanced
+}
+
+\title{Research Questions\\[0.5em]
+\large Defending Tracking Control Neural Networks\\Against Adversarial Attacks on ACC Systems}
+\author{Ablasse Kingcaid-Ouedraogo}
+\date{February 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\input{q1-context-and-positioning.tex}
+\newpage
+\input{q2-variable-mapping.tex}
+\newpage
+\input{q3-simulated-attacks.tex}
+\newpage
+\input{q4-attack-function-in-paper3.tex}
+
+\end{document}
+\bibliographystyle{ieeetr}
+
+\bibliography{references}

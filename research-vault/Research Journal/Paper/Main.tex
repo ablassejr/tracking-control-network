@@ -1,0 +1,67 @@
+%! Tex Root=**/Main.tex
+\documentclass{article}
+% ---------------------------------------------------------------------------
+% TikZ Libraries
+% ---------------------------------------------------------------------------
+\usepackage[utf8]{inputenc}
+
+
+\usepackage{tikz}
+\usepackage{relsize}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{witharrows}
+\usetikzlibrary{
+	tikzmark,
+	patterns,               % Fill patterns (hatching, dots, etc.)
+	fadings,                % Gradient/fading fills
+	decorations.pathreplacing,
+	decorations.pathmorphing,% Wavy/zigzag lines for perturbations
+	decorations.markings,
+	calc,
+	fit,
+	backgrounds,
+	arrows.meta,
+	positioning,
+	shapes.geometric,
+	shapes.callouts
+}
+\newcommand{\state}{\ensuremath{x(k)}}
+\newcommand{\func}[1]{\ensuremath{f(#1)}}
+\newcommand{\control}[1]{\ensuremath{u(#1)}}
+\newcommand{\coupling}[1]{\ensuremath{g(#1)}}
+\begin{document}
+
+
+
+
+\title{An Analysis and Simulation of Defending Tracking Control Neural Network
+	for Known Affine Discrete-Time Nonlinear Systems Against Adversarial Attacks}
+\author{Ablasse Kingcaid-Ouedraogo}
+\date {Last Updated: Feb 3, 2026}
+\maketitle
+
+% =============================================================================
+
+\section{Abstract}
+The simulation of a modified tracking control neural network for known affine
+discrete-time nonlinear systems\textsubscript{\cite{tymoshchuk2024tracking}}
+will be ported to C++ and optimized. A previous simulation\textsubscript{\cite{tymoshchuk2024tracking}}
+of this system was designed in matlab. C++ gives lower level control to the
+programmer, allowing for more granular and programmatic optimizations to be performed.
+The modification to the tracking control network will to simulate adversarial attacks.
+For this purpose, a close analog has been chosen to represent a plausible attack scenario.
+Based on a previous analysis of the behavior of common adaptive cruise control systems
+when falsified speed data is injected into the controller area network
+bus\textsubscript{\cite{tymoshchuk2024tracking}}, a modified system equation
+that seeks to minimize the impact of this style of adversarial attack will be designed and simulated.
+\section{Introduction}
+\input{chapters/introduction/intro.tex}
+\input{chapters/attacks/adversarial-attacks.tex}
+
+\bibliographystyle{ieeetr}
+\bibliography{references}
+
+\end{document}

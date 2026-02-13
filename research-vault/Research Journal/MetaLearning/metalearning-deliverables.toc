@@ -1,0 +1,33 @@
+\contentsline {section}{Overview}{2}{Doc-Start}%
+\contentsline {section}{\numberline {1}Mathematical Foundations}{4}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Difference Equations}{4}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Linear Algebra}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Optimization \& Gradient}{6}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Control Theory Fundamentals}{8}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Discrete-Time Dynamic Systems}{8}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Affine Nonlinear Systems}{9}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Tracking Control Problem}{9}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Optimal Control \& HJB Equation}{10}{subsection.2.4}%
+\contentsline {section}{\numberline {3}Stability Analysis}{12}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Lyapunov Stability Theory}{12}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Existence \& Uniqueness of Steady States}{13}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Finite-Time Convergence}{14}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Sliding Mode Analysis}{14}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Neural Network Concepts}{16}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Basic NN Architecture}{16}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Functional Block Diagram (Fig.~1)}{17}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Adversarial Attacks \& Defense}{20}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Types of Adversarial Attacks}{20}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Defense Mechanisms}{20}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}CAN Bus \& Vehicle Networks}{21}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}The Big Picture}{22}{subsection.5.4}%
+\contentsline {section}{\numberline {6}Implementation Skills}{24}{section.6}%
+\contentsline {subsection}{\numberline {6.1}MATLAB Implementation}{24}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Python Implementation}{25}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}C++ and CUDA}{26}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Implementation Comparison Framework}{26}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Project Timeline \& Deliverables}{28}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Milestone Mapping}{28}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Deliverable Definitions}{28}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Risk Assessment}{30}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Research Communication}{31}{subsection.7.4}%

@@ -1,0 +1,12 @@
+\newtheorem{subdefinition}{Definition}[section]
+\begin{equation}
+	\label{systemModel}
+	\begin{aligned}
+		\underbrace{x(k+1)}_{\substack{\text{next}                       \\\text{system-state}}}
+		 & = \underbrace{x(k)}_{\substack{\text{current}                 \\\text{system-state}}}
+		+ \underbrace{\mathlarger{\tau}}_{\substack{\text{discrete-time} \\\text{step}}}
+		\underbrace{\bigl[\underbrace{ f(x(k))}_{\substack{\text{state}  \\\text{dynamics}}}
+		+ \underbrace{ g(x(k))}_{\substack{\text{coupling}               \\\text{dynamics}}}
+		\underbrace{u(k)}_{\substack{\text{control}                      \\\text{input}}} \bigr]}_{\text{Rate of Change}}
+	\end{aligned}
+\end{equation}

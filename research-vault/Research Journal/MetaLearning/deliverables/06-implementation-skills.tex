@@ -1,0 +1,153 @@
+\section{Implementation Skills}
+
+\begin{purposebox}
+\textbf{Purpose:} Demonstrate readiness to implement the tracking control NN in MATLAB, Python, and C++/CUDA. Not about mastery of each language, but about knowing the right tools and libraries for control system simulation.
+
+\textbf{When complete:} You can set up a simulation environment in each language and implement basic control system operations.
+\end{purposebox}
+
+%──────────────────────────────────────────────────
+\subsection{MATLAB Implementation}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Core Functions}
+For each MATLAB function, describe what it does and when you would use it in this project:
+
+\medskip
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Function} & \textbf{Purpose} & \textbf{When to Use} \\
+\midrule
+\texttt{ss()}   & & \\[0.8em]
+\texttt{tf()}   & & \\[0.8em]
+\texttt{step()} & & \\[0.8em]
+\texttt{bode()} & & \\
+\bottomrule
+\end{tabularx}
+
+\begin{answerbox}\end{answerbox}
+
+\question{Simulink}
+What is Simulink and how does it relate to the functional block diagram from Step~4? Would you implement the block diagram directly in Simulink or in MATLAB script? What are the trade-offs?
+
+\begin{answerbox}\end{answerbox}
+
+\question{MATLAB Simulation Skeleton}
+Write pseudocode (or actual MATLAB code) for the basic simulation loop of the tracking control NN:
+\begin{itemize}[nosep]
+  \item Initialize state $x(0)$, reference trajectory $r(k)$, parameters ($\tau, \beta, f, g$)
+  \item Loop over $k = 0$ to $N$: compute $u(k)$, update $x(k+1)$, store results
+  \item Plot $x(k)$ vs.\ $r(k)$
+\end{itemize}
+
+\begin{codeanswer}\end{codeanswer}
+
+%──────────────────────────────────────────────────
+\subsection{Python Implementation}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Library Mapping}
+Map MATLAB functionality to Python libraries:
+
+\medskip
+\begin{tabularx}{\textwidth}{l l X}
+\toprule
+\textbf{MATLAB} & \textbf{Python Equivalent} & \textbf{Library} \\
+\midrule
+Matrix operations       & & \\[0.6em]
+Control System Toolbox  & & \\[0.6em]
+ODE / system simulation & & \\[0.6em]
+Plotting                & & \\
+\bottomrule
+\end{tabularx}
+
+\begin{answerbox}\end{answerbox}
+
+\question{NumPy for the System Model}
+Write Python code (using NumPy) to compute one time step of the system model:
+\[
+  x(k+1) = x(k) + \tau\bigl(f(x(k)) + g(x(k))\,u(k)\bigr)
+\]
+Assume \texttt{x} is an $n$-dimensional array, \texttt{u} is an $m$-dimensional array, and \texttt{f()}, \texttt{g()} are functions.
+
+\begin{codeanswer}\end{codeanswer}
+
+\question{\texttt{python-control} Library}
+What does the \texttt{python-control} library provide? How would you use it for this project? Give an example function call.
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection{C++ and CUDA}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Concept Check}
+
+\question{Why C++?}
+Why would you implement the tracking control NN in C++ when MATLAB and Python are easier? What practical applications require C++ performance?
+
+\begin{answerbox}\end{answerbox}
+
+\question{Eigen Library}
+The Eigen library provides matrix operations in C++. Write pseudocode showing how you would represent the state vector $x(k)$ and compute one system update step using Eigen-style operations.
+
+\begin{codeanswer}\end{codeanswer}
+
+\question{CUDA Parallelism}
+For the block diagram with $n$ state variables:
+\begin{itemize}[nosep]
+  \item Which computations can be parallelized across states?
+  \item Which computations must be sequential?
+  \item How would you map the $n$ blocks of $f(x)$ and $n \times m$ blocks of $g(x)$ to GPU threads?
+\end{itemize}
+
+\begin{answerbox}\end{answerbox}
+
+\question{CUDA Necessity}
+Under what conditions would CUDA actually provide a speedup over CPU computation for this problem? (Hint: think about the size of $n$ and $m$, and the number of simulation steps.)
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection{Implementation Comparison Framework}
+%──────────────────────────────────────────────────
+
+\subsubsection*{Synthesis Question}
+
+\question{Comparison Criteria}
+The project requires comparing implementations across languages. Fill in the table:
+
+\medskip
+\begin{tabularx}{\textwidth}{l X X}
+\toprule
+\textbf{Criterion} & \textbf{How to Measure} & \textbf{Expected Winner} \\
+\midrule
+Execution speed        & & \\[0.8em]
+Code complexity        & & \\[0.8em]
+Numerical accuracy     & & \\[0.8em]
+Ease of visualization  & & \\[0.8em]
+Real-time capability   & & \\
+\bottomrule
+\end{tabularx}
+
+\begin{answerbox}\end{answerbox}
+
+%──────────────────────────────────────────────────
+\subsection*{Self-Assessment Checklist}
+%──────────────────────────────────────────────────
+
+\begin{itemize}[leftmargin=2em, label=$\square$]
+  \item I can identify the MATLAB functions needed for control system simulation
+  \item I can write a basic simulation loop in MATLAB pseudocode
+  \item I can map MATLAB tools to Python equivalents (NumPy, SciPy, \texttt{python-control})
+  \item I can implement one time step of the system model in Python/NumPy
+  \item I can explain why C++ and CUDA matter for real-time control
+  \item I can identify which computations parallelize on GPU
+  \item I can define comparison criteria for cross-language implementation evaluation
+\end{itemize}
+
+\begin{notesbox}\end{notesbox}

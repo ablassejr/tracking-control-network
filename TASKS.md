@@ -1,37 +1,76 @@
-# Tasks
+# Research Tasks & Milestones
 
-## Active
-### Week 1: Difference Equation Description (Due: Feb 2) ⚠️ TOMORROW
-> CAHSI REU - Dr. Pavlo Tymoshchuk
+## 🚀 Active Focus (Week 2/3)
 
-- [ ] Basic Form and Solutions
-- [ ] Variable Structure Systems
-- [ ] Euler Approximation (Discretization)
-- [ ] Linear Algebra review
+### 🔴 Immediate Deadlines (Due Feb 9)
+- [ ] **Existence & Uniqueness Analysis**
+    - [ ] Complete steady-state trajectory analysis for discrete-time system.
+    - [ ] Draft "Student Log" entry:
+        - *Constraint:* Use exact plan language verbatim *plus* own explanation.
+        - *Constraint:* Avoid plagiarism of baseline text.
+- [ ] **Create Network Description File** (Word/Doc format)
+    - [ ] Copy equations, variables, and parameters from Reference 1 (baseline).
+    - [ ] Annotate and rewrite descriptions to establish a clean starting point.
 
-### Daily Habits
-- [ ] 2 internship applications
-- [ ] 30 push-ups
+### 🟡 On Deck (Due Feb 16)
+- [ ] **Stability & Convergence Analysis**
+    - [ ] Analyze global stability / finite-step convergence.
+    - [ ] *Assignment:* Ablasse to lead stability analysis; Jeffrey to analyze convergence time.
+- [ ] **Functional Block Diagram Prep**
+    - [ ] **DECISION:** Select software tool for block diagrams (Visio, TikZ, Simulink, etc.).
+    - [ ] Draft preliminary diagram logic.
 
-## Inbox
-<!-- Quick capture - process these into Active or Backlog -->
+### ⚙️ Research Ops & Admin
+- [ ] **Send Weekly Status Email** (Use "Questions-Forward" draft).
+    - [ ] Confirm "Network Description" file format/location.
+- [ ] **Journal Compliance**
+    - [ ] Ensure "Plan for next week" entry explicitly mentions "Functional Block Diagram" preparation.
+- [ ] **Meeting Workflow**
+    - [ ] Ensure Zoom recordings are long enough for Notion AI transcription.
 
-## Backlog
+---
 
-### CAHSI REU Milestones (Jan 26 - Apr 10, 2026)
-- [ ] Week 2: Existence & Uniqueness Analysis (Due: Feb 9)
-- [ ] Week 3: Stability & Convergence (Due: Feb 16)
-- [ ] Weeks 4-5: Block Diagram Analysis (Due: Mar 2)
-- [ ] Week 6: Implementation (Due: Mar 9)
-- [ ] Midterm Report (Due: Mar 16)
-- [ ] Week 7: Compare Implementations (Due: Mar 23)
-- [ ] Week 8: Compare with Analogs (Due: Mar 30)
-- [ ] Week 9: Simulations (Due: Apr 6)
-- [ ] Week 10: Final Report & Poster (Due: Apr 10)
+## 📅 Project Milestones (Spring 2026)
 
-## Completed
+| Due Date | Milestone | Status |
+| :--- | :--- | :--- |
+| **Feb 2** | Description of Tracking Control NN (Variable Structure) | ✅ **Done** |
+| **Feb 9** | Existence & Uniqueness of Steady States | 🔄 **In Progress** |
+| **Feb 16** | Stability & Convergence Analysis | ⏳ Pending |
+| **Mar 2** | Functional Block Diagram (Presentation + Analysis) | ⏳ Pending |
+| **Mar 9** | Implementation (MATLAB/Octave) | ⏳ Pending |
+| **Mar 16** | **Midterm Report Submission** | ⏳ Pending |
+| **Mar 23** | Compare Implementations | ⏳ Pending |
+| **Mar 30** | Compare with Analogs | ⏳ Pending |
+| **Apr 6** | Simulations (Noise Injection Experiments) | ⏳ Pending |
+| **Apr 10** | **Final Report & Poster** | ⏳ Pending |
+
+---
+
+## 📥 Inbox / Open Questions
+- [ ] **Clarification:** Exact definition of "affine" in this discrete-time context (for report defense).
+- [ ] **Tooling:** Confirm MATLAB vs Octave for final delivery (Pivot to MATLAB signaled Feb 4).
+- [ ] **Threat Model:** Confirm "adversarial attack" modeling (additive vs separate channel).
+
+---
+
+## ✅ Completed
+### Logistics & Setup
+- [x] Weekly Meeting Kickoff (Jan 30).
+- [x] Project Scope & Title Finalized ("...Against Adversarial Attacks").
+- [x] **Novelty Identification:** Simulated Noise Injection.
+- [x] Journal Infrastructure (OneNote + Obsidian templates).
+- [x] Progress Report Skeleton Created.
+- [x] LaTeX/TikZ Annotation System Refactor.
+
+### Internship Applications
 - [x] BGE application
 - [x] Firefly Aerospace application
 - [x] Navy Federal Credit Union application
 - [x] Phillips 66 application
 - [x] Tetramem application
+
+### Daily Habits (Personal)
+- [ ] 2 internship applications
+- [ ] 30 push-ups
+
