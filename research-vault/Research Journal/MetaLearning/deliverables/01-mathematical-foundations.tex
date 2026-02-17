@@ -50,7 +50,8 @@ Given the continuous-time ODE $\dot{x} = f(x)$, derive the Euler approximation t
 			x(k + 1)                                            & \approx x(k) + \tau( f(x(k)) )\text{, $k = t\tau$} \\
 		\end{aligned}
 	\end{math} \\
-	Tau is the quotient of the current time step over the time horizon(total amount of time steps)
+	Tau is the quotient of the current time step over
+	the time horizon(total amount of time steps)
 \end{answerbox}
 
 \question{Connecting to the Paper}
@@ -58,9 +59,17 @@ The paper's core equation is:
 \[
 	x(k+1) = x(k) + \tau\bigl[f(x(k)) + g(x(k))\,u(k)\bigr]
 \]
-Identify which part comes from the Euler approximation of a continuous-time system, and write out what the original continuous-time ODE would look like.
+Identify which part comes from the Euler approximation of a
+continuous-time system, and write out what the original
+continuous-time ODE would look like.
 
-\begin{answerbox}\end{answerbox}
+\begin{answerbox}
+	$x(k+1), x(k), and \tau$ come from the Euler approximation. \\
+	The original ODE:
+	\begin{equation}
+		\dot{x}(t) = f(x(t)) + g(x(t))\,u(t)
+	\end{equation} \\ \\
+\end{answerbox}
 
 %──────────────────────────────────────────────────
 \subsection{Linear Algebra}
