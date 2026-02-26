@@ -1,7 +1,10 @@
 \begin{thebibliography}{1}
 
 \bibitem{tymoshchuk2024tracking}
-P.~Tymoshchuk, ``A tracking control neural network for the known affine in the inputs discrete-time nonlinear systems,'' 2024.
-\newblock University of North Texas.
+P.~Tymoshchuk, ``A tracking control neural network for the known affine in the inputs discrete-time nonlinear systems,'' tech. rep., University of North Texas, 2024.
+
+\bibitem{migration-analysis}
+A.~Kingcaid-Ouedraogo, ``Analysis of methods of simulation in {C++}: Migration strategy for tracking control neural network,'' 2026.
+\newblock Internal research document, Texas A\&M University--Victoria.
 
 \end{thebibliography}

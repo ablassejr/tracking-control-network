@@ -3,37 +3,36 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: Main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-Warning--empty booktitle in tymoshchuk2024tracking
-You've used 1 entry,
+You've used 2 entries,
             1876 wiz_defined-function locations,
-            482 strings with 3636 characters,
-and the built_in function-call counts, 179 in all, are:
-= -- 13
-> -- 4
+            487 strings with 3842 characters,
+and the built_in function-call counts, 271 in all, are:
+= -- 25
+> -- 8
 < -- 0
-+ -- 2
-- -- 1
-* -- 9
-:= -- 34
-add.period$ -- 2
-call.type$ -- 1
-change.case$ -- 1
++ -- 4
+- -- 2
+* -- 12
+:= -- 53
+add.period$ -- 3
+call.type$ -- 2
+change.case$ -- 3
 chr.to.int$ -- 0
 cite$ -- 2
-duplicate$ -- 12
-empty$ -- 23
-format.name$ -- 1
-if$ -- 39
+duplicate$ -- 10
+empty$ -- 31
+format.name$ -- 2
+if$ -- 61
 int.to.chr$ -- 0
-int.to.str$ -- 1
-missing$ -- 1
-newline$ -- 7
-num.names$ -- 1
-pop$ -- 8
+int.to.str$ -- 2
+missing$ -- 0
+newline$ -- 10
+num.names$ -- 2
+pop$ -- 9
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1
+skip$ -- 4
 stack$ -- 0
 substring$ -- 0
 swap$ -- 0
@@ -41,8 +40,7 @@ text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 1
-while$ -- 1
-width$ -- 2
-write$ -- 11
-(There was 1 warning)
+warning$ -- 0
+while$ -- 2
+width$ -- 3
+write$ -- 20
