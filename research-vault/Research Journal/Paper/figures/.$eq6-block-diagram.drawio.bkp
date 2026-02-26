@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="Electron">
+  <diagram name="Eq6-Block-Diagram" id="eq6-1">
+    <mxGraphModel dx="780" dy="520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" defaultFontFamily="Helvetica">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- BACKGROUND REGIONS -->
+        <mxCell id="sys_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;strokeWidth=1;dashed=1;dashPattern=5 3;" vertex="1" parent="1">
+          <mxGeometry x="25" y="45" width="660" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl_bg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#999999;strokeWidth=1;dashed=1;dashPattern=5 3;" vertex="1" parent="1">
+          <mxGeometry x="25" y="295" width="660" height="140" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES: SYSTEM INTERNAL -->
+        <mxCell id="e_drk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="drk_in" target="sigma_s">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_tau" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="tau_blk" target="sigma_s">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_ss_z" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sigma_s" target="delay_blk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_z_fork" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=none;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="delay_blk" target="fork_out">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_fork_out" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="fork_out" target="out_label">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EDGES: FEEDBACK x(k) PATHS -->
+        <mxCell id="e_fork_down" style="edgeStyle=none;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=none;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="552" y="156" as="sourcePoint" />
+            <mxPoint x="552" y="230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_xk_ss" style="edgeStyle=none;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="548" y="230" as="sourcePoint" />
+            <mxPoint x="329" y="172" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="329" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_xk_se" style="edgeStyle=none;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="552" y="234" as="sourcePoint" />
+            <mxPoint x="181" y="350" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="552" y="318" />
+              <mxPoint x="181" y="318" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- EDGES: CONTROLLER INTERNAL -->
+        <mxCell id="e_rk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="rk_in" target="sigma_e">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_se_sgn" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sigma_e" target="sgn_blk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_sgn_b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="sgn_blk" target="beta_blk">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- EDGE: CROSS-REGION control signal β→τ -->
+        <mxCell id="e_ctrl" style="edgeStyle=none;html=1;strokeWidth=2;fontFamily=Helvetica;endArrow=classic;endFill=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="442" y="355" as="sourcePoint" />
+            <mxPoint x="190" y="151" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="442" y="278" />
+              <mxPoint x="120" y="278" />
+              <mxPoint x="120" y="151" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- SHAPES: SYSTEM REGION -->
+        <mxCell id="sys_label" value="&lt;b&gt;System&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fontFamily=Helvetica;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="40" y="52" width="80" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="sys_eq" value="&lt;i&gt;x(k+1) = x(k) + τβ sgn(x(k) − r(k)) + Δr(k)&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=top;fontFamily=Helvetica;fontSize=11;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="40" y="76" width="300" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="tau_blk" value="&lt;i&gt;τ&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=16;fillColor=#FFD966;strokeColor=#BF9000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="190" y="134" width="55" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="sigma_s" value="Σ" style="ellipse;html=1;fontFamily=Helvetica;fontSize=16;fillColor=#A8D08D;strokeColor=#548235;strokeWidth=2;align=center;verticalAlign=middle;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="308" y="130" width="42" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="delay_blk" value="&lt;i&gt;z&lt;/i&gt;&lt;sup&gt;−1&lt;/sup&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=16;fillColor=#6FA8DC;strokeColor=#3D85C6;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="435" y="134" width="78" height="36" as="geometry" />
+        </mxCell>
+        <mxCell id="drk_in" value="&lt;i&gt;Δr(k)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="305" y="62" width="50" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="xk1_label" value="&lt;i&gt;x(k+1)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="365" y="118" width="52" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="fork_out" value="" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="548" y="149" width="8" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="out_label" value="&lt;i&gt;x(k)&lt;/i&gt;" style="text;html=1;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="585" y="140" width="55" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="xk_fork" value="" style="ellipse;html=1;fillColor=#000000;strokeColor=#000000;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="548" y="226" width="8" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="xk_sig" value="&lt;i&gt;x(k)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="555" y="185" width="35" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="plus_ss_bot" value="+" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="334" y="172" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="plus_ss_top" value="+" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="334" y="118" width="12" height="12" as="geometry" />
+        </mxCell>
+
+        <!-- SHAPES: CONTROLLER REGION -->
+        <mxCell id="ctrl_label" value="&lt;b&gt;Controller&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=top;fontFamily=Helvetica;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="40" y="300" width="120" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="rk_in" value="&lt;i&gt;r(k)&lt;/i&gt;" style="text;html=1;align=right;verticalAlign=middle;fontFamily=Helvetica;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="50" y="360" width="48" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="sigma_e" value="Σ" style="ellipse;html=1;fontFamily=Helvetica;fontSize=16;fillColor=#A8D08D;strokeColor=#548235;strokeWidth=2;align=center;verticalAlign=middle;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="350" width="42" height="42" as="geometry" />
+        </mxCell>
+        <mxCell id="sgn_blk" value="sgn(·)" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=14;fillColor=#E06666;strokeColor=#CC0000;strokeWidth=2;fontColor=#FFFFFF;" vertex="1" parent="1">
+          <mxGeometry x="275" y="355" width="80" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="beta_blk" value="&lt;i&gt;β&lt;/i&gt;" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=16;fillColor=#FFD966;strokeColor=#BF9000;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="415" y="355" width="55" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="ek_label" value="&lt;i&gt;e(k)&lt;/i&gt;" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=#555555;" vertex="1" parent="1">
+          <mxGeometry x="222" y="340" width="30" height="16" as="geometry" />
+        </mxCell>
+        <mxCell id="minus_err" value="−" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontColor=#CC0000;" vertex="1" parent="1">
+          <mxGeometry x="148" y="345" width="12" height="12" as="geometry" />
+        </mxCell>
+        <mxCell id="plus_err" value="+" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="185" y="340" width="12" height="12" as="geometry" />
+        </mxCell>
+
+        <!-- CAPTION -->
+        <mxCell id="caption" value="Fig. 1. Functional block-diagram of the closed-loop tracking control system — Eq. (6)" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=12;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="60" y="448" width="590" height="20" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
