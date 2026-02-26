@@ -1,14 +1,11 @@
 x(1)=0.;
 t(1)=0;
 y(1)=0.;
-
 n=45000;
 tmax=45;
 dt=tmax/n;
-
 Q=10;
 R=0.01;
-
 m(1)=1;
 alpha=1;
 betta=100;
@@ -16,15 +13,17 @@ lambda=0.3;
 gamma=20;
 B=1;
 Da=0.072;
-
 r1(1)=0.;
 r2(1)=0.;
-
 e1(1)=x(1)-r1(1);
 e2(1)=y(1)-r2(1);
-
 u(1)=0;
-
+programCount = 20;
+avgTime = zeros(20);
+% ==========================
+diary("matlab_output.log")
+for j=1:programCount,
+tic
 for i=1:n-1,
 
 m(i+1)=m(i)+1;
@@ -33,7 +32,6 @@ g1(i)=0;
 g2(i)=lambda;
 
 f1(i)=x(i)+dt*(-alpha*x(i)+Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
-
 f2(i)=y(i)+dt*(-alpha*y(i)+B*Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
 
 t(i+1)=t(i)+dt;
@@ -68,24 +66,36 @@ u2(i)=-1/g2(i)*(-betta*S(i)+r2(i+1)-r2(i)-f2(i));
 x(i+1)=f1(i);
 y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i));
 
+%x(i+1)=r1(i+1);
+%y(i+1)=r2(i+1);
+
 e1(i+1)=x(i+1)-r1(i+1);
 e2(i+1)=y(i+1)-r2(i+1);
 
-end
-
+end;
+toc
+end;
+diary off;
+% print("Average Runtime:" + mean(avgTime))
 subplot(2,1,1), plot(t,x,'k-',t,r1,'r--')
 axis([0 tmax 0 0.8])
 legend('x_1','r_1')
 grid
+
 ylabel('x_1,r_1')
+
 xlabel('Time (s)')
+
 hold on;
 
 subplot(2,1,2), plot(t,y,'k-',t,r2,'r--')
+
 axis([0 tmax 0 5])
 ylabel('x_2, r_2')
-legend('x_2','r_2')
-xlabel('Time (s)')
-grid
 
+legend('x_2','r_2')
+
+xlabel('Time (s)')
+
+grid
 clear all;
