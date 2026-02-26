@@ -1,22 +1,5 @@
 \section{Adversarial Attacks}
 
-\subsection*{
-	Attacks Against a Tracking Control Neural Network
-}
-The general form of the discrete-time affine-in-the-inputs nonlinear system,
-can be given by:
-\begin{definition}
-	\begin{equation}
-		x(k) = F(x(k), r(k))
-	\end{equation}
-	where:
 
-	\setlength{\itemsep}{0.35em}
-	\begingroup \leftskip=2em
-	\item[{\makebox{\boldmath$x$}:}] System state.
-	\item[{\makebox{\boldmath$F$}:}] Nonlinear function that defines the system's internal state dynamics.
-	\item[{\makebox{\boldmath$r$}:}] Reference trajectory that the system will attempt to follow.
-
-
-	\endgroup
-\end{definition}
+\input{chapters/attacks/white-noise.tex}
+\input{chapters/attacks/modified-tracking.tex}

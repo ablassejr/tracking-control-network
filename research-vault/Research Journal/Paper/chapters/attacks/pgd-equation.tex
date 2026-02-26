@@ -1,0 +1,20 @@
+\begin{definition}
+	\begin{equation}
+		\begin{aligned}
+			 & a(k+1) = P_{\beta_{\epsilon}}(\Delta a(k) - \tau\text{sgn}(\nabla_{a}, J( \hat{a}(\Delta a(k))), x^{*})\text{,} \\
+			 & \Delta a(0) = 0^{n}\text{,}                                                                                     \\
+			 & k = 0 ...N_{PGD} - 1
+		\end{aligned}
+	\end{equation}
+	where:
+
+	\begin{description}
+		\setlength{\itemsep}{0.35em}
+		\item $\Delta a(k)$: Adversarial perturbation to sensor measurement at PGD iteration $k$; starts at zero vector in $\mathbb{R}^n$ (sensor dim).
+		\item $P_{B_\epsilon}$: Euclidean projection onto $\ell_\infty$-ball $B_\epsilon$, clips perturbation to bound $\epsilon$ (stealth constraint).
+		\item $\tau$: Step size (implicit in $k$, often fixed for uniform steps).
+		\item $\operatorname{sgn}(\cdot)$: Signum (componentwise); from FGSM core.
+		\item $\nabla_y J(\hat{y}(\Delta y^{(k)}), x^*)$: Gradient of attack loss $J$ w.r.t. perturbed measurement; $\hat{y}$ is NN-estimated state from attacked obs; $x^*$ is target unsafe state (e.g., collision).
+		\item $N_{\text{PGD}}$: Total iterations
+	\end{description}
+\end{definition}
