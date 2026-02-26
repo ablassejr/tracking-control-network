@@ -4,8 +4,12 @@
 % TikZ Libraries
 % ---------------------------------------------------------------------------
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{float}
 
 
+\usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{relsize}
 \usepackage{amsmath}
@@ -13,6 +17,11 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{witharrows}
+\usepackage{svg}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 \usetikzlibrary{
 	tikzmark,
 	patterns,               % Fill patterns (hatching, dots, etc.)
@@ -28,6 +37,30 @@
 	shapes.geometric,
 	shapes.callouts
 }
+\graphicspath{{./figures/images/}}
+
+% ---------------------------------------------------------------------------
+% Code Listing Styles (used in Appendix)
+% ---------------------------------------------------------------------------
+\lstset{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\bfseries\color{blue!70!black},
+  commentstyle=\itshape\color{green!50!black},
+  stringstyle=\color{orange!80!black},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  numbersep=8pt,
+  breaklines=true,
+  tabsize=4,
+  showstringspaces=false,
+  frame=single,
+  captionpos=b,
+  xleftmargin=2em,
+}
+\lstdefinestyle{cpp}{language=C++, morekeywords={std,vector,Eigen,MatrixXd,StateMatrix,auto}}
+\lstdefinestyle{matlab}{language=Matlab, morekeywords={figure,plot,xlabel,ylabel,legend,hold,tic,toc}}
+\lstdefinestyle{plain}{language={}, numbers=none, frame=none, xleftmargin=0em}
+\svgpath{{./figures/images/}}
 \newcommand{\state}{\ensuremath{x(k)}}
 \newcommand{\func}[1]{\ensuremath{f(#1)}}
 \newcommand{\control}[1]{\ensuremath{u(#1)}}
@@ -52,16 +85,23 @@ will be ported to C++ and optimized. A previous simulation\textsubscript{\cite{t
 of this system was designed in matlab. C++ gives lower level control to the
 programmer, allowing for more granular and programmatic optimizations to be performed.
 The modification to the tracking control network will to simulate adversarial attacks.
-For this purpose, a close analog has been chosen to represent a plausible attack scenario.
-Based on a previous analysis of the behavior of common adaptive cruise control systems
-when falsified speed data is injected into the controller area network
-bus\textsubscript{\cite{tymoshchuk2024tracking}}, a modified system equation
-that seeks to minimize the impact of this style of adversarial attack will be designed and simulated.
+A modified system equation that seeks to minimize the impact of this style of a
+dversarial attack will be designed and simulated.
 \section{Introduction}
 \input{chapters/introduction/intro.tex}
 \input{chapters/attacks/adversarial-attacks.tex}
+\input{chapters/theorems/theorems.tex}
+\newpage
+\section{Figures}
+\input{chapters/diagrams/diagrams.tex}
 
 \bibliographystyle{ieeetr}
 \bibliography{references}
+
+% =============================================================================
+% Appendix
+% =============================================================================
+\appendix
+\input{chapters/migration/migration.tex}
 
 \end{document}
