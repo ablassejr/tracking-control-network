@@ -1,0 +1,341 @@
+% =============================================================================
+% Appendix: Code Migration — MATLAB to C++
+% =============================================================================
+
+\section{Code Migration: MATLAB to C++}
+\label{sec:migration}
+
+\subsection{Motivation}
+\label{subsec:migration-motivation}
+
+The original tracking control simulation was implemented as a collection of
+MATLAB scripts (\texttt{Fig2a.m}--\texttt{Fig2c.m}, \texttt{Fig5.m}--\texttt{Fig5b.m}),
+following the reference implementation in~\cite{tymoshchuk2024tracking}.
+While MATLAB provides rapid prototyping through built-in matrix operations and
+plotting, several factors motivated a migration to C++:
+
+\begin{enumerate}
+	\item \textbf{Execution speed.} The simulation loop iterates 45{,}000 time
+	      steps with per-step nonlinear dynamics evaluation. C++ compiled code
+	      with direct memory access eliminates the interpreter overhead inherent
+	      to MATLAB's execution model.
+	\item \textbf{Memory control.} C++ provides explicit control over stack
+	      versus heap allocation, cache-aligned data layouts, and
+	      zero-copy data access through pointers---critical when storing
+	      $2 \times 45{,}000$ state matrices.
+\end{enumerate}
+
+\subsection{Architecture Decisions}
+\label{subsec:migration-architecture}
+
+The MATLAB implementation uses a procedural style: separate 1-D arrays for
+each state variable (\texttt{x}, \texttt{y}, \texttt{r1}, \texttt{r2},
+\texttt{e1}, \texttt{e2}, \texttt{u}) with a single \texttt{for} loop
+driving the simulation. The C++ port uses 2d arrays for the state variables
+with a single for loop as well. It adopts a struct-based architecture that
+groups related data and separates concerns across compilation units.
+
+\subsubsection{Data Layout}
+\begin{table}[htbp]
+	\centering
+	\caption{Data structure mapping between MATLAB and C++ implementations.}
+	\label{tab:data-layout}
+	\begin{tabular}{lll}
+		\toprule
+		MATLAB Variable                        & C++ Equivalent                                             & Type                                \\
+		\midrule
+		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                                       & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                                   & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{velocityErrorMatrix}, \texttt{distanceErrorMatrix} & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                                    & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{alpha}, \texttt{betta}, \ldots & \texttt{InternalConditions}                                & \texttt{struct}                     \\
+		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                                       & \texttt{struct}                     \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The key design choice is consolidating per-variable 1-D arrays into
+$2 \times N$ Eigen matrices. Row~0 stores the velocity (conversion) state
+$x_1$, and row~1 stores the distance (temperature) state $x_2$. This layout
+preserves temporal locality: accessing both states at time step $k$ requires
+reading two adjacent memory locations in the same column.
+
+\subsubsection{Build System}
+
+The C++ project uses CMake 3.15+ with \texttt{FetchContent} to manage two
+external dependencies:
+
+\begin{table}[htbp]
+	\centering
+	\caption{C++ build dependencies fetched at configure time.}
+	\label{tab:dependencies}
+	\begin{tabular}{llll}
+		\toprule
+		Library & Source                & Version & Purpose                       \\
+		\midrule
+		Eigen   & GitLab                & master  & Matrix algebra                \\
+		cxxplot & US Naval Research Lab & v0.4.1  & Interactive Qt-based plotting \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Implementation}
+\label{subsec:migration-implementation}
+
+This section presents side-by-side comparisons of the MATLAB and C++
+implementations for each major component of the simulation.
+
+\subsubsection{System Dynamics}
+\label{subsubsec:dynamics}
+
+The CSTR system has two states: conversion $x_1$ and temperature $x_2$.
+Since the control gain $g_1 = 0$, the conversion state evolves under
+open-loop natural dynamics. The temperature state uses feedback-linearizing
+sliding-mode control.
+
+\paragraph{Velocity (conversion) state --- open loop.}
+The natural dynamics follow the discretized CSTR model:
+\begin{equation}
+	x_1(k{+}1) = x_1(k) + \tau\!\left[
+		-\alpha\, x_1(k) + D_a\bigl(1 - x_1(k)\bigr)
+		\exp\!\left(\frac{x_2(k)}{1 + x_2(k)/\gamma}\right)
+		\right]
+	\label{eq:x1-dynamics}
+\end{equation}
+
+\noindent
+\textbf{MATLAB} (\texttt{Fig2b.m}, line~29):
+\begin{lstlisting}[style=matlab]
+f1(i) = x(i) + dt*(-alpha*x(i) + Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
+\end{lstlisting}
+
+\noindent
+\textbf{C++} (\texttt{state\_space.cpp}, lines~24--29):
+\begin{lstlisting}[style=cpp]
+stateConditions.stateMatrix(0, i) =
+    prevVelocity +
+    settings.tau *
+        (-internalConditions.alpha * prevVelocity +
+         internalConditions.D * (1 - prevVelocity) *
+             exp(prevDistance / (1 + prevDistance / internalConditions.gamma)));
+\end{lstlisting}
+
+The C++ version accesses parameters through the \texttt{InternalConditions}
+struct rather than workspace variables, and uses cached local variables
+(\texttt{prevVelocity}, \texttt{prevDistance}) to avoid repeated matrix
+indexing within the inner loop.
+
+\paragraph{Distance (temperature) state --- closed loop.}
+The feedback-linearizing control law cancels the nonlinear dynamics $f_2(x)$,
+yielding the simplified closed-loop update:
+\begin{equation}
+	x_2(k{+}1) = x_2(k) + \tau\!\left[
+	-\beta\,\operatorname{sgn}(e_2(k)) + \Delta r_2(k)
+	\right]
+	\label{eq:x2-closedloop}
+\end{equation}
+where $e_2(k) = x_2(k) - r_2(k)$ is the tracking error and
+$\Delta r_2(k) = r_2(k{+}1) - r_2(k)$ is the reference change.
+
+\noindent
+\textbf{MATLAB} (\texttt{Fig2a.m}, line~62):
+\begin{lstlisting}[style=matlab]
+y(i+1) = y(i) + dt*(-betta*S(i) + r2(i+1) - r2(i));
+\end{lstlisting}
+
+\noindent
+\textbf{C++} (\texttt{state\_space.cpp}, lines~34--38):
+\begin{lstlisting}[style=cpp]
+double deltaR2 = stateConditions.deltaReference(1, i - 1);
+stateConditions.stateMatrix(1, i) =
+    prevDistance +
+    settings.tau *
+        (-internalConditions.beta * sgn(e2) + deltaR2);
+\end{lstlisting}
+
+A notable difference is that the C++ implementation pre-computes the
+$\Delta r_2$ matrix in a single Eigen operation before entering the simulation
+loop, whereas MATLAB computes \texttt{r2(i+1)-r2(i)} inline at each step.
+
+\subsubsection{Reference Trajectory}
+\label{subsubsec:reference}
+
+The piecewise-constant reference switches between two operating points at
+$t = 15$\,s and $t = 30$\,s.
+
+\noindent
+\textbf{MATLAB} uses time-based conditionals:
+\begin{lstlisting}[style=matlab]
+if 0<=t(i+1) & t(i+1)<=15
+    r1(i+1) = 0.4472;
+elseif 15<t(i+1) & t(i+1)<30
+    r1(i+1) = 0.7646;
+elseif 30<=t(i+1) & t(i+1)<tmax
+    r1(i+1) = 0.4472;
+end
+\end{lstlisting}
+
+\noindent
+\textbf{C++} uses index-based ternary expressions:
+\begin{lstlisting}[style=cpp]
+stateConditions.referenceMatrix(0, i) =
+    i > 15000 && i < 30000 ? 0.7646 : 0.4472;
+\end{lstlisting}
+
+The index-based approach is valid because $t = i \cdot \tau$ and
+$\tau = 45/45000 = 0.001$\,s, so $t = 15$ corresponds to $i = 15{,}000$.
+Additionally, the C++ version pre-computes the reference difference matrix
+$\Delta R$ via Eigen column operations:
+\begin{lstlisting}[style=cpp]
+stateConditions.deltaReference =
+    stateConditions.referenceMatrix.rightCols(settings.timeSteps - 1) -
+    stateConditions.referenceMatrix.leftCols(settings.timeSteps - 1);
+\end{lstlisting}
+
+\subsubsection{Signum Function}
+\label{subsubsec:signum}
+
+The signum function $\operatorname{sgn}(\cdot)$ is central to the
+sliding-mode controller.
+
+\noindent
+\textbf{MATLAB} implements it with explicit branching:
+\begin{lstlisting}[style=matlab]
+if (y(i)-r2(i)) > 0
+    S(i) = 1;
+elseif (y(i)-r2(i)) < 0
+    S(i) = -1;
+else
+    S(i) = 0;
+end
+\end{lstlisting}
+
+\noindent
+\textbf{C++} uses a branchless template:
+\begin{lstlisting}[style=cpp]
+template <typename T>
+int sgn(const T &val) {
+    return (T(0) < val) - (val < T(0));
+}
+\end{lstlisting}
+
+The C++ implementation avoids conditional branching by exploiting boolean
+arithmetic: the expression evaluates to $+1$, $-1$, or $0$ without any
+\texttt{if}/\texttt{else} statements, which can improve pipeline utilization
+on modern processors.
+
+\subsubsection{Visualization}
+\label{subsubsec:visualization}
+
+MATLAB's native \texttt{subplot}/\texttt{plot} functions were replaced with
+the \texttt{cxxplot} library from the US Naval Research Laboratory. The
+library provides interactive Qt-based plot windows with a named-parameter API:
+
+\begin{lstlisting}[style=cpp]
+auto vel = cxxplot::plot(timeVector, velStateVector,
+    window_title_ = "Velocity",
+    show_legend_  = true,
+    name_         = "State x(k)",
+    xlabel_       = "Time (s)",
+    ylabel_       = "Velocity");
+vel.add_graph(timeVector, velRefVector, name_ = "Reference r(k)");
+\end{lstlisting}
+
+Table~\ref{tab:plot-mapping} maps the MATLAB plotting calls to their C++
+equivalents.
+
+\begin{table}[htbp]
+	\centering
+	\caption{Visualization API mapping.}
+	\label{tab:plot-mapping}
+	\begin{tabular}{ll}
+		\toprule
+		MATLAB                          & C++ (cxxplot)                                         \\
+		\midrule
+		\texttt{plot(t, x, 'k-')}       & \texttt{cxxplot::plot(t, x)}                          \\
+		\texttt{xlabel('Time (s)')}     & \texttt{xlabel\_ = "Time (s)"}                        \\
+		\texttt{ylabel('x\_1, r\_1')}   & \texttt{ylabel\_ = "Velocity"}                        \\
+		\texttt{legend('x\_1', 'r\_1')} & \texttt{show\_legend\_ = true}, \texttt{name\_ = ...} \\
+		\texttt{subplot(2,1,k)}         & separate \texttt{cxxplot::plot()} call per window     \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsection{Performance Comparison}
+\label{subsec:migration-performance}
+
+The C++ simulation includes instrumentation via
+\texttt{std::chrono::high\_resolution\_clock}. The MATLAB simulation uses
+\texttt{tic}/\texttt{toc}. Figure~\ref{fig:exec-time} compares execution
+times across implementations.
+
+% --- Placeholder for execution time comparison ---
+\begin{figure}[htbp]
+	\centering
+	% Uncomment and replace with actual figure when data is available:
+	% \includegraphics[width=0.6\textwidth]{figures/execution_time_comparison}
+	\includesvg[width=1\textwidth]{"/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/state_sim_avg_times.svg"}
+	\caption{Execution time comparison between MATLAB and C++
+		implementations of the CSTR tracking control simulation
+		($n = 45{,}000$ steps, $\tau = 0.001$\,s).}
+	\label{fig:exec-time}
+\end{figure}
+
+Figure~\ref{fig:plot-comparison} presents side-by-side output from both
+implementations to verify numerical equivalence.
+
+% --- Placeholder for plot comparison ---
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		% \includegraphics[width=\textwidth]{figures/matlab_tracking}
+		\fbox{\parbox{\textwidth}{\centering\vspace{3cm}
+				\textit{MATLAB tracking plot} \\
+				$x_1, x_2$ vs.\ $r_1, r_2$
+				\vspace{3cm}}}
+		\caption{MATLAB (\texttt{Fig2a.m}).}
+		\label{fig:matlab-tracking}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		% \includegraphics[width=\textwidth]{figures/cpp_tracking}
+		\fbox{\parbox{\textwidth}{\centering\vspace{3cm}
+				\textit{C++ tracking plot} \\
+				$x_1, x_2$ vs.\ $r_1, r_2$
+				\vspace{3cm}}}
+		\caption{C++ (\texttt{simulation.cpp}).}
+		\label{fig:cpp-tracking}
+	\end{subfigure}
+	\caption{Side-by-side comparison of state trajectories from the MATLAB
+		reference implementation and the C++ port. Both simulations use
+		identical parameters ($\alpha = 1$, $\beta = 100$,
+		$\lambda = 0.3$, $\gamma = 20$, $D_a = 0.072$) and initial
+		conditions $x(0) = \mathbf{0}$.}
+	\label{fig:plot-comparison}
+\end{figure}
+
+\subsection{Remaining Work}
+\label{subsec:migration-remaining}
+
+The following components have not yet been migrated from MATLAB to C++:
+
+\begin{enumerate}
+	\item \textbf{Fig5 --- Mechanical sinusoidal tracking system.}
+	      A second-order system with position and velocity states tracking
+	      $r(t) = 0.08\sin(\pi t / 2)$, using a cost-based sliding-mode
+	      controller with white noise perturbation.
+	\item \textbf{Adversarial attack simulations.}
+	      PGD attacks on the temperature measurement channel
+	      (\texttt{temp\_pgd\_attack.m}) and neural network approximation-based
+	      attacks (\texttt{temp\_pgd\_attack.py} using IBM ART).
+	\item \textbf{Control signal visualization.}
+	      MATLAB's \texttt{Fig2b.m} and \texttt{Fig2c.m} plot the control
+	      input $u(t)$ and tracking errors $e_1(t)$, $e_2(t)$; these are
+	      computed in C++ but not yet plotted.
+	\item \textbf{Test infrastructure.}
+	      Numerical validation against MATLAB output via CSV export and
+	      tolerance-based comparison, as recommended in the migration
+	      analysis~\cite{migration-analysis}.
+\end{enumerate}

@@ -1,0 +1,28 @@
+\subsubsection{\centering Existence and Uniqueness of Steady States}
+\newtheorem{theorem}{Theorem}
+\begin{theorem}\label{thm:existence_uniqueness}
+	The steady-state solutions of of the difference equation
+	dynamics~(\ref{eq:error_dynamics}) exists and is unique for any $\beta_i$,
+	$i = 1,\ldots,n$\,\textsubscript{\cite{tymoshchuk2024tracking}}.
+\end{theorem}
+
+\begin{proof}
+	A steady state satisfies $e(k+1) = e(k)$; substituting into~(\ref{eq:error_dynamics})
+	yields the equilibrium condition
+	\begin{equation}
+		\beta\,\text{sgn}(e^{*}) = 0.
+		\label{eq:equilibrium_condition}
+	\end{equation}
+	Since $\beta_i > 0$ for every $i$, equation~(\ref{eq:equilibrium_condition}) holds
+	if and only if $\text{sgn}(e_i^{*}) = 0$ for each component $i$.
+	By~(\ref{eq:sgn_control}), this is satisfied uniquely at $e_i^{*} = 0$, so the
+	unique steady state is $e^{*} = 0$, equivalently $x^{*}(k) = r(k)$.
+
+	\medskip
+	\noindent\textit{Existence.}\enspace
+	The cost function $C(x) = \|e\|$ is convex in $e$, which guarantees that its
+	infimum is attained.  The gradient update $\Delta e = -\nabla C(e) = -\text{sgn}(e)$
+	used in~(\ref{eq:error_dynamics}) drives $e$ toward the minimizer $C^{*} = 0$,
+	confirming that the equilibrium $e^{*} = 0$ is
+	attainable~\textsubscript{\cite{tymoshchuk2024tracking}}.
+\end{proof}

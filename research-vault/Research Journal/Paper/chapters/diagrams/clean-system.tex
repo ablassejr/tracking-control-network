@@ -1,0 +1,14 @@
+A functional block-diagram of the controlled nonlinear system described by \ref{systemModel}
+and \ref{eq:control_function} is presented in Fig. 1. The diagram includes the blocks of
+discrete-time summation $+$, sign activation function $S$, amplification  $\beta$,
+nonlinear functions $f(x)$ and  $g(x)$, NN solver of
+system of linear algebraic equations LAESS, reference $r$, state variable $x(k)$
+with initial value $x(1)$ , and control input $u(k)$. As one can see in Fig. 1,
+the NN consists of $3n$  adders, $n$ controlled switches, $n$ amplifiers, $n$ digital
+differentiators, $n$ blocks of nonlinear functions $f(x)$, $n \times m$ blocks of nonlinear
+functions $g(x)$, and $n$ NN solvers of a systems of linear algebraic equations.\textsubscript{\cite{tymoshchuk2024tracking}}
+\begin{figure}[H]
+	\centering
+	\includesvg[width=0.9\textwidth]{clean-system}
+	\caption{Functional block-diagram of the controlled nonlinear system.}
+\end{figure}
