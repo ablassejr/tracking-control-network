@@ -1,34 +1,17 @@
 \subsubsection*{\centering Control Function}
 
-For the purpose of finding a solution to the tracking control problem, the control function \control{$k$} has been designed~\textsubscript{\cite{tymoshchuk2024tracking}}:
+\begin{definition}
+	For the purpose of finding a solution to the tracking control problem, the control function \control{$k$} has been designed~\textsubscript{\cite{tymoshchuk2024tracking}}:
+	\begin{equation}
+		u(k) = \begin{cases}
+			g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \text{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
+			0                                                                                 & \text{if } g(x(k)) = 0
+		\end{cases}
+		\label{eq:control_function}
+	\end{equation}
 
-\begin{equation}
-	u(k) = \begin{cases}
-		g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \text{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
-		0                                                                                 & \text{if } g(x(k)) = 0
-	\end{cases}
-	\label{eq:control_function}
-\end{equation}
+	such that, given a reference trajectory $r(k)$, the system~(\ref{systemModel}) seeks to minimize the closed-loop error dynamics:
 
-such that, given a reference trajectory $r(k)$, the system~(\ref{systemModel}) seeks to minimize the closed-loop error dynamics:
+	\input{chapters/introduction/error.tex}
 
-\begin{equation}
-	x(k+1) = x(k) - \beta \text{sgn}(x(k) - r(k)) + \Delta r(k)
-	\label{eq:tracking_deployed}
-\end{equation}
-
-where:
-
-\begin{equation}
-	\text{sgn}(x(k) - r(k)) = \begin{cases}
-		1  & \text{if } x(k) > r(k) \\
-		0  & \text{if } x(k) = r(k) \\
-		-1 & \text{if } x(k) < r(k)
-	\end{cases}
-	\label{eq:sgn_control}
-\end{equation}
-
-\centering and
-\begin{equation}
-	\Delta r(k) = r(k+1) - r(k)
-\end{equation}
+\end{definition}

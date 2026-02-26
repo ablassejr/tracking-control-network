@@ -1,0 +1,12 @@
+\subsubsection*{\centering Closed-Loop Tracking Control} % TODO: fix the version of the equation
+\begin{definition}
+	Substituting $u(k)$ from~(\ref{eq:control_function}) into the
+	system model~(\ref{systemModel}) gives the closed-loop state equation:
+	\begin{equation}
+		x(k+1) = \state + \tau \beta \text{sgn}(x(k) - r(k)) + \Delta r(k)
+	\end{equation}
+	where:
+	\begin{equation}
+		\Delta r(k) = r(k+1) - r(k)
+	\end{equation}
+\end{definition}

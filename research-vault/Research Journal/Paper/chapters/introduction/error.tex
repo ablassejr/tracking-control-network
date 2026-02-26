@@ -1,68 +1,22 @@
-\subsection{Error Dynamics}
-
-The closed-loop tracking error dynamics are described by the following difference equation with variable structure:
-\begin{subdefinition}
+\begin{definition}
 	\begin{equation}
-		e(k+1) = e(k) - \alpha \text{sgn}(e(k))
+		e(k+1) = e(k) - \beta \text{sgn}(e(k))
 		\label{eq:error_dynamics}
 	\end{equation}
 
 	where:
-	\begin{itemize}
-		\item $e(k)$ is the tracking error at time step $k$
-		\item $\alpha = \text{diag}(\alpha_1, \ldots, \alpha_n)$ is the diagonal matrix of learning rate parameters
-		\item $\text{sgn}(e)$ is the signum activation function defined as:
-		      \begin{equation}
-			      \text{sgn}(e) = \begin{cases}
-				      1  & \text{if } e > 0 \\
-				      0  & \text{if } e = 0 \\
-				      -1 & \text{if } e < 0
-			      \end{cases}
-		      \end{equation}
-		\item $e = r(k) - x(k)$ represents the difference between the reference trajectory $r(k)$ and the system state $x(k)$
-	\end{itemize}
-\end{subdefinition}
-This difference equation can be rewritten in its equivalent deployed form as:
 
-\begin{equation}
-	x(k+1) = x(k) - \alpha \text{sgn}(x(k) - r(k)) + \dot{r}(k)
-\end{equation}
+	\begin{equation}
+		\text{sgn}(e(k)) = \begin{cases}
+			1  & \text{if } e(k) > 0 \\
+			0  & \text{if } e(k) = 0 \\
+			-1 & \text{if } e(k) < 0
+		\end{cases}
+		\label{eq:sgn_control}
+	\end{equation}
 
-where $\dot{r}(k) = r(k+1) - r(k)$ is the discrete-time derivative of the reference trajectory. This tracking equation describes the discrete-time state variable trajectory of the designed system.
-
-\subsection{Reference Trajectory Derivative}
-
-The discrete-time derivative (or change) of the reference trajectory is defined as:
-
-\begin{equation}
-	\Delta r(k) = r(k+1) - r(k)
-	\label{eq:delta_r}
-\end{equation}
-
-where $\Delta r(k)$ represents the discrete-time derivative of the reference trajectory between consecutive time steps $k$ and $k+1$.
-
-\subsection{Tracking Equation (Equation 10)}
-
-The state equation can be represented in the equivalent deployed form as:
-
-\begin{equation}
-	x(k+1) = x(k) - \beta \text{sgn}(x(k) - r(k)) + \Delta r(k)
-	\label{eq:tracking_equation}
-\end{equation}
-
-where $\Delta r(k) = r(k+1) - r(k)$ is defined in Equation (\ref{eq:delta_r}). This equation describes the discrete-time state variable trajectory of the designed system, showing how the state evolves to track the reference trajectory.
-
-\subsection{Signum Function for Tracking Error (Equation 11)}
-
-The signum activation function applied to the tracking error in the deployed form is:
-
-\begin{equation}
-	\text{sgn}(x(k) - r(k)) = \begin{cases}
-		1  & \text{if } x(k) > r(k) \\
-		0  & \text{if } x(k) = r(k) \\
-		-1 & \text{if } x(k) < r(k)
-	\end{cases}
-	\label{eq:sgn_tracking_error}
-\end{equation}
-
-This function provides the corrective action: when the state $x(k)$ exceeds the reference $r(k)$, the function outputs 1, causing the control to decrease the state; conversely, when the state is below the reference, it outputs $-1$, causing the control to increase the state. When they are equal, the function outputs 0, indicating no corrective action is needed at that instant.
+	\centering and
+	\begin{equation}
+		e(k) = x(k) - r(k)
+	\end{equation}
+\end{definition}
