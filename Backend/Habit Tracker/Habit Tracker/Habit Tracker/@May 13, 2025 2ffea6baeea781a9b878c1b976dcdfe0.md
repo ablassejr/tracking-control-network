@@ -1,9 +1,0 @@
-# @May 13, 2025
-
-Deep work 4h: No
-Journal: No
-Meditation: No
-Progress : 0%
-Read 10p: No
-Running 30min: No
-Workout: No
