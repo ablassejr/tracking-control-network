@@ -1,6 +1,8 @@
 #include "cxxplot/window.hpp"
+#include "downsample.h"
 #include "state_space.h"
 #include <Eigen/Dense>
+#include <chrono>
 #include <cxxplot/cxxplot>
 #include <fstream>
 #include <vector>
@@ -35,24 +37,39 @@ int main(int argc, char *argv[]) {
     stateConditions.stateMatrix(1, 0) = 0.0;
 
     // Run the simulation
+    auto start = std::chrono::high_resolution_clock::now();
     systemFunction(settings, stateConditions, internalConditions);
+    auto end = std::chrono::high_resolution_clock::now();
 
     for (auto state : stateConditions.stateMatrix.colwise()) {
       velStateVector.push_back(state(0));
       disStateVector.push_back(state(1));
     }
 
-    auto vel =
-        cxxplot::plot(timeVector, velStateVector, window_title_ = "Velocity",
-                      show_legend_ = true, name_ = "State x(k)",
-                      xlabel_ = "Time (s)", ylabel_ = "Velocity");
-    vel.add_graph(timeVector, velRefVector, name_ = "Reference r(k)");
+    std::vector<double> tVel, velDs, tVelRef, velRefDs;
+    downsample(timeVector, velStateVector, tVel, velDs);
+    downsample(timeVector, velRefVector, tVelRef, velRefDs);
 
-    auto dis =
-        cxxplot::plot(timeVector, disStateVector, window_title_ = "Distance",
-                      show_legend_ = true, name_ = "State x(k)",
-                      xlabel_ = "Time (s)", ylabel_ = "Distance");
-    dis.add_graph(timeVector, disRefVector, name_ = "Reference r(k)");
+    std::vector<double> tDis, disDs, tDisRef, disRefDs;
+    downsample(timeVector, disStateVector, tDis, disDs);
+    downsample(timeVector, disRefVector, tDisRef, disRefDs);
+
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::ofstream outFile("fig2a_cpp_output.log");
+    outFile << "Execution time: "
+            << static_cast<double>(duration.count()) / 1000000 << " seconds"
+            << std::endl;
+
+    auto vel = cxxplot::plot(tVel, velDs, window_title_ = "Velocity",
+                             show_legend_ = true, name_ = "x1",
+                             xlabel_ = "Time (s)", ylabel_ = "x1, r1");
+    vel.add_graph(tVelRef, velRefDs, name_ = "r1");
+
+    auto dis = cxxplot::plot(tDis, disDs, window_title_ = "Distance",
+                             show_legend_ = true, name_ = "x2",
+                             xlabel_ = "Time (s)", ylabel_ = "x2, r2");
+    dis.add_graph(tDisRef, disRefDs, name_ = "r2");
 
     return 0;
   });
