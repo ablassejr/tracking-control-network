@@ -26,8 +26,8 @@ target_compile_options(cxxplot PRIVATE -w)
 add_executable(fig2a fig2a.cpp state_space.cpp)
 target_link_libraries(fig2a PUBLIC eigen PRIVATE cxxplot::cxxplot)
 
-add_executable(Fig2b Fig2b.cpp state_space.cpp)
-target_link_libraries(Fig2b PUBLIC eigen PRIVATE cxxplot::cxxplot)
+add_executable(fig2b fig2b.cpp state_space.cpp)
+target_link_libraries(fig2b PUBLIC eigen PRIVATE cxxplot::cxxplot)
 
-add_executable(Fig2c Fig2c.cpp state_space.cpp)
-target_link_libraries(Fig2c PUBLIC eigen PRIVATE cxxplot::cxxplot)
+add_executable(fig2c fig2c.cpp state_space.cpp)
+target_link_libraries(fig2c PUBLIC eigen PRIVATE cxxplot::cxxplot)
