@@ -1,7 +1,10 @@
-\subsubsection*{\centering Perturbed Tracking Equation}
-
-The mathematical representation of the adversarially perturbed system can be expressed, using equation~(\ref{systemModel}) as follows:
-\begin{equation}
-	x(k+1) = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) u(k)                      \bigr] + I(k)
-\end{equation}
-where $I(k)$ represents the adversarial \textit{intrusion} at time step $k$.
+\begin{definition}
+	Adversarially Perturbed Tracking State Equation
+	\begin{equation}
+		\begin{aligned}
+			 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) u(k) \bigr] + I(k) \\
+			 & \text{where:}                                                                     \\
+			 & I(k) \sim \mathcal N(0, \sigma^2 \mathcal Id_n)
+		\end{aligned}
+	\end{equation}
+\end{definition}
