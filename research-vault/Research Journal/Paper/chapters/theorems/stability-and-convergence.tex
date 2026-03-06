@@ -3,7 +3,7 @@
 
 \begin{theorem}\label{thm:convergence}
 	Starting from any finite initial error $e(1) = e_1$ with $|e_{1,i}|<\infty$,
-	the tracking error $e_i(k)$ governed by~(\ref{eq:error_dynamics}) converges to
+	the tracking error $e_i(k)$ governed by~\autoref{eq:error_dynamics} converges to
 	$e_i^{*} = 0$ in at most
 	\begin{equation}
 		K_i = \left\lceil\frac{|e_{1,i}|}{\beta_i}\right\rceil
@@ -14,7 +14,7 @@
 \end{theorem}
 
 \begin{proof}
-	Consider the $i$-th component of~(\ref{eq:error_dynamics}):
+	Consider the $i$-th component of~\autoref{eq:error_dynamics}:
 	\begin{equation}
 		e_i(k+1) = e_i(k) - \beta_i\,\text{sgn}(e_i(k)).
 		\label{eq:scalar_error_dynamics}
@@ -27,7 +27,7 @@
 		 & = -2\beta_i\,|e_i(k)| + \beta_i^{2}.
 		\label{eq:lyapunov_delta}
 	\end{align}
-	When $|e_i(k)| \geq \beta_i$, equation~(\ref{eq:lyapunov_delta}) gives
+	When $|e_i(k)| \geq \beta_i$, equation~\autoref{eq:lyapunov_delta} gives
 	$V_i(k+1)-V_i(k) \leq -\beta_i^{2} < 0$, so $V_i$ decreases strictly.
 	Because $|e_i(k)|$ is reduced by $\beta_i$ at each such step, $|e_i(k)|$
 	reaches zero in at most $K_i = \lceil|e_{1,i}|/\beta_i\rceil$ steps.
