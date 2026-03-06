@@ -1,7 +1,7 @@
 % =============================================================================
 % Appendix: Code Migration — MATLAB to C++
 % =============================================================================
-
+\newpage
 \section{Code Migration: MATLAB to C++}
 \label{sec:migration}
 
@@ -9,7 +9,7 @@
 \label{subsec:migration-motivation}
 
 The original tracking control simulation was implemented as a collection of
-MATLAB scripts (\texttt{Fig2a.m}--\texttt{Fig2c.m}, \texttt{Fig5.m}--\texttt{Fig5b.m}),
+MATLAB scripts (\texttt{Fig2a.m}--\texttt{Fig2c.m}),
 following the reference implementation in~\cite{tymoshchuk2024tracking}.
 While MATLAB provides rapid prototyping through built-in matrix operations and
 plotting, several factors motivated a migration to C++:
@@ -42,21 +42,21 @@ groups related data and separates concerns across compilation units.
 	\label{tab:data-layout}
 	\begin{tabular}{lll}
 		\toprule
-		MATLAB Variable                        & C++ Equivalent                                             & Type                                \\
+		MATLAB Variable                        & C++ Equivalent                                       & Type                                \\
 		\midrule
-		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                                       & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                                   & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{velocityErrorMatrix}, \texttt{distanceErrorMatrix} & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                                    & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{alpha}, \texttt{betta}, \ldots & \texttt{InternalConditions}                                & \texttt{struct}                     \\
-		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                                       & \texttt{struct}                     \\
+		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                                 & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                             & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{x1ErrorMatrix}, \texttt{x2ErrorMatrix}       & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                              & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{alpha}, \texttt{beta}, \ldots  & \texttt{InternalConditions}                          & \texttt{struct}                     \\
+		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                                 & \texttt{struct}                     \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
 The key design choice is consolidating per-variable 1-D arrays into
-$2 \times N$ Eigen matrices. Row~0 stores the velocity (conversion) state
-$x_1$, and row~1 stores the distance (temperature) state $x_2$. This layout
+$2 \times N$ Eigen matrices. Row~0 stores the conversion state
+$x_1$, and row~1 stores the temperature state $x_2$. This layout
 preserves temporal locality: accessing both states at time step $k$ requires
 reading two adjacent memory locations in the same column.
 
@@ -79,11 +79,16 @@ external dependencies:
 	\end{tabular}
 \end{table}
 
-\subsection{Implementation}
+The build system produces three executables from separate translation units:
+\texttt{fig2a}, \texttt{fig2b}, \texttt{fig2c} (CSTR system). Each executable contains
+its own \texttt{main()} function, with shared simulation logic factored into
+\texttt{state\_space.cpp}.
+
+\subsection{Implementation --- CSTR System (Fig.~2)}
 \label{subsec:migration-implementation}
 
 This section presents side-by-side comparisons of the MATLAB and C++
-implementations for each major component of the simulation.
+implementations for each major component of the CSTR simulation.
 
 \subsubsection{System Dynamics}
 \label{subsubsec:dynamics}
@@ -93,7 +98,7 @@ Since the control gain $g_1 = 0$, the conversion state evolves under
 open-loop natural dynamics. The temperature state uses feedback-linearizing
 sliding-mode control.
 
-\paragraph{Velocity (conversion) state --- open loop.}
+\paragraph{Conversion state $x_1$ --- open loop.}
 The natural dynamics follow the discretized CSTR model:
 \begin{equation}
 	x_1(k{+}1) = x_1(k) + \tau\!\left[
@@ -104,28 +109,28 @@ The natural dynamics follow the discretized CSTR model:
 \end{equation}
 
 \noindent
-\textbf{MATLAB} (\texttt{Fig2b.m}, line~29):
+\textbf{MATLAB} (\texttt{Fig2a.m}, line~34):
 \begin{lstlisting}[style=matlab]
 f1(i) = x(i) + dt*(-alpha*x(i) + Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
 \end{lstlisting}
 
 \noindent
-\textbf{C++} (\texttt{state\_space.cpp}, lines~24--29):
+\textbf{C++} (\texttt{state\_space.cpp}, lines~23--28):
 \begin{lstlisting}[style=cpp]
 stateConditions.stateMatrix(0, i) =
-    prevVelocity +
+    *prevX1 +
     settings.tau *
-        (-internalConditions.alpha * prevVelocity +
-         internalConditions.D * (1 - prevVelocity) *
-             exp(prevDistance / (1 + prevDistance / internalConditions.gamma)));
+        (-internalConditions.alpha * *prevX1 +
+         internalConditions.Da * (1 - *prevX1) *
+             exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
 \end{lstlisting}
 
 The C++ version accesses parameters through the \texttt{InternalConditions}
-struct rather than workspace variables, and uses cached local variables
-(\texttt{prevVelocity}, \texttt{prevDistance}) to avoid repeated matrix
+struct rather than workspace variables, and uses cached pointer variables
+(\texttt{prevX1}, \texttt{prevX2}) to avoid repeated matrix
 indexing within the inner loop.
 
-\paragraph{Distance (temperature) state --- closed loop.}
+\paragraph{Temperature state $x_2$ --- closed loop.}
 The feedback-linearizing control law cancels the nonlinear dynamics $f_2(x)$,
 yielding the simplified closed-loop update:
 \begin{equation}
@@ -138,19 +143,18 @@ where $e_2(k) = x_2(k) - r_2(k)$ is the tracking error and
 $\Delta r_2(k) = r_2(k{+}1) - r_2(k)$ is the reference change.
 
 \noindent
-\textbf{MATLAB} (\texttt{Fig2a.m}, line~62):
+\textbf{MATLAB} (\texttt{Fig2a.m}, line~67):
 \begin{lstlisting}[style=matlab]
 y(i+1) = y(i) + dt*(-betta*S(i) + r2(i+1) - r2(i));
 \end{lstlisting}
 
 \noindent
-\textbf{C++} (\texttt{state\_space.cpp}, lines~34--38):
+\textbf{C++} (\texttt{state\_space.cpp}, lines~31--34):
 \begin{lstlisting}[style=cpp]
-double deltaR2 = stateConditions.deltaReference(1, i - 1);
+deltaR2 = &stateConditions.deltaReference(1, i - 1);
 stateConditions.stateMatrix(1, i) =
-    prevDistance +
-    settings.tau *
-        (-internalConditions.beta * sgn(e2) + deltaR2);
+    *prevX2 +
+    settings.tau * (-internalConditions.beta * sgn(e2) + *deltaR2);
 \end{lstlisting}
 
 A notable difference is that the C++ implementation pre-computes the
@@ -232,16 +236,20 @@ the \texttt{cxxplot} library from the US Naval Research Laboratory. The
 library provides interactive Qt-based plot windows with a named-parameter API:
 
 \begin{lstlisting}[style=cpp]
-auto vel = cxxplot::plot(timeVector, velStateVector,
-    window_title_ = "Velocity",
+auto x1Plot = cxxplot::plot(tX1, x1Ds,
+    window_title_ = "Conversion",
     show_legend_  = true,
-    name_         = "State x(k)",
+    name_         = "x1",
     xlabel_       = "Time (s)",
-    ylabel_       = "Velocity");
-vel.add_graph(timeVector, velRefVector, name_ = "Reference r(k)");
+    ylabel_       = "x1, r1");
+x1Plot.add_graph(tX1Ref, x1RefDs, name_ = "r1");
 \end{lstlisting}
 
-Table~\ref{tab:plot-mapping} maps the MATLAB plotting calls to their C++
+To handle the 45{,}000 data points efficiently, a min/max envelope
+downsampling utility reduces the data to approximately 2{,}000 points
+while preserving visual fidelity of peaks and transients.
+
+\autoref{tab:plot-mapping} maps the MATLAB plotting calls to their C++
 equivalents.
 
 \begin{table}[htbp]
@@ -254,7 +262,7 @@ equivalents.
 		\midrule
 		\texttt{plot(t, x, 'k-')}       & \texttt{cxxplot::plot(t, x)}                          \\
 		\texttt{xlabel('Time (s)')}     & \texttt{xlabel\_ = "Time (s)"}                        \\
-		\texttt{ylabel('x\_1, r\_1')}   & \texttt{ylabel\_ = "Velocity"}                        \\
+		\texttt{ylabel('x\_1, r\_1')}   & \texttt{ylabel\_ = "x1, r1"}                          \\
 		\texttt{legend('x\_1', 'r\_1')} & \texttt{show\_legend\_ = true}, \texttt{name\_ = ...} \\
 		\texttt{subplot(2,1,k)}         & separate \texttt{cxxplot::plot()} call per window     \\
 		\bottomrule
@@ -266,54 +274,58 @@ equivalents.
 
 The C++ simulation includes instrumentation via
 \texttt{std::chrono::high\_resolution\_clock}. The MATLAB simulation uses
-\texttt{tic}/\texttt{toc}. Figure~\ref{fig:exec-time} compares execution
-times across implementations.
+\texttt{tic}/\texttt{toc}. Both implementations were executed 20 times and
+averaged. \autoref{fig:fig2-exec-time}
+compares execution times across implementations.
 
-% --- Placeholder for execution time comparison ---
 \begin{figure}[htbp]
 	\centering
-	% Uncomment and replace with actual figure when data is available:
-	% \includegraphics[width=0.6\textwidth]{figures/execution_time_comparison}
-	\includesvg[width=1\textwidth]{"/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/state_sim_avg_times.svg"}
-	\caption{Execution time comparison between MATLAB and C++
-		implementations of the CSTR tracking control simulation
-		($n = 45{,}000$ steps, $\tau = 0.001$\,s).}
-	\label{fig:exec-time}
+	\includesvg[width=\textwidth]{fig2_exec_time_comparison}
+	\caption{Execution time comparison for the CSTR tracking control
+		simulation ($n = 45{,}000$ steps, $\tau = 0.001$\,s).
+		Average over 20 runs.}
+	\label{fig:fig2-exec-time}
 \end{figure}
 
-Figure~\ref{fig:plot-comparison} presents side-by-side output from both
+Note that the MATLAB averages include a first-run JIT compilation overhead,
+which is representative of interactive usage. Excluding the warmup run, the
+steady-state MATLAB time is approximately 0.005\,s, reducing the speedup
+factor to approximately 4$\times$. The JIT overhead is a real cost in the
+MATLAB execution model and is therefore included in the reported averages.
+
+\subsubsection{Output Comparison --- CSTR System}
+
+\autoref{fig:fig2-plot-comparison} presents side-by-side output from both
 implementations to verify numerical equivalence.
 
-% --- Placeholder for plot comparison ---
 \begin{figure}[htbp]
 	\centering
+	\begin{subfigure}[b]{0.65\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_tracking}
+		\caption{MATLAB (\texttt{Fig2a.m}).}
+		\label{fig:fig2-matlab-tracking}
+	\end{subfigure}
+	\par\vspace{0.8em}
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
-		% \includegraphics[width=\textwidth]{figures/matlab_tracking}
-		\fbox{\parbox{\textwidth}{\centering\vspace{3cm}
-				\textit{MATLAB tracking plot} \\
-				$x_1, x_2$ vs.\ $r_1, r_2$
-				\vspace{3cm}}}
-		\caption{MATLAB (\texttt{Fig2a.m}).}
-		\label{fig:matlab-tracking}
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1}
+		\caption{C++ (\texttt{fig2a}, conversion $x_1$).}
+		\label{fig:fig2-cpp-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.48\textwidth}
 		\centering
-		% \includegraphics[width=\textwidth]{figures/cpp_tracking}
-		\fbox{\parbox{\textwidth}{\centering\vspace{3cm}
-				\textit{C++ tracking plot} \\
-				$x_1, x_2$ vs.\ $r_1, r_2$
-				\vspace{3cm}}}
-		\caption{C++ (\texttt{simulation.cpp}).}
-		\label{fig:cpp-tracking}
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2}
+		\caption{C++ (\texttt{fig2a}, temperature $x_2$).}
+		\label{fig:fig2-cpp-x2}
 	\end{subfigure}
-	\caption{Side-by-side comparison of state trajectories from the MATLAB
-		reference implementation and the C++ port. Both simulations use
-		identical parameters ($\alpha = 1$, $\beta = 100$,
-		$\lambda = 0.3$, $\gamma = 20$, $D_a = 0.072$) and initial
-		conditions $x(0) = \mathbf{0}$.}
-	\label{fig:plot-comparison}
+	\caption{Comparison of CSTR state trajectories from the MATLAB reference
+		implementation and the C++ port. Both simulations use identical
+		parameters ($\alpha = 1$, $\beta = 100$, $\lambda = 0.3$,
+		$\gamma = 20$, $D_a = 0.072$) and initial conditions
+		$x(0) = \mathbf{0}$.}
+	\label{fig:fig2-plot-comparison}
 \end{figure}
 
 \subsection{Remaining Work}
@@ -322,18 +334,10 @@ implementations to verify numerical equivalence.
 The following components have not yet been migrated from MATLAB to C++:
 
 \begin{enumerate}
-	\item \textbf{Fig5 --- Mechanical sinusoidal tracking system.}
-	      A second-order system with position and velocity states tracking
-	      $r(t) = 0.08\sin(\pi t / 2)$, using a cost-based sliding-mode
-	      controller with white noise perturbation.
 	\item \textbf{Adversarial attack simulations.}
 	      PGD attacks on the temperature measurement channel
-	      (\texttt{temp\_pgd\_attack.m}) and neural network approximation-based
-	      attacks (\texttt{temp\_pgd\_attack.py} using IBM ART).
-	\item \textbf{Control signal visualization.}
-	      MATLAB's \texttt{Fig2b.m} and \texttt{Fig2c.m} plot the control
-	      input $u(t)$ and tracking errors $e_1(t)$, $e_2(t)$; these are
-	      computed in C++ but not yet plotted.
+	      and neural network approximation-based attacks (planned
+	      implementations using IBM ART).
 	\item \textbf{Test infrastructure.}
 	      Numerical validation against MATLAB output via CSV export and
 	      tolerance-based comparison, as recommended in the migration
