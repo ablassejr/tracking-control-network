@@ -14,8 +14,8 @@ int main(int argc, char *argv[]) {
     SimSettings settings;
     StateConditions stateConditions(settings.timeSteps);
     InternalConditions internalConditions;
-    std::vector<double> timeVector, velStateVector, disStateVector,
-        velRefVector, disRefVector;
+    std::vector<double> timeVector, x1StateVector, x2StateVector,
+        x1RefVector, x2RefVector;
 
     // Initialize reference trajectories and time vector
     for (int i = 0; i < settings.timeSteps; i++) {
@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
           i > 15000 && i < 30000 ? 0.7646 : 0.4472;
       stateConditions.referenceMatrix(1, i) =
           i > 15000 && i < 30000 ? 4.7052 : 2.7520;
-      velRefVector.push_back(i > 15000 && i < 30000 ? 0.7646 : 0.4472);
-      disRefVector.push_back(i > 15000 && i < 30000 ? 4.7052 : 2.7520);
+      x1RefVector.push_back(i > 15000 && i < 30000 ? 0.7646 : 0.4472);
+      x2RefVector.push_back(i > 15000 && i < 30000 ? 4.7052 : 2.7520);
     }
 
     // Calculate delta reference for error calculations
@@ -41,35 +41,35 @@ int main(int argc, char *argv[]) {
     systemFunction(settings, stateConditions, internalConditions);
     auto end = std::chrono::high_resolution_clock::now();
 
-    for (auto state : stateConditions.stateMatrix.colwise()) {
-      velStateVector.push_back(state(0));
-      disStateVector.push_back(state(1));
-    }
-
-    std::vector<double> tVel, velDs, tVelRef, velRefDs;
-    downsample(timeVector, velStateVector, tVel, velDs);
-    downsample(timeVector, velRefVector, tVelRef, velRefDs);
-
-    std::vector<double> tDis, disDs, tDisRef, disRefDs;
-    downsample(timeVector, disStateVector, tDis, disDs);
-    downsample(timeVector, disRefVector, tDisRef, disRefDs);
-
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-    std::ofstream outFile("fig2a_cpp_output.log");
+    std::ofstream outFile("cpp_output.log");
     outFile << "Execution time: "
             << static_cast<double>(duration.count()) / 1000000 << " seconds"
             << std::endl;
 
-    auto vel = cxxplot::plot(tVel, velDs, window_title_ = "Velocity",
-                             show_legend_ = true, name_ = "x1",
-                             xlabel_ = "Time (s)", ylabel_ = "x1, r1");
-    vel.add_graph(tVelRef, velRefDs, name_ = "r1");
+    for (auto state : stateConditions.stateMatrix.colwise()) {
+      x1StateVector.push_back(state(0));
+      x2StateVector.push_back(state(1));
+    }
 
-    auto dis = cxxplot::plot(tDis, disDs, window_title_ = "Distance",
-                             show_legend_ = true, name_ = "x2",
-                             xlabel_ = "Time (s)", ylabel_ = "x2, r2");
-    dis.add_graph(tDisRef, disRefDs, name_ = "r2");
+    std::vector<double> tX1, x1Ds, tX1Ref, x1RefDs;
+    downsample(timeVector, x1StateVector, tX1, x1Ds);
+    downsample(timeVector, x1RefVector, tX1Ref, x1RefDs);
+
+    std::vector<double> tX2, x2Ds, tX2Ref, x2RefDs;
+    downsample(timeVector, x2StateVector, tX2, x2Ds);
+    downsample(timeVector, x2RefVector, tX2Ref, x2RefDs);
+
+    auto x1Plot = cxxplot::plot(tX1, x1Ds, window_title_ = "Conversion",
+                                show_legend_ = true, name_ = "x1",
+                                xlabel_ = "Time (s)", ylabel_ = "x1, r1");
+    x1Plot.add_graph(tX1Ref, x1RefDs, name_ = "r1");
+
+    auto x2Plot = cxxplot::plot(tX2, x2Ds, window_title_ = "Temperature",
+                                show_legend_ = true, name_ = "x2",
+                                xlabel_ = "Time (s)", ylabel_ = "x2, r2");
+    x2Plot.add_graph(tX2Ref, x2RefDs, name_ = "r2");
 
     return 0;
   });

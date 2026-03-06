@@ -31,3 +31,4 @@ target_link_libraries(fig2b PUBLIC eigen PRIVATE cxxplot::cxxplot)
 
 add_executable(fig2c fig2c.cpp state_space.cpp)
 target_link_libraries(fig2c PUBLIC eigen PRIVATE cxxplot::cxxplot)
+

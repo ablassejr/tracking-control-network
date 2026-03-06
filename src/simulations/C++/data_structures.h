@@ -8,16 +8,16 @@ struct StateConditions {
   StateMatrix referenceMatrix;
   Vector2d errorMatrix;
   Vector2d controlMatrix;
-  StateMatrix velocityErrorMatrix;
-  StateMatrix distanceErrorMatrix;
+  StateMatrix x1ErrorMatrix;
+  StateMatrix x2ErrorMatrix;
   StateMatrix deltaReference;
   double time = 0;
 
   explicit StateConditions(int timeSteps)
       : stateMatrix(StateMatrix::Zero(2, timeSteps)),
         referenceMatrix(StateMatrix::Zero(2, timeSteps)),
-        velocityErrorMatrix(StateMatrix::Zero(2, timeSteps)),
-        distanceErrorMatrix(StateMatrix::Zero(2, timeSteps)),
+        x1ErrorMatrix(StateMatrix::Zero(2, timeSteps)),
+        x2ErrorMatrix(StateMatrix::Zero(2, timeSteps)),
         deltaReference(StateMatrix::Zero(2, timeSteps - 1)) {}
 };
 
@@ -27,7 +27,7 @@ struct InternalConditions {
   double lambda = 0.3;
   double gamma = 20;
   double B = 1.0;
-  double D = 0.072;
+  double Da = 0.072;
   Vector2d g{0, lambda};
 };
 

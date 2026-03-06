@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
       double f2 =
           y + settings.tau *
                   (-internalConditions.alpha * y +
-                   internalConditions.B * internalConditions.D * (1 - x) *
+                   internalConditions.B * internalConditions.Da * (1 - x) *
                        std::exp(y / (1 + y / internalConditions.gamma)));
       double e2 = y - r2i;
       double S = (e2 > 0) ? 1.0 : (e2 < 0 ? -1.0 : 0.0);
