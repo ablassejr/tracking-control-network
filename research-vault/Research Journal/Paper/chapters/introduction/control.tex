@@ -1,7 +1,11 @@
 \subsubsection*{\centering Control Function}
 
+The MATLAB simulation from \cite{tymoshchuk2024tracking}
+is designed to simulate the tracking control neural network. For that
+purpose, it is necessary to define the control function, \control{$k$}, that will
+be used to control the system~\autoref{systemModel}.
 \begin{definition}
-	For the purpose of finding a solution to the tracking control problem, the control function \control{$k$} has been designed~\textsubscript{\cite{tymoshchuk2024tracking}}:
+	Control Function \textsubscript{\cite{tymoshchuk2024tracking}}
 	\begin{equation}
 		u(k) = \begin{cases}
 			g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \text{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
@@ -10,7 +14,7 @@
 		\label{eq:control_function}
 	\end{equation}
 
-	such that, given a reference trajectory $r(k)$, the system~(\ref{systemModel}) seeks to minimize the closed-loop error dynamics:
+	such that, given a reference trajectory $r(k)$, the system~\autoref{systemModel} seeks to minimize the closed-loop error dynamics:
 
 	\input{chapters/introduction/error.tex}
 

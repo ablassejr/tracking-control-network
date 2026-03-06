@@ -7,6 +7,9 @@
 
 \newtheorem{definition}{Definition}
 \subsubsection*{\centering System Model}
+The tracking control neural network, as defined in \cite{tymoshchuk2024tracking},
+is designed to control a known affine discrete-time nonlinear system.
+The system is described by the following equation:
 \begin{definition} Affine-In-The-Inputs Discrete-Time Nonlinear System\textsubscript{\cite{tymoshchuk2024tracking}}\label{eq:dynamic}
 	\input{chapters/introduction/sysModel.tex} % Description of the system by the equation
 	\quad where:
@@ -14,3 +17,4 @@
 \end{definition}
 \input{chapters/introduction/control.tex} % Description of the control
 \input{chapters/introduction/closed-loop.tex} % Description of the closed loop dynamics
+\input{./chapters/diagrams/clean-system.tex}
