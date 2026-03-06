@@ -3,9 +3,9 @@ tags: []
 parent: ""
 collections:
     - Notes
-$version: 15
+$version: 14
 $libraryID: 1
-$itemKey: H5AHRPGQ
+$itemKey: IG8SQQM5
 
 ---
 ## Parameters
@@ -18,11 +18,9 @@ $e(k+1)=e(k)-\beta\,\mathrm{sgn}(e(k)), \qquad \beta=\mathrm{diag}(\beta_1,\ldot
 
 Here:
 
-*   $e(k) = x(k) - r(k)$  is the **tracking error** (state minus reference).
-
-*   $\mathrm{sgn}(\cdot)$  is the **signum activation** applied componentwise.
-
-*   $\beta$  is a **diagonal gain matrix** whose diagonal entries are called **learning-rate parameters** in the paper.
+*   $e(k) = x(k) - r(k)$ is the **tracking error** (state minus reference).
+*   $\mathrm{sgn}(\cdot)$ is the **signum activation** applied componentwise.
+*   $\beta$ is a **diagonal gain matrix** whose diagonal entries are called **learning-rate parameters** in the paper.
 
 So, $\beta$ is not a "matrix you learn" via backprop; it is a **designed (chosen) set of per-state step sizes** that determines how aggressively the controller drives each error component toward zero.
 
@@ -36,8 +34,7 @@ Because the update is intended to be **coordinatewise**:
 
 $e_i(k+1) = e_i(k) - \beta_i\,\mathrm{sgn}(e_i(k))$
 
-*   Each state/error channel $e_i$ gets its **own** gain $\beta_i$ .
-
+*   Each state/error channel$e_i$gets its **own** gain$\beta_i$.
 *   No cross-coupling is introduced at the error-update level (which helps keep the analysis and implementation simple and predictable—important for your "moderate complexity" goal).
 
 ***
@@ -83,28 +80,21 @@ Your project's core aim is to analyze and simulate a **defended tracking-control
 In that context, $\beta$ is one of the **main tuning knobs** that trades off:
 
 *   **Responsiveness** (how quickly you "correct" tracking error),
-
 *   vs.
-
-*   **Attack/noise sensitivity** (how strongly injected disturbances in $x(k)$ or $r(k)$ immediately drive the sign-based update),
-
+*   **Attack/noise sensitivity** (how strongly injected disturbances in$x(k)$or$r(k)$immediately drive the sign-based update),
 *   vs.
-
 *   **Implementation robustness** (larger steps can amplify quantization effects / induce chattering).
 
 ### Practical "defense-relevant" interpretation
 
 *   If an attacker injects spikes/perturbations into measured state or reference, the sign term can flip rapidly.
-
-*   A **large** $\beta_i$ makes those flips produce **large control corrections** (potentially amplifying the attacker's effect).
-
-*   A **smaller** $\beta_i$ limits the per-step correction magnitude, which can act like a **rate limiter** on the error dynamics—often desirable under adversarial perturbations.
+*   A **large**$\beta_i$makes those flips produce **large control corrections** (potentially amplifying the attacker's effect).
+*   A **smaller**$\beta_i$limits the per-step correction magnitude, which can act like a **rate limiter** on the error dynamics—often desirable under adversarial perturbations.
 
 Because $\beta$ is **diagonal**, you can also do **channel-wise hardening**:
 
-*   Reduce $\beta_i$ on channels you believe are more exposed (e.g., compromised sensors),
-
-*   Keep larger $\beta_j$ on trusted channels to preserve performance.
+*   Reduce$\beta_i$on channels you believe are more exposed (e.g., compromised sensors),
+*   Keep larger$\beta_j$on trusted channels to preserve performance.
 
 ***
 
