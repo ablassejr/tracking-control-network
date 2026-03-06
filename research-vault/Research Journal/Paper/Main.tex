@@ -1,5 +1,6 @@
 %! Tex Root=**/Main.tex
 \documentclass{article}
+\usepackage[margin=1in]{geometry}
 % ---------------------------------------------------------------------------
 % TikZ Libraries
 % ---------------------------------------------------------------------------
@@ -14,6 +15,7 @@
 \usepackage{relsize}
 \usepackage{amsmath}
 \usepackage{mathtools}
+\usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{witharrows}
@@ -79,14 +81,14 @@
 % =============================================================================
 
 \section{Abstract}
-The simulation of a modified tracking control neural network for known affine
-discrete-time nonlinear systems\textsubscript{\cite{tymoshchuk2024tracking}}
-will be ported to C++ and optimized. A previous simulation\textsubscript{\cite{tymoshchuk2024tracking}}
-of this system was designed in matlab. C++ gives lower level control to the
-programmer, allowing for more granular and programmatic optimizations to be performed.
-The modification to the tracking control network will to simulate adversarial attacks.
-A modified system equation that seeks to minimize the impact of this style of a
-dversarial attack will be designed and simulated.
+This paper will investigate the simulation of an adversarial attack on the
+tracking control neural network for known affine discrete-time nonlinear
+system given by \cite{tymoshchuk2024tracking}. Additionally, the simulation
+will be ported to C++ and optimized. The previous simulation \textsubscript{\cite{tymoshchuk2024tracking}},
+of the system was designed in MATLAB. This paper proposes that C++ is the
+more optimal language for these simulations. C++ gives greater control of
+the hardware resources involved in the computation to the programmer, allowing
+for more granular optimizations to be performed.
 \section{Introduction}
 \input{chapters/introduction/intro.tex}
 \input{chapters/attacks/adversarial-attacks.tex}
