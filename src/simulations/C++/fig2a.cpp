@@ -5,6 +5,7 @@
 #include <chrono>
 #include <cxxplot/cxxplot>
 #include <fstream>
+#include <iomanip>
 #include <vector>
 
 using namespace cxxplot::named_parameters;
@@ -18,7 +19,11 @@ int main(int argc, char *argv[]) {
         x1RefVector, x2RefVector;
 
     // Initialize reference trajectories and time vector
-    for (int i = 0; i < settings.timeSteps; i++) {
+    // Index 0 stays at zero (matching MATLAB's r1(1)=0, r2(1)=0)
+    timeVector.push_back(0.0);
+    x1RefVector.push_back(0.0);
+    x2RefVector.push_back(0.0);
+    for (int i = 1; i < settings.timeSteps; i++) {
       timeVector.push_back(i * settings.tau);
       stateConditions.referenceMatrix(0, i) =
           i > 15000 && i < 30000 ? 0.7646 : 0.4472;
@@ -47,6 +52,20 @@ int main(int argc, char *argv[]) {
     outFile << "Execution time: "
             << static_cast<double>(duration.count()) / 1000000 << " seconds"
             << std::endl;
+
+    std::ofstream csv("fig2a_cpp_output.csv");
+    csv << std::setprecision(15);
+    for (int i = 0; i < settings.timeSteps; i++) {
+      double t = i * settings.tau;
+      double e1 = stateConditions.stateMatrix(0, i) - stateConditions.referenceMatrix(0, i);
+      double e2 = stateConditions.stateMatrix(1, i) - stateConditions.referenceMatrix(1, i);
+      csv << t << ","
+          << stateConditions.stateMatrix(0, i) << ","
+          << stateConditions.stateMatrix(1, i) << ","
+          << stateConditions.referenceMatrix(0, i) << ","
+          << stateConditions.referenceMatrix(1, i) << ","
+          << e1 << "," << e2 << "\n";
+    }
 
     for (auto state : stateConditions.stateMatrix.colwise()) {
       x1StateVector.push_back(state(0));

@@ -1,7 +1,37 @@
 #include "Eigen/Core"
+#include <cassert>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
 using Eigen::Vector2d, Eigen::Vector;
 
 using StateMatrix = Eigen::Matrix<double, 2, Eigen::Dynamic>;
+
+inline Eigen::VectorXd loadCSV(const std::string& filepath) {
+  std::ifstream file(filepath);
+  assert(file.is_open() && "Failed to open CSV file");
+  std::vector<double> values;
+  std::string line;
+  while (std::getline(file, line)) {
+    std::istringstream ss(line);
+    std::string token;
+    while (std::getline(ss, token, ','))
+      values.push_back(std::stod(token));
+  }
+  Eigen::VectorXd result(values.size());
+  for (size_t i = 0; i < values.size(); ++i)
+    result(i) = values[i];
+  return result;
+}
+
+inline void results_validation(const std::string& matlab_csv,
+                               const Eigen::VectorXd& cpp_result,
+                               double tolerance = 1e-10) {
+  auto matlab_data = loadCSV(matlab_csv);
+  double max_error = (cpp_result - matlab_data).cwiseAbs().maxCoeff();
+  assert(max_error < tolerance && "C++ result diverges from MATLAB");
+}
 
 struct StateConditions {
   StateMatrix stateMatrix;
