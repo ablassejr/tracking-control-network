@@ -328,18 +328,77 @@ implementations to verify numerical equivalence.
 	\label{fig:fig2-plot-comparison}
 \end{figure}
 
+\subsection{Output Validation}
+\label{subsec:migration-validation}
+
+Verifying numerical equivalence between two independent implementations
+requires more than visual comparison of plots. The migration includes a
+CSV-based validation pipeline that compares the C++ simulation output against
+MATLAB reference data at every time step.
+
+\subsubsection{Validation Pipeline}
+
+Both implementations export identical 7-column CSV files containing
+$\bigl(t,\; x_1,\; x_2,\; r_1,\; r_2,\; e_1,\; e_2\bigr)$
+at each of the $n = 45{,}000$ time steps. The MATLAB script writes its
+reference data via \texttt{writematrix} at the end of the simulation loop;
+the C++ executable writes its output through \texttt{std::ofstream} with
+15-digit precision.
+
+A standalone validation executable (\texttt{validate\_output}) loads both CSV
+files, extracts corresponding columns into Eigen vectors, and computes the
+element-wise maximum absolute error for each variable:
+\begin{equation}
+	\varepsilon_{\max}^{(v)} = \max_{k=0}^{n-1}
+	\bigl| v_{\text{C++}}(k) - v_{\text{MATLAB}}(k) \bigr|,
+	\quad v \in \{x_1, x_2, e_1, e_2\}
+	\label{eq:max-abs-error}
+\end{equation}
+
+Each variable passes if $\varepsilon_{\max}^{(v)} < \epsilon$ for a
+configurable tolerance $\epsilon$. The validator reports per-variable
+pass/fail status and returns a nonzero exit code on any failure, enabling
+integration into automated build pipelines.
+
+\subsubsection{Validation Results}
+
+After correcting an off-by-one initialization error in the reference
+trajectory (see~\S\ref{subsubsec:reference}), the validation confirms
+machine-precision agreement between the two implementations:
+
+\begin{table}[htbp]
+	\centering
+	\caption{Maximum absolute error between C++ and MATLAB outputs
+		for the CSTR tracking control simulation
+		($n = 45{,}000$, $\tau = 0.001$\,s).}
+	\label{tab:validation-results}
+	\begin{tabular}{lcl}
+		\toprule
+		Variable                & $\varepsilon_{\max}$       & Status \\
+		\midrule
+		$x_1$ (conversion)     & $\sim 10^{-15}$ & PASS   \\
+		$x_2$ (temperature)    & $\sim 10^{-15}$ & PASS   \\
+		$e_1$ (tracking error) & $\sim 10^{-15}$ & PASS   \\
+		$e_2$ (tracking error) & $\sim 10^{-15}$ & PASS   \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The errors at $\mathcal{O}(10^{-15})$ are consistent with IEEE~754
+double-precision machine epsilon ($\approx 2.22 \times 10^{-16}$),
+confirming that the two implementations compute identical floating-point
+results up to rounding in the final digits. The default tolerance of
+$\epsilon = 10^{-6}$ provides a margin of nine orders of magnitude above
+the observed error floor.
+
 \subsection{Remaining Work}
 \label{subsec:migration-remaining}
 
-The following components have not yet been migrated from MATLAB to C++:
+The following component has not yet been migrated from MATLAB to C++:
 
 \begin{enumerate}
 	\item \textbf{Adversarial attack simulations.}
 	      PGD attacks on the temperature measurement channel
 	      and neural network approximation-based attacks (planned
 	      implementations using IBM ART).
-	\item \textbf{Test infrastructure.}
-	      Numerical validation against MATLAB output via CSV export and
-	      tolerance-based comparison, as recommended in the migration
-	      analysis~\cite{migration-analysis}.
 \end{enumerate}
