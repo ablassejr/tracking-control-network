@@ -95,6 +95,7 @@ axis([0 tmax -3 2.5])
 
 grid
 
+writematrix([t', e1', e2'], 'fig2c_reference.csv');
 clear all;
 
 

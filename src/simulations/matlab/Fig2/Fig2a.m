@@ -98,4 +98,6 @@ legend('x_2','r_2')
 xlabel('Time (s)')
 
 grid
+
+writematrix([t', x', y', r1', r2', e1', e2'], 'fig2a_reference.csv');
 clear all;

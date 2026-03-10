@@ -99,8 +99,9 @@ ylabel('u')
 xlabel('Time (s)')
 %axis([0.25 0.5 -55 30])
 axis([0.25 0.5 -350 400])
-grid 
- 
+grid
+
+writematrix([tt', u'], 'fig2b_reference.csv');
 clear all;
 
 
