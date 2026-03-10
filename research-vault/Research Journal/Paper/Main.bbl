@@ -3,11 +3,10 @@
 \bibitem{tymoshchuk2024tracking}
 P.~Tymoshchuk, ``A tracking control neural network for the known affine in the inputs discrete-time nonlinear systems,'' tech. rep., University of North Texas, 2024.
 
-\bibitem{Hajari2023}
-H.~Hajari, M.~Cesaire, L.~Schott, S.~Lamprier, and P.~Gallinari, ``Neural adversarial attacks with random noises,'' {\em International Journal on Artificial Intelligence Tools}, vol.~32, p.~22, August 2023.
+\bibitem{madry2019deeplearningmodelsresistant}
+A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu, ``Towards deep learning models resistant to adversarial attacks,'' 2019.
 
-\bibitem{migration-analysis}
-A.~Kingcaid-Ouedraogo, ``Analysis of methods of simulation in {C++}: Migration strategy for tracking control neural network,'' 2026.
-\newblock Internal research document, Texas A\&M University--Victoria.
+\bibitem{Hajari2023}
+H.~Hajari, M.~Cesaire, L.~Schott, S.~Lamprier, and P.~Gallinari, ``Neural adversarial attacks with random noises,'' {\em International Journal on}, vol.~32, p.~22, August 2023.
 
 \end{thebibliography}
