@@ -1,8 +1,9 @@
+\newpage
 \section{Adversarial Attacks}
 
 For the purpose of simulating adversarial attacks against the tracking control
 neural network, the current state of the art method is to use a projected
-gradient descent (PGD) attack, which is an iterative method that seeks to
+gradient descent (PGD)\textsubscript{\cite{madry2019deeplearningmodelsresistant}} attack, which is an iterative method that seeks to
 find the optimal perturbation that maximizes the loss function of the neural
 network. The simulation and defense of a neural network using the PGD method
 will be left for future analysis. This paper will examine the an alternative method
@@ -10,3 +11,9 @@ of attack simulation, using additive gaussian noise perturbation\textsubscript{\
 The mathematical representation of the adversarially perturbed system is defined, considering~\autoref{systemModel}, by:
 
 \input{chapters/attacks/modified-tracking.tex}
+
+Substituting the control function from~\autoref{eq:control_function}
+into the perturbed system model gives the adversarially perturbed closed-loop state
+equation:
+
+\input{chapters/attacks/perturbed-closed-loop-equation.tex}
