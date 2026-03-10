@@ -1,23 +1,17 @@
 \begin{definition}
 	Closed-Loop Tracking Control Error Dynamics \textsubscript{\cite{tymoshchuk2024tracking}}
 	\begin{equation}
-		e(k+1) = e(k) - \beta \text{sgn}(e(k))
 		\label{eq:error_dynamics}
-	\end{equation}
-
-	where:
-
-	\begin{equation}
-		\text{sgn}(e(k)) = \begin{cases}
-			1  & \text{if } e(k) > 0 \\
-			0  & \text{if } e(k) = 0 \\
-			-1 & \text{if } e(k) < 0
-		\end{cases}
-		\label{eq:sgn_control}
-	\end{equation}
-
-	\centering and
-	\begin{equation}
-		e(k) = x(k) - r(k)
+		\begin{aligned}
+			 & e(k+1) = e(k) - \beta \text{sgn}(e(k))      \\ \\
+			 & \text{where:}                               \\
+			 & \text{sgn}(e(k)) = \begin{cases}
+				                      1  & \text{if } e(k) > 0 \\
+				                      0  & \text{if } e(k) = 0 \\
+				                      -1 & \text{if } e(k) < 0 \\
+			                      \end{cases} \\
+			 & \text{ and }                                \\ \\
+			 & e(k) = x(k) - r(k)
+		\end{aligned}
 	\end{equation}
 \end{definition}

@@ -1,14 +1,15 @@
-\subsubsection*{\centering Closed-Loop Tracking Control} % TODO: fix the version of the equation
+\subsubsection*{\centering Closed-Loop Tracking Control}
 Substituting $u(k)$ from~\autoref{eq:control_function} into the
 system model~\autoref{systemModel} gives the deployed closed-loop
 state equation:
 \begin{definition}
 	Closed-Loop Tracking Control State Equation \textsubscript{\cite{tymoshchuk2024tracking}}
 	\begin{equation}
-		x(k+1) = \state + \tau \beta \text{sgn}(x(k) - r(k)) + \Delta r(k)
-	\end{equation}
-	where:
-	\begin{equation}
-		\Delta r(k) = r(k+1) - r(k)
+		\label{eq:closed_loop}
+		\begin{aligned}
+			 & x(k+1) = \state - \beta \text{sgn}(x(k) - r(k)) + \Delta r(k) \\
+			 & \text{where:}                                                   \\
+			 & \Delta r(k) = r(k+1) - r(k)
+		\end{aligned}
 	\end{equation}
 \end{definition}
