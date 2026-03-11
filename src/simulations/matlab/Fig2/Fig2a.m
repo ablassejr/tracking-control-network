@@ -18,7 +18,7 @@ r2(1)=0.;
 e1(1)=x(1)-r1(1);
 e2(1)=y(1)-r2(1);
 u(1)=0;
-programCount = 20;
+programCount = 1;
 avgTime = zeros(20);
 % ==========================
 diary("matlab_output.log")
@@ -33,6 +33,7 @@ g2(i)=lambda;
 
 f1(i)=x(i)+dt*(-alpha*x(i)+Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
 f2(i)=y(i)+dt*(-alpha*y(i)+B*Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
+
 
 t(i+1)=t(i)+dt;
 
@@ -77,26 +78,20 @@ toc
 end;
 diary off;
 % print("Average Runtime:" + mean(avgTime))
-subplot(2,1,1), plot(t,x,'k-',t,r1,'r--')
+figure(1)
+plot(t,x,'k-',t,r1,'r--')
 axis([0 tmax 0 0.8])
 legend('x_1','r_1')
 grid
-
 ylabel('x_1,r_1')
-
 xlabel('Time (s)')
 
-hold on;
-
-subplot(2,1,2), plot(t,y,'k-',t,r2,'r--')
-
+figure(2)
+plot(t,y,'k-',t,r2,'r--')
 axis([0 tmax 0 5])
 ylabel('x_2, r_2')
-
 legend('x_2','r_2')
-
 xlabel('Time (s)')
-
 grid
 
 writematrix([t', x', y', r1', r2', e1', e2'], 'fig2a_reference.csv');

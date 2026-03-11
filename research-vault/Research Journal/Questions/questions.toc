@@ -1,4 +1,0 @@
-\contentsline {section}{\numberline {1}How Does My Paper Relate to the ACC/IDS Problem?}{2}{section.1}%
-\contentsline {section}{\numberline {2}Is My Variable Mapping to the ACC Domain Correct?}{4}{section.2}%
-\contentsline {section}{\numberline {3}How Will Simulated Attacks Be Represented in the Math?}{6}{section.3}%
-\contentsline {section}{\numberline {4}Where Is the Attack Function in Paper [3]?}{7}{section.4}%

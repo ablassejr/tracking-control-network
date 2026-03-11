@@ -77,22 +77,18 @@ for j=1:n-1,
     tt(j)=t(j);    
 end
 
-subplot(2,1,1), plot(t,e1,'g-')
- 
+figure(1)
+plot(t,e1,'g-')
 ylabel('e_1')
 xlabel('Time (s)')
 axis([0 tmax -0.5 0.4])
-
 grid
 
-hold on;
- 
-subplot(2,1,2), plot(t,e2,'g-')
- 
+figure(2)
+plot(t,e2,'g-')
 ylabel('e_2')
 xlabel('Time (s)')
 axis([0 tmax -3 2.5])
-
 grid
 
 writematrix([t', e1', e2'], 'fig2c_reference.csv');

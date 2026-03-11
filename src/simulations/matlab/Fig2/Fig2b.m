@@ -80,24 +80,17 @@ for j=1:n-1,
     tt(j)=t(j);    
 end
 
-%subplot(2,1,1), plot(t,u,'b-')
-
-subplot(2,1,1), plot(tt,u,'b-')
- 
+figure(1)
+plot(tt,u,'b-')
 ylabel('u')
 xlabel('Time (s)')
-%axis([0 tmax -55 30])
 axis([0 tmax -350 400])
-grid 
- 
-hold on;
+grid
 
-%subplot(2,1,2), plot(t,u,'b-')
-subplot(2,1,2), plot(tt,u,'b-')
- 
+figure(2)
+plot(tt,u,'b-')
 ylabel('u')
 xlabel('Time (s)')
-%axis([0.25 0.5 -55 30])
 axis([0.25 0.5 -350 400])
 grid
 
