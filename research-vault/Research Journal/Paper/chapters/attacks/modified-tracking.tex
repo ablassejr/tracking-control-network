@@ -2,9 +2,9 @@
 	Adversarially Perturbed Tracking State Equation
 	\begin{equation}
 		\begin{aligned}
-			 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) u(k) \bigr] + I(k) \\
-			 & \text{where:}                                                                     \\
-			 & I(k) \sim \mathcal N(0, \sigma^2 \mathcal Id_n)
+			 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) u(k) + I(k)\bigr] \\
+			 & \text{where:}                                                                    \\
+			 & I(k) \sim \mathcal N(0, \sigma \mathcal Id_n)
 		\end{aligned}
 	\end{equation}
 \end{definition}

@@ -17,3 +17,49 @@ into the perturbed system model gives the adversarially perturbed closed-loop st
 equation:
 
 \input{chapters/attacks/perturbed-closed-loop-equation.tex}
+\includesvg{attacked-system}[H]
+
+\newpage
+\subsection{Simulation of Attacked CSTR System}
+
+\autoref{fig:attacked-output-comparison} presents the attacked-state
+trajectories from both the MATLAB reference implementation and the C++ port
+in a state-aligned layout.
+
+\begin{figure}[htbp]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
+		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), conversion $x_1$.}
+		\label{fig:attacked-matlab-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
+		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), temperature $x_2$.}
+		\label{fig:attacked-matlab-x2}
+	\end{subfigure}
+	\par\medskip
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1}
+		\caption{C++ (\texttt{fig2a\_attacked}), conversion $x_1$.}
+		\label{fig:attacked-cpp-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2}
+		\caption{C++ (\texttt{fig2a\_attacked}), temperature $x_2$.}
+		\label{fig:attacked-cpp-x2}
+	\end{subfigure}
+	\caption{Attacked CSTR state trajectories under additive Gaussian noise
+		($\sigma = 2$). The top row shows the MATLAB reference implementation,
+		the bottom row shows the C++ port, the left column compares
+		$x_1$ against $r_1$, and the right column compares $x_2$ against
+		$r_2$. Both implementations show degraded tracking performance once the
+		stochastic perturbation is introduced.}
+	\label{fig:attacked-output-comparison}
+\end{figure}
