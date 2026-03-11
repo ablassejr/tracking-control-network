@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 project(Simulation)
+enable_testing()
 
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -35,3 +36,9 @@ target_link_libraries(fig2c PUBLIC eigen PRIVATE cxxplot::cxxplot)
 add_executable(validate_output validate_output.cpp)
 target_link_libraries(validate_output PUBLIC eigen)
 
+add_executable(fig2a_attacked fig2a_attacked.cpp state_space.cpp)
+target_link_libraries(fig2a_attacked PUBLIC eigen PRIVATE cxxplot::cxxplot)
+
+add_executable(test_attacked_simulation test_attacked_simulation.cpp state_space.cpp)
+target_link_libraries(test_attacked_simulation PUBLIC eigen PRIVATE cxxplot::cxxplot)
+add_test(NAME test_attacked_simulation COMMAND test_attacked_simulation)
