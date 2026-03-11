@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
     SimSettings settings;
     StateConditions stateConditions(settings.timeSteps);
     InternalConditions internalConditions;
-    std::vector<double> timeVector, x1StateVector, x2StateVector,
-        x1RefVector, x2RefVector;
+    std::vector<double> timeVector, x1StateVector, x2StateVector, x1RefVector,
+        x2RefVector;
 
     // Initialize reference trajectories and time vector
     // Index 0 stays at zero (matching MATLAB's r1(1)=0, r2(1)=0)
@@ -57,14 +57,15 @@ int main(int argc, char *argv[]) {
     csv << std::setprecision(15);
     for (int i = 0; i < settings.timeSteps; i++) {
       double t = i * settings.tau;
-      double e1 = stateConditions.stateMatrix(0, i) - stateConditions.referenceMatrix(0, i);
-      double e2 = stateConditions.stateMatrix(1, i) - stateConditions.referenceMatrix(1, i);
-      csv << t << ","
-          << stateConditions.stateMatrix(0, i) << ","
+      double e1 = stateConditions.stateMatrix(0, i) -
+                  stateConditions.referenceMatrix(0, i);
+      double e2 = stateConditions.stateMatrix(1, i) -
+                  stateConditions.referenceMatrix(1, i);
+      csv << t << "," << stateConditions.stateMatrix(0, i) << ","
           << stateConditions.stateMatrix(1, i) << ","
           << stateConditions.referenceMatrix(0, i) << ","
-          << stateConditions.referenceMatrix(1, i) << ","
-          << e1 << "," << e2 << "\n";
+          << stateConditions.referenceMatrix(1, i) << "," << e1 << "," << e2
+          << "\n";
     }
 
     for (auto state : stateConditions.stateMatrix.colwise()) {
