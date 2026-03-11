@@ -42,14 +42,14 @@ groups related data and separates concerns across compilation units.
 	\label{tab:data-layout}
 	\begin{tabular}{lll}
 		\toprule
-		MATLAB Variable                        & C++ Equivalent                                       & Type                                \\
+		MATLAB Variable                        & C++ Equivalent                                 & Type                                \\
 		\midrule
-		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                                 & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                             & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{x1ErrorMatrix}, \texttt{x2ErrorMatrix}       & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                              & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{alpha}, \texttt{beta}, \ldots  & \texttt{InternalConditions}                          & \texttt{struct}                     \\
-		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                                 & \texttt{struct}                     \\
+		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                           & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                       & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{x1ErrorMatrix}, \texttt{x2ErrorMatrix} & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                        & \texttt{Matrix<double, 2, Dynamic>} \\
+		\texttt{alpha}, \texttt{beta}, \ldots  & \texttt{InternalConditions}                    & \texttt{struct}                     \\
+		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                           & \texttt{struct}                     \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -79,10 +79,11 @@ external dependencies:
 	\end{tabular}
 \end{table}
 
-The build system produces three executables from separate translation units:
-\texttt{fig2a}, \texttt{fig2b}, \texttt{fig2c} (CSTR system). Each executable contains
-its own \texttt{main()} function, with shared simulation logic factored into
-\texttt{state\_space.cpp}.
+The build system produces four executables from separate translation units:
+\texttt{fig2a}, \texttt{fig2b}, \texttt{fig2c} (CSTR system under normal
+operation) and \texttt{fig2a\_attacked} (CSTR system under adversarial attack).
+Each executable contains its own \texttt{main()} function, with shared
+simulation logic factored into \texttt{state\_space.cpp}.
 
 \subsection{Implementation --- CSTR System (Fig.~2)}
 \label{subsec:migration-implementation}
@@ -269,21 +270,164 @@ equivalents.
 	\end{tabular}
 \end{table}
 
+\subsection{Implementation --- Attacked CSTR System}
+\label{subsec:migration-attacked}
+
+The adversarial attack simulation extends the normal CSTR dynamics by
+injecting additive Gaussian noise into the temperature state update at each
+time step. The attack is implemented in both MATLAB
+(\texttt{Fig2a\_attacked.m}) and C++ (\texttt{fig2a\_attacked.cpp}), with the
+core attacked dynamics defined in the shared
+\texttt{attackedSystemFunction()} in \texttt{state\_space.cpp}.
+
+\subsubsection{Noise Injection}
+\label{subsubsec:noise-injection}
+
+The key difference from the normal system is the addition of a stochastic
+perturbation $I(k) \sim \mathcal{N}(0, \sigma^2 \Delta t)$ to the
+temperature state.
+
+\noindent
+\textbf{MATLAB} (\texttt{Fig2a\_attacked.m}, lines~31--37):
+\begin{lstlisting}[style=matlab]
+sigma = 2;
+Ik = sigma * sqrt(dt) * randn();
+
+f1(i) = x(i) + dt*(-alpha*x(i) + Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma))) + Ik;
+\end{lstlisting}
+
+\noindent
+In MATLAB, the noise sample is drawn via \texttt{randn()} scaled by
+$\sigma \Delta t$, and is added only to the attacked $x_2$ update.
+
+\noindent
+\textbf{C++} (\texttt{state\_space.cpp}, lines~46--73):
+\begin{lstlisting}[style=cpp]
+std::normal_distribution<double> noise(0.0, 2);
+std::default_random_engine randomNumberGenerator;
+// ...
+stateConditions.stateMatrix(1, i) =
+    *prevX2 +
+    settings.tau * (-internalConditions.beta * sgn(e2) + *deltaR2) +
+    noise(randomNumberGenerator);
+\end{lstlisting}
+
+\noindent
+The C++ implementation uses the \texttt{<random>} standard library with a
+\texttt{std::normal\_distribution} of standard deviation $\sigma = 2$, adding
+the noise to the $x_2$ closed-loop update. This follows the perturbed
+closed-loop formulation in~\autoref{eq:x2-attacked}.
+
+\newpage
+\subsubsection{Output Comparison --- CSTR System}
+
+\autoref{fig:fig2-plot-comparison} presents a state-aligned comparison of
+the MATLAB reference implementation and the C++ port.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_x1_r1}
+		\caption{MATLAB (\texttt{Fig2a.m}), conversion $x_1$.}
+		\label{fig:fig2-matlab-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_x2_r2}
+		\caption{MATLAB (\texttt{Fig2a.m}), temperature $x_2$.}
+		\label{fig:fig2-matlab-x2}
+	\end{subfigure}
+	\par\medskip
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1}
+		\caption{C++ (\texttt{fig2a}), conversion $x_1$.}
+		\label{fig:fig2-cpp-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2}
+		\caption{C++ (\texttt{fig2a}), temperature $x_2$.}
+		\label{fig:fig2-cpp-x2}
+	\end{subfigure}
+	\caption{Comparison of CSTR state trajectories from the MATLAB reference
+		implementation and the C++ port. The top row shows MATLAB, the bottom
+		row shows C++, the left column compares $x_1$ against $r_1$, and the
+		right column compares $x_2$ against $r_2$. Both simulations use
+		identical parameters ($\alpha = 1$, $\beta = 100$, $\lambda = 0.3$,
+		$\gamma = 20$, $D_a = 0.072$) and initial conditions
+		$x(0) = \mathbf{0}$.}
+	\label{fig:fig2-plot-comparison}
+\end{figure}
+
+\newpage
+\subsubsection{Output Comparison --- Attacked CSTR System}
+
+\autoref{fig:fig2-attacked-plot-comparison} presents the attacked outputs in
+a state-aligned comparison, with MATLAB and C++ occupying separate rows.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
+		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), conversion $x_1$.}
+		\label{fig:fig2-attacked-matlab-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
+		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), temperature $x_2$.}
+		\label{fig:fig2-attacked-matlab-x2}
+	\end{subfigure}
+	\par\medskip
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1}
+		\caption{C++ (\texttt{fig2a\_attacked}), conversion $x_1$.}
+		\label{fig:fig2-attacked-cpp-x1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2}
+		\caption{C++ (\texttt{fig2a\_attacked}), temperature $x_2$.}
+		\label{fig:fig2-attacked-cpp-x2}
+	\end{subfigure}
+	\caption{Comparison of attacked CSTR state trajectories. Both
+		simulations use $\sigma = 2$ Gaussian noise injection with identical
+		system parameters. The top row shows MATLAB, the bottom row shows C++,
+		the left column compares $x_1$ against $r_1$, and the right column
+		compares $x_2$ against $r_2$. Due to the stochastic nature of the
+		attack, exact numerical equivalence is not expected; instead, the
+		qualitative loss of tracking performance is verified.}
+	\label{fig:fig2-attacked-plot-comparison}
+\end{figure}
+
+Unlike the nominal system (\autoref{fig:fig2-plot-comparison}), the attacked
+simulations do not produce identical numerical output because each run
+draws independent random noise samples. The validation criterion is therefore
+qualitative: both implementations should exhibit the same degradation pattern
+in tracking performance under the specified noise intensity.
+
+\newpage
 \subsection{Performance Comparison}
 \label{subsec:migration-performance}
 
 The C++ simulation includes instrumentation via
 \texttt{std::chrono::high\_resolution\_clock}. The MATLAB simulation uses
-\texttt{tic}/\texttt{toc}. Both implementations were executed 20 times and
-averaged. \autoref{fig:fig2-exec-time}
+\texttt{tic}/\texttt{toc}.  \autoref{fig:fig2-exec-time}
 compares execution times across implementations.
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 	\centering
 	\includesvg[width=\textwidth]{fig2_exec_time_comparison}
 	\caption{Execution time comparison for the CSTR tracking control
-		simulation ($n = 45{,}000$ steps, $\tau = 0.001$\,s).
-		Average over 20 runs.}
+		simulation ($n = 45{,}000$ steps, $\tau = 0.001$\,s). }
 	\label{fig:fig2-exec-time}
 \end{figure}
 
@@ -292,41 +436,6 @@ which is representative of interactive usage. Excluding the warmup run, the
 steady-state MATLAB time is approximately 0.005\,s, reducing the speedup
 factor to approximately 4$\times$. The JIT overhead is a real cost in the
 MATLAB execution model and is therefore included in the reported averages.
-
-\subsubsection{Output Comparison --- CSTR System}
-
-\autoref{fig:fig2-plot-comparison} presents side-by-side output from both
-implementations to verify numerical equivalence.
-
-\begin{figure}[htbp]
-	\centering
-	\begin{subfigure}[b]{0.65\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_tracking}
-		\caption{MATLAB (\texttt{Fig2a.m}).}
-		\label{fig:fig2-matlab-tracking}
-	\end{subfigure}
-	\par\vspace{0.8em}
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1}
-		\caption{C++ (\texttt{fig2a}, conversion $x_1$).}
-		\label{fig:fig2-cpp-x1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2}
-		\caption{C++ (\texttt{fig2a}, temperature $x_2$).}
-		\label{fig:fig2-cpp-x2}
-	\end{subfigure}
-	\caption{Comparison of CSTR state trajectories from the MATLAB reference
-		implementation and the C++ port. Both simulations use identical
-		parameters ($\alpha = 1$, $\beta = 100$, $\lambda = 0.3$,
-		$\gamma = 20$, $D_a = 0.072$) and initial conditions
-		$x(0) = \mathbf{0}$.}
-	\label{fig:fig2-plot-comparison}
-\end{figure}
 
 \subsection{Output Validation}
 \label{subsec:migration-validation}
@@ -374,12 +483,12 @@ machine-precision agreement between the two implementations:
 	\label{tab:validation-results}
 	\begin{tabular}{lcl}
 		\toprule
-		Variable                & $\varepsilon_{\max}$       & Status \\
+		Variable               & $\varepsilon_{\max}$ & Status \\
 		\midrule
-		$x_1$ (conversion)     & $\sim 10^{-15}$ & PASS   \\
-		$x_2$ (temperature)    & $\sim 10^{-15}$ & PASS   \\
-		$e_1$ (tracking error) & $\sim 10^{-15}$ & PASS   \\
-		$e_2$ (tracking error) & $\sim 10^{-15}$ & PASS   \\
+		$x_1$ (conversion)     & $\sim 10^{-15}$      & PASS   \\
+		$x_2$ (temperature)    & $\sim 10^{-15}$      & PASS   \\
+		$e_1$ (tracking error) & $\sim 10^{-15}$      & PASS   \\
+		$e_2$ (tracking error) & $\sim 10^{-15}$      & PASS   \\
 		\bottomrule
 	\end{tabular}
 \end{table}
@@ -394,11 +503,12 @@ the observed error floor.
 \subsection{Remaining Work}
 \label{subsec:migration-remaining}
 
-The following component has not yet been migrated from MATLAB to C++:
+The adversarial attack simulation has been successfully migrated to C++.
+The following components remain for future work:
 
 \begin{enumerate}
-	\item \textbf{Adversarial attack simulations.}
-	      PGD attacks on the temperature measurement channel
-	      and neural network approximation-based attacks (planned
-	      implementations using IBM ART).
+	\item \textbf {Design Defense Mechanism}
+	\item \textbf {Model Defense Mechanism}
+	\item \textbf {Diagram Defense Mechanism}
+	\item \textbf {Simulate Defense Mechanism}
 \end{enumerate}
