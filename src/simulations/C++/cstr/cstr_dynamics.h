@@ -1,5 +1,4 @@
-#include "data_structures.h"
-#include <cxxplot/cxxplot>
+#include "../simulation_types.h"
 void systemFunction(SimSettings &settings, StateConditions &stateConditions,
                     InternalConditions &internalConditions);
 

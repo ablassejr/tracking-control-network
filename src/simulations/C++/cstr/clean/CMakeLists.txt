@@ -1,0 +1,8 @@
+add_executable(cstr_state_tracking cstr_state_tracking.cpp)
+target_link_libraries(cstr_state_tracking PUBLIC cstr_dynamics_lib)
+
+add_executable(cstr_control_input cstr_control_input.cpp)
+target_link_libraries(cstr_control_input PUBLIC cstr_dynamics_lib)
+
+add_executable(cstr_tracking_error cstr_tracking_error.cpp)
+target_link_libraries(cstr_tracking_error PUBLIC cstr_dynamics_lib)

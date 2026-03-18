@@ -1,6 +1,5 @@
-#include "state_space.h"
+#include "cstr_dynamics.h"
 #include <cmath>
-#include <cxxplot/cxxplot>
 #include <random>
 
 void systemFunction(SimSettings &settings, StateConditions &stateConditions,
@@ -43,7 +42,7 @@ void attackedSystemFunction(SimSettings &settings,
                             InternalConditions &internalConditions) {
   // Pre Simulation Variable Declarations
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> noise(0.0, 2);
+  std::normal_distribution<double> epsilon(0.0, 1);
   std::default_random_engine randomNumberGenerator;
 
   // Simulation loop
@@ -68,9 +67,9 @@ void attackedSystemFunction(SimSettings &settings,
     // x2 closed-loop dynamics with control
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
-        *prevX2 +
-        settings.tau * (-internalConditions.beta * sgn(e2) + *deltaR2) +
-        (settings.tau * noise(randomNumberGenerator));
+        *prevX2 + settings.tau * (-internalConditions.beta *
+                                      sgn(e2 + epsilon(randomNumberGenerator)) +
+                                  *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }

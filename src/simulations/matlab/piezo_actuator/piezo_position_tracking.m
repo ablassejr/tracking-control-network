@@ -45,19 +45,21 @@ u(n)=-1/g2(n)*(f2(n)+sqrt(f2(n)^2+Q*g2(n)^2/R));
 elseif (y(n)-0.08*pi/2*cos(0.5*pi*t(n)))<0
 u(n)=-1/g2(n)*(f2(n)-sqrt(f2(n)^2+Q*g2(n)^2/R));
 end
+
+subplot(2,1,1),plot(t,x,'k-')
+axis([0 8 -0.1 0.1])
  
-subplot(2,1,1),plot(t,u,'k-')
- 
-axis([0 8 -1.1 1.1])
-ylabel('u (V)')
+ylabel('y (m)')
  
 hold on;
  
-subplot(2,1,2),plot(t,u,'k-')
-axis([0 0.1 -0.8 1.1])
-ylabel('u (V)')
+subplot(2,1,2),plot(t,e,'k-')
+ 
+axis([0 8 -1e-3 -0e-3])
+ylabel('e (m)')
  
 xlabel('Time t (s)')
  
 grid
+exportgraphics(gcf, '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/piezo_position_tracking.png', 'Resolution', 300);
 clear all;

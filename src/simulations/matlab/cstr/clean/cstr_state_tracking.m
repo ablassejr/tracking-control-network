@@ -19,10 +19,12 @@ e1(1)=x(1)-r1(1);
 e2(1)=y(1)-r2(1);
 u(1)=0;
 programCount = 1;
-avgTime = zeros(20);
+x_sum = zeros(1, n);
+y_sum = zeros(1, n);
 % ==========================
 diary("matlab_output.log")
 for j=1:programCount,
+x(1)=0; y(1)=0; t(1)=0; e1(1)=0; e2(1)=0; m(1)=1;
 tic
 for i=1:n-1,
 
@@ -74,12 +76,15 @@ e1(i+1)=x(i+1)-r1(i+1);
 e2(i+1)=y(i+1)-r2(i+1);
 
 end;
+x_sum = x_sum + x;
+y_sum = y_sum + y;
 toc
 end;
 diary off;
-% print("Average Runtime:" + mean(avgTime))
+x_avg = x_sum / programCount;
+y_avg = y_sum / programCount;
 figure(1)
-plot(t,x,'k-',t,r1,'r--')
+plot(t,x_avg,'k-',t,r1,'r--')
 axis([0 tmax 0 0.8])
 legend('x_1','r_1')
 grid
@@ -87,12 +92,14 @@ ylabel('x_1,r_1')
 xlabel('Time (s)')
 
 figure(2)
-plot(t,y,'k-',t,r2,'r--')
+plot(t,y_avg,'k-',t,r2,'r--')
 axis([0 tmax 0 5])
 ylabel('x_2, r_2')
 legend('x_2','r_2')
 xlabel('Time (s)')
 grid
 
-writematrix([t', x', y', r1', r2', e1', e2'], 'fig2a_reference.csv');
+exportgraphics(figure(1), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2a_x1_r1.png', 'Resolution', 300);
+exportgraphics(figure(2), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2a_x2_r2.png', 'Resolution', 300);
+writematrix([t', x_avg', y_avg', r1', r2', e1', e2'], 'cstr_state_tracking_reference.csv');
 clear all;

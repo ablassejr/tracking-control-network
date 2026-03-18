@@ -3,7 +3,7 @@ import unittest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-MATLAB_ATTACKED = ROOT / "src" / "simulations" / "matlab" / "Fig2" / "Fig2a_attacked.m"
+MATLAB_ATTACKED = ROOT / "src" / "simulations" / "matlab" / "cstr" / "attacked" / "cstr_state_tracking_attacked.m"
 
 
 class AttackedModelConsistencyTests(unittest.TestCase):
@@ -11,7 +11,7 @@ class AttackedModelConsistencyTests(unittest.TestCase):
         source = MATLAB_ATTACKED.read_text()
 
         self.assertNotIn(
-            "f1(i)=x(i)+dt*(-alpha*x(i)+Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma))) + Ik;",
+            "f1(i)=x(i)+dt*(-alpha*x(i)+Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma))) + epsilon;",
             source,
         )
         self.assertIn(
@@ -19,7 +19,7 @@ class AttackedModelConsistencyTests(unittest.TestCase):
             source,
         )
         self.assertIn("x(i+1)=f1(i);", source)
-        self.assertIn("y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i)) + Ik;", source)
+        self.assertIn("y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i)) + epsilon;", source)
 
 
 if __name__ == "__main__":

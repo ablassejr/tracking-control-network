@@ -73,29 +73,34 @@ else
 S(n)=0;  
 end 
 
-%g2(n)=lambda;
-%u(n)=-1/g2(n)*(-betta*S(n)+r2(n+1)-r2(n)-f2(n));
-
 for j=1:n-1,      
     tt(j)=t(j);    
 end
 
 figure(1)
-plot(tt,u,'b-')
-ylabel('u')
+plot(t,e1,'g-')
+ylabel('e_1')
 xlabel('Time (s)')
-axis([0 tmax -350 400])
+axis([0 tmax -0.5 0.4])
 grid
 
 figure(2)
-plot(tt,u,'b-')
-ylabel('u')
+plot(t,e2,'g-')
+ylabel('e_2')
 xlabel('Time (s)')
-axis([0.25 0.5 -350 400])
+axis([0 tmax -3 2.5])
 grid
 
-writematrix([tt', u'], 'fig2b_reference.csv');
+exportgraphics(figure(1), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2c_e1.png', 'Resolution', 300);
+exportgraphics(figure(2), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2c_e2.png', 'Resolution', 300);
+writematrix([t', e1', e2'], 'cstr_tracking_error_reference.csv');
 clear all;
+
+
+
+
+
+
 
 
 

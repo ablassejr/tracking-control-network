@@ -1,4 +1,4 @@
-#include "data_structures.h"
+#include "simulation_types.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -13,7 +13,7 @@ Eigen::VectorXd extractColumn(const Eigen::VectorXd &flat, int numCols,
 
 int main(int argc, char *argv[]) {
   if (argc != 3) {
-    std::cerr << "Usage: validate_output <matlab_csv> <cpp_csv>" << std::endl;
+    std::cerr << "Usage: validate_matlab_cpp <matlab_csv> <cpp_csv>" << std::endl;
     return 1;
   }
 
