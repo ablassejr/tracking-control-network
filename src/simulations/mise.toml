@@ -1,0 +1,90 @@
+[env]
+DCMAKE_EXPORT_COMPILE_COMMANDS = "ON"
+CPP_DIR = "{{config_root}}/C++"
+SIM_ROOT = "{{config_root}}"
+PAPER_DIR = "{{config_root}}/../../research-vault/Research Journal/Paper"
+
+[tasks.build]
+description = "Build all C++ simulation targets (Release)"
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Release",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+]
+
+[tasks.run-clean]
+description = "Run clean CSTR simulations (50 runs each)"
+depends = ["build"]
+dir = "{{config_root}}/C++"
+run = [
+  "./build/cstr/clean/cstr_state_tracking",
+  "./build/cstr/clean/cstr_control_input",
+  "./build/cstr/clean/cstr_tracking_error",
+]
+
+[tasks.run-attacked]
+description = "Run attacked CSTR simulation (50 runs)"
+depends = ["build"]
+dir = "{{config_root}}/C++"
+run = [
+  "./build/cstr/attacked/cstr_state_tracking_attacked",
+]
+
+[tasks.validate]
+description = "Validate C++ output against MATLAB reference data"
+depends = ["run-clean"]
+dir = "{{config_root}}/C++"
+run = [
+  "./build/validate_matlab_cpp $SIM_ROOT/matlab/cstr/clean/cstr_state_tracking_reference.csv $SIM_ROOT/C++/cstr_state_tracking_cpp_output.csv",
+]
+
+[tasks.generate-table]
+description = "Generate LaTeX runtime comparison table from logs"
+depends = ["run-clean", "run-attacked"]
+run = [
+  "python3 $SIM_ROOT/generate_runtime_table.py --base-dir $SIM_ROOT --output \"$PAPER_DIR/chapters/migration/runtime_comparison_table.tex\"",
+]
+
+[tasks.all]
+description = "Build, run all simulations, validate, and generate runtime table"
+depends = ["validate", "generate-table"]
+
+[tasks.debug-clean]
+description = "Build (Debug) and run clean CSTR simulations"
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Debug",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/clean/cstr_state_tracking",
+  "./build/cstr/clean/cstr_control_input",
+  "./build/cstr/clean/cstr_tracking_error",
+  "./build/validate_matlab_cpp $SIM_ROOT/matlab/cstr/clean/cstr_state_tracking_reference.csv $SIM_ROOT/C++/cstr_state_tracking_cpp_output.csv",
+]
+
+[tasks.debug-attacked]
+description = "Build (Debug) and run attacked CSTR simulation"
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Debug",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/attacked/cstr_state_tracking_attacked",
+]
+
+[tasks.test-clean]
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Release",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/clean/cstr_state_tracking",
+  "./build/cstr/clean/cstr_control_input",
+  "./build/cstr/clean/cstr_tracking_error",
+  "./build/validate_matlab_cpp $SIM_ROOT/matlab/cstr/clean/cstr_state_tracking_reference.csv $SIM_ROOT/C++/cstr_state_tracking_cpp_output.csv",
+]
+
+[tasks.test-attacked]
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Release",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/attacked/cstr_state_tracking_attacked",
+]
