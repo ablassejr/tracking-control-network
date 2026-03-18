@@ -1,20 +1,32 @@
+The tracking control problem is one of the most fundmaental practical problems
+in control theory, where the goal is to design a controller that allows a system
+to follow a desired trajectory or reference signal over time. In recent years,
+neural networks have been increasingly used in control systems due to their ability
+to approximate complex nonlinear functions and adapt to changing conditions. However,
+the use of neural networks in control systems also introduces new vulnerabilities,
+particularly to adversarial attacks. Small, practically undetectable perturbations
+in the input of a neural network can lead to outsized adverse effects on the output,
+which can be particularly problematic in control systems where safety and reliability are paramount.
+\par
+A tracking control problem can be formulated as designing such a system whose output
+approximately repeats a given time-varying reference trajectory \textsubscript{\cite{tymoshchuk2024tracking}}.
+The defense of a tracking control neural network against adversarial perturbations
+requires that, under the influence of such perturbations, tracking performance
+remains acceptable within certain conditions. These conditions vary and are dependent
+upon the designed control law's inherent robustness, the magnitude and nature of
+the perturbation and the performance metrics required of the system for safe operation.
+The channel of attack chosen for this analysis is the error dynamics of the tracking
+control system described in \autoref{eq:error_dynamics} \textsubscript{\cite{tymoshchuk2024tracking}}.
+\par
+A continuous stirred tank reactior (CSTR) system is chosen as a common close analog
+to compare and confirm the results of the analysis. The CSTR is a widely studied
+system in control theory, making it suitable for comparison with competitive analogs.
 
-% Why is the topic important?
-% What is the current state of research in this area? (based on [1]-[3])
-% subsection Background (end)
-% Problem Statement
-% explanation of analogue
-
-\newtheorem{definition}{Definition}
 \subsubsection*{\centering System Model}
-The tracking control neural network, as defined in \cite{tymoshchuk2024tracking},
-is designed to control a known affine discrete-time nonlinear system.
-The system is described by the following equation:
-\begin{definition} Affine-In-The-Inputs Discrete-Time Nonlinear System\textsubscript{\cite{tymoshchuk2024tracking}}\label{eq:dynamic}
-	\input{chapters/introduction/sysModel.tex} % Description of the system by the equation
-	\quad where:
-	\input{chapters/introduction/semanticModel.tex} % Description of the system by semantics
-\end{definition}
-\input{chapters/introduction/control.tex} % Description of the control
-\input{chapters/introduction/closed-loop.tex} % Description of the closed loop dynamics
+We consider a known affine discrete-time nonlinear system described by the
+following difference equation \textsubscript{\cite{tymoshchuk2024tracking}}:\label{eq:dynamic}
+\input{chapters/introduction/sysModel.tex}
+\input{chapters/introduction/semanticModel.tex}
+\input{chapters/introduction/control.tex}
+\input{chapters/introduction/closed-loop.tex}
 \input{./chapters/diagrams/clean-system.tex}

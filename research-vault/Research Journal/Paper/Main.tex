@@ -1,14 +1,15 @@
 %! Tex Root=**/Main.tex
-\documentclass{article}
-\usepackage[margin=1in]{geometry}
-% ---------------------------------------------------------------------------
-% TikZ Libraries
-% ---------------------------------------------------------------------------
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\documentclass[onecolumn]{svjour3}
+% \usepackage[utf8]{inputenc}
+% \usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{
+  a4paper,
+	total={170mm,257mm},
+	left=20mm,
+	top=20mm,
+}
 \usepackage{float}
-
-
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -40,32 +41,28 @@
 }
 \graphicspath{{./figures/images/}}
 
-% ---------------------------------------------------------------------------
-% Code Listing Styles (used in Appendix)
-% ---------------------------------------------------------------------------
 \lstset{
   basicstyle=\ttfamily\small,
-  keywordstyle=\bfseries\color{blue!70!black},
-  commentstyle=\itshape\color{green!50!black},
-  stringstyle=\color{orange!80!black},
   numbers=left,
-  numberstyle=\tiny\color{gray},
-  numbersep=8pt,
+  numberstyle=\tiny,
   breaklines=true,
   tabsize=4,
   showstringspaces=false,
   frame=single,
   captionpos=b,
-  xleftmargin=2em,
 }
 \lstdefinestyle{cpp}{language=C++, morekeywords={std,vector,Eigen,MatrixXd,StateMatrix,auto}}
 \lstdefinestyle{matlab}{language=Matlab, morekeywords={figure,plot,xlabel,ylabel,legend,hold,tic,toc}}
 \lstdefinestyle{plain}{language={}, numbers=none, frame=none, xleftmargin=0em}
 \svgpath{{./figures/images/}}
+\newcommand{\srcmatlab}{../../../src/simulations/matlab}
+\newcommand{\srccpp}{../../../src/simulations/C++}
 \newcommand{\state}{\ensuremath{x(k)}}
 \newcommand{\func}[1]{\ensuremath{f(#1)}}
 \newcommand{\control}[1]{\ensuremath{u(#1)}}
 \newcommand{\coupling}[1]{\ensuremath{g(#1)}}
+% \newtheorem{definition}{Definition}
+% \newtheorem{theorem}{Theorem}
 \begin{document}
 
 
@@ -73,26 +70,27 @@
 
 \title{An Analysis and Simulation of Defending Tracking Control Neural Network
 	for Known Affine Discrete-Time Nonlinear Systems Against Adversarial Attacks}
-\author{Ablasse Kingcaid-Ouedraogo}
-\date {Last Updated: Mar 10, 2026}
+\author{
+	Mentee: Ablasse Kingcaid-Ouedraogo, \\
+	Mentor: Dr. Pavlo Tymoshchuk
+}
 \maketitle
 
+\begin{abstract}
+	A neural network (NN) tracking control for discrete-time nonlinear systems with known internal dynamics is designed. The adversarial attack on the tracking control NN is described by Gaussian distributed additive stochastic noise. The adversarially perturbed system and the corresponding closed-loop tracking dynamics are derived. A functional block-diagram of the controlled nonlinear system is presented. Computer simulations of the controller operation under nominal and adversarial conditions are provided. A C++ implementation of the simulation is compared against a MATLAB reference to confirm numerical consistency.
+
+	% \begin{IEEEkeywords}
+
+	\keywords{ control systems, neural networks, adversarial attacks}
+	% \end{IEEEkeywords}
+\end{abstract}
 % =============================================================================
 
-\section{Abstract}
-This paper will investigate the simulation of an adversarial attack on the
-tracking control neural network for known affine discrete-time nonlinear
-system given by \cite{tymoshchuk2024tracking}. Additionally, the simulation
-will be ported to C++ and optimized. The previous simulation \textsubscript{\cite{tymoshchuk2024tracking}},
-of the system was designed in MATLAB. This paper proposes that C++ is the
-more optimal language for these simulations. C++ gives greater control of
-the hardware resources involved in the computation to the programmer, allowing
-for more granular optimizations to be performed.
 \section{Introduction}
 \input{chapters/introduction/intro.tex}
 \input{chapters/attacks/adversarial-attacks.tex}
 \newpage
-\bibliographystyle{ieeetr}
+\bibliographystyle{IEEEtran}
 \bibliography{references}
 
 % =============================================================================

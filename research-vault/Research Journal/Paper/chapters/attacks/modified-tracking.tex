@@ -1,10 +1,11 @@
-\begin{definition}
-	Adversarially Perturbed Tracking State Equation
-	\begin{equation}
-		\begin{aligned}
-			 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) u(k) + I(k)\bigr] \\
-			 & \text{where:}                                                                    \\
-			 & I(k) \sim \mathcal N(0, \sigma \mathcal Id_n)
-		\end{aligned}
-	\end{equation}
-\end{definition}
+\begin{equation}
+	\begin{aligned}
+		 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) \tilde{u}(k) \bigr] \\
+		 & \text{where }                                                                      \\
+		 & \tilde{u}(k) = (g(x(k)))^{-1} (-f(x(k)) + \Delta r(k) - \beta sgn(\tilde{e}(k) ))  \\
+		 & \text{and }                                                                        \\
+		 & \tilde{e}(k) = (r(k) - x(k)) + \epsilon(k)                                         \\
+		 & \text{and}                                                                         \\
+		 & \epsilon(k) \sim \mathcal N(0, \mathcal Id_n) \text{ is the standard normal.}
+	\end{aligned}
+\end{equation}

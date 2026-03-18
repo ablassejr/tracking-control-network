@@ -1,15 +1,12 @@
 \subsubsection*{\centering Closed-Loop Tracking Control}
-Substituting $u(k)$ from~\autoref{eq:control_function} into the
-system model~\autoref{systemModel} gives the deployed closed-loop
-state equation:
-\begin{definition}
-	Closed-Loop Tracking Control State Equation \textsubscript{\cite{tymoshchuk2024tracking}}
-	\begin{equation}
-		\label{eq:closed_loop}
-		\begin{aligned}
-			 & x(k+1) = \state - \beta \text{sgn}(x(k) - r(k)) + \Delta r(k) \\
-			 & \text{where:}                                                   \\
-			 & \Delta r(k) = r(k+1) - r(k)
-		\end{aligned}
-	\end{equation}
-\end{definition}
+The difference equation \autoref{systemModel} and control equation \autoref{eq:control_function}
+describe the full closed-loop dynamics. Substituting $u(k)$ from \autoref{eq:control_function}
+into \autoref{systemModel} gives the closed-loop state equation \textsubscript{\cite{tymoshchuk2024tracking}}:
+\begin{equation}
+	\label{eq:closed_loop}
+	\begin{aligned}
+		 & x(k+1) = \state - \beta \text{sgn}(x(k) - r(k)) + \Delta r(k) \\
+		 & \text{where:}                                                   \\
+		 & \Delta r(k) = r(k+1) - r(k)
+	\end{aligned}
+\end{equation}

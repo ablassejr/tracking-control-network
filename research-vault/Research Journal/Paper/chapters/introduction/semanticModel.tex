@@ -1,17 +1,6 @@
-\begin{description}
-	\setlength{\itemsep}{0.35em}
-	\begingroup \leftskip=2em
-	\item[\small Affine-In-The-Inputs:] The system dynamics are described by the sum of the
-	      linear function of the input and the nonlinear function of the state.
-	      This property simplifies the analysis and control design.
-	\item[\small Discrete-Time:] The system state is updated at specific, uniform intervals of time.
-
-	\item[{\makebox{\boldmath$x$}:}] System state.
-	\item[{\makebox{\boldmath$f$}:}] Nonlinear function that defines the system's internal state dynamics.
-	\item[{\makebox{\boldmath$g$}:}] Nonlinear function that defines the effect of the control input on the state dynamics.
-	\item[{\makebox{\boldmath$u$}:}] The control input applied to the system.
-	\item[{\makebox{\boldmath$\tau$}:}] Discrete-time step.
-
-
-	      \endgroup
-\end{description}
+where $x(k) \in \mathbb{R}^n$ is the discrete-time state variable,
+$f(x(k)) \in \mathbb{R}^n$ is the nonlinear function of the system's internal state dynamics,
+$g(x(k)) \in \mathbb{R}^{n \times m}$ is the nonlinear function that defines the effect of the
+control input on the state dynamics,
+$u(k) \in \mathbb{R}^m$ is the control input applied to the system,
+and $\tau > 0$ is the discrete-time step.

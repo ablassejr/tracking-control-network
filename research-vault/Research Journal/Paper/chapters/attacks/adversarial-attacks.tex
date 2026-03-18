@@ -1,58 +1,63 @@
-\newpage
 \section{Adversarial Attacks}
 
-For the purpose of simulating adversarial attacks against the tracking control
-neural network, the current state of the art method is to use a projected
-gradient descent (PGD)\textsubscript{\cite{madry2019deeplearningmodelsresistant}} attack, which is an iterative method that seeks to
-find the optimal perturbation that maximizes the loss function of the neural
-network. The simulation and defense of a neural network using the PGD method
-will be left for future analysis. This paper will examine the an alternative method
-of attack simulation, using additive gaussian noise perturbation\textsubscript{\cite{Hajari2023}}.
-The mathematical representation of the adversarially perturbed system is defined, considering~\autoref{systemModel}, by:
+The current state-of-the-art method for adversarial attacks against neural networks
+is the projected gradient descent (PGD) attack \textsubscript{\cite{madry2019deeplearningmodelsresistant}},
+an iterative method that seeks to find the optimal perturbation maximizing
+the loss function of the neural network. The simulation and defense of a neural network
+using the PGD method will be left for future analysis. In this paper, we examine
+an alternative method of attack simulation using additive Gaussian noise
+perturbation\textsubscript{\cite{Hajari2023}} on the error channel, $e(k)$.
+The mathematical representation of the adversarially perturbed system, considering \autoref{systemModel}, can be given by:
 
 \input{chapters/attacks/modified-tracking.tex}
 
-Substituting the control function from~\autoref{eq:control_function}
+Substituting the control function from \autoref{eq:control_function}
 into the perturbed system model gives the adversarially perturbed closed-loop state
 equation:
 
 \input{chapters/attacks/perturbed-closed-loop-equation.tex}
-\includesvg{attacked-system}[H]
+\includesvg[width=0.9\textwidth]{attacked-system}[H]
 
 \newpage
 \subsection{Simulation of Attacked CSTR System}
 
-\autoref{fig:attacked-output-comparison} presents the attacked-state
-trajectories from both the MATLAB reference implementation and the C++ port
-in a state-aligned layout.
+The trajectories of state variables $x_1(k)$ and $x_2(k)$ under adversarial
+perturbation are presented in \autoref{fig:attacked-output-comparison}.
+\autoref{fig:attacked-matlab-x1} and \autoref{fig:attacked-matlab-x2} show
+the MATLAB reference implementation results for conversion $x_1$ and temperature $x_2$,
+respectively. \autoref{fig:attacked-cpp-x1} and \autoref{fig:attacked-cpp-x2}
+show the corresponding C++ port results. Both implementations exhibit degraded
+tracking performance once the stochastic perturbation ($\sigma = 2$) is introduced,
+confirming that the adversarial attack model produces consistent effects across
+platforms.
 
 \begin{figure}[htbp]
 	\centering
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
-		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), conversion $x_1$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), conversion $x_1$.}
 		\label{fig:attacked-matlab-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
-		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), temperature $x_2$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), temperature $x_2$.}
 		\label{fig:attacked-matlab-x2}
 	\end{subfigure}
 	\par\medskip
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1}
-		\caption{C++ (\texttt{fig2a\_attacked}), conversion $x_1$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), conversion $x_1$.}
 		\label{fig:attacked-cpp-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2}
-		\caption{C++ (\texttt{fig2a\_attacked}), temperature $x_2$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), temperature $x_2$.}
 		\label{fig:attacked-cpp-x2}
 	\end{subfigure}
 	\caption{Attacked CSTR state trajectories under additive Gaussian noise
