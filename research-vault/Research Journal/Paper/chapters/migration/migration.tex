@@ -9,8 +9,8 @@
 \label{subsec:migration-motivation}
 
 The original tracking control simulation was implemented as a collection of
-MATLAB scripts (\texttt{Fig2a.m}--\texttt{Fig2c.m}),
-following the reference implementation in~\cite{tymoshchuk2024tracking}.
+MATLAB scripts (\texttt{cstr\_state\_tracking.m}--\texttt{cstr\_tracking\_error.m}),
+following the reference implementation in \textsubscript{\cite{tymoshchuk2024tracking}}.
 While MATLAB provides rapid prototyping through built-in matrix operations and
 plotting, several factors motivated a migration to C++:
 
@@ -80,10 +80,10 @@ external dependencies:
 \end{table}
 
 The build system produces four executables from separate translation units:
-\texttt{fig2a}, \texttt{fig2b}, \texttt{fig2c} (CSTR system under normal
-operation) and \texttt{fig2a\_attacked} (CSTR system under adversarial attack).
+\texttt{cstr\_state\_tracking}, \texttt{cstr\_control\_input}, \texttt{cstr\_tracking\_error} (CSTR system under normal
+operation) and \texttt{cstr\_state\_tracking\_attacked} (CSTR system under adversarial attack).
 Each executable contains its own \texttt{main()} function, with shared
-simulation logic factored into \texttt{state\_space.cpp}.
+simulation logic factored into \texttt{cstr\_dynamics.cpp}.
 
 \subsection{Implementation --- CSTR System (Fig.~2)}
 \label{subsec:migration-implementation}
@@ -110,21 +110,12 @@ The natural dynamics follow the discretized CSTR model:
 \end{equation}
 
 \noindent
-\textbf{MATLAB} (\texttt{Fig2a.m}, line~34):
-\begin{lstlisting}[style=matlab]
-f1(i) = x(i) + dt*(-alpha*x(i) + Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma)));
-\end{lstlisting}
+\textbf{MATLAB} (\texttt{cstr\_state\_tracking.m}, line~34):
+\lstinputlisting[style=matlab, firstline=34, lastline=34]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
 
 \noindent
-\textbf{C++} (\texttt{state\_space.cpp}, lines~23--28):
-\begin{lstlisting}[style=cpp]
-stateConditions.stateMatrix(0, i) =
-    *prevX1 +
-    settings.tau *
-        (-internalConditions.alpha * *prevX1 +
-         internalConditions.Da * (1 - *prevX1) *
-             exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
-\end{lstlisting}
+\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~24--29):
+\lstinputlisting[style=cpp, firstline=24, lastline=29]{\srccpp/cstr/cstr_dynamics.cpp}
 
 The C++ version accesses parameters through the \texttt{InternalConditions}
 struct rather than workspace variables, and uses cached pointer variables
@@ -144,19 +135,12 @@ where $e_2(k) = x_2(k) - r_2(k)$ is the tracking error and
 $\Delta r_2(k) = r_2(k{+}1) - r_2(k)$ is the reference change.
 
 \noindent
-\textbf{MATLAB} (\texttt{Fig2a.m}, line~67):
-\begin{lstlisting}[style=matlab]
-y(i+1) = y(i) + dt*(-betta*S(i) + r2(i+1) - r2(i));
-\end{lstlisting}
+\textbf{MATLAB} (\texttt{cstr\_state\_tracking.m}, line~68):
+\lstinputlisting[style=matlab, firstline=68, lastline=68]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
 
 \noindent
-\textbf{C++} (\texttt{state\_space.cpp}, lines~31--34):
-\begin{lstlisting}[style=cpp]
-deltaR2 = &stateConditions.deltaReference(1, i - 1);
-stateConditions.stateMatrix(1, i) =
-    *prevX2 +
-    settings.tau * (-internalConditions.beta * sgn(e2) + *deltaR2);
-\end{lstlisting}
+\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~32--35):
+\lstinputlisting[style=cpp, firstline=32, lastline=35]{\srccpp/cstr/cstr_dynamics.cpp}
 
 A notable difference is that the C++ implementation pre-computes the
 $\Delta r_2$ matrix in a single Eigen operation before entering the simulation
@@ -170,32 +154,17 @@ $t = 15$\,s and $t = 30$\,s.
 
 \noindent
 \textbf{MATLAB} uses time-based conditionals:
-\begin{lstlisting}[style=matlab]
-if 0<=t(i+1) & t(i+1)<=15
-    r1(i+1) = 0.4472;
-elseif 15<t(i+1) & t(i+1)<30
-    r1(i+1) = 0.7646;
-elseif 30<=t(i+1) & t(i+1)<tmax
-    r1(i+1) = 0.4472;
-end
-\end{lstlisting}
+\lstinputlisting[style=matlab, firstline=40, lastline=46]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
 
 \noindent
 \textbf{C++} uses index-based ternary expressions:
-\begin{lstlisting}[style=cpp]
-stateConditions.referenceMatrix(0, i) =
-    i > 15000 && i < 30000 ? 0.7646 : 0.4472;
-\end{lstlisting}
+\lstinputlisting[style=cpp, firstline=28, lastline=29]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
 
 The index-based approach is valid because $t = i \cdot \tau$ and
 $\tau = 45/45000 = 0.001$\,s, so $t = 15$ corresponds to $i = 15{,}000$.
 Additionally, the C++ version pre-computes the reference difference matrix
 $\Delta R$ via Eigen column operations:
-\begin{lstlisting}[style=cpp]
-stateConditions.deltaReference =
-    stateConditions.referenceMatrix.rightCols(settings.timeSteps - 1) -
-    stateConditions.referenceMatrix.leftCols(settings.timeSteps - 1);
-\end{lstlisting}
+\lstinputlisting[style=cpp, firstline=37, lastline=39]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
 
 \subsubsection{Signum Function}
 \label{subsubsec:signum}
@@ -205,24 +174,11 @@ sliding-mode controller.
 
 \noindent
 \textbf{MATLAB} implements it with explicit branching:
-\begin{lstlisting}[style=matlab]
-if (y(i)-r2(i)) > 0
-    S(i) = 1;
-elseif (y(i)-r2(i)) < 0
-    S(i) = -1;
-else
-    S(i) = 0;
-end
-\end{lstlisting}
+\lstinputlisting[style=matlab, firstline=56, lastline=62]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
 
 \noindent
 \textbf{C++} uses a branchless template:
-\begin{lstlisting}[style=cpp]
-template <typename T>
-int sgn(const T &val) {
-    return (T(0) < val) - (val < T(0));
-}
-\end{lstlisting}
+\lstinputlisting[style=cpp, firstline=93, lastline=95]{\srccpp/cstr/cstr_dynamics.cpp}
 
 The C++ implementation avoids conditional branching by exploiting boolean
 arithmetic: the expression evaluates to $+1$, $-1$, or $0$ without any
@@ -236,15 +192,7 @@ MATLAB's native \texttt{subplot}/\texttt{plot} functions were replaced with
 the \texttt{cxxplot} library from the US Naval Research Laboratory. The
 library provides interactive Qt-based plot windows with a named-parameter API:
 
-\begin{lstlisting}[style=cpp]
-auto x1Plot = cxxplot::plot(tX1, x1Ds,
-    window_title_ = "Conversion",
-    show_legend_  = true,
-    name_         = "x1",
-    xlabel_       = "Time (s)",
-    ylabel_       = "x1, r1");
-x1Plot.add_graph(tX1Ref, x1RefDs, name_ = "r1");
-\end{lstlisting}
+\lstinputlisting[style=cpp, firstline=84, lastline=87]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
 
 To handle the 45{,}000 data points efficiently, a min/max envelope
 downsampling utility reduces the data to approximately 2{,}000 points
@@ -276,41 +224,30 @@ equivalents.
 The adversarial attack simulation extends the normal CSTR dynamics by
 injecting additive Gaussian noise into the temperature state update at each
 time step. The attack is implemented in both MATLAB
-(\texttt{Fig2a\_attacked.m}) and C++ (\texttt{fig2a\_attacked.cpp}), with the
+(\texttt{cstr\_state\_tracking\_attacked.m}) and C++ (\texttt{cstr\_state\_tracking\_attacked.cpp}), with the
 core attacked dynamics defined in the shared
-\texttt{attackedSystemFunction()} in \texttt{state\_space.cpp}.
+\texttt{attackedSystemFunction()} in \texttt{cstr\_dynamics.cpp}.
 
 \subsubsection{Noise Injection}
 \label{subsubsec:noise-injection}
 
 The key difference from the normal system is the addition of a stochastic
-perturbation $I(k) \sim \mathcal{N}(0, \sigma^2 \Delta t)$ to the
+perturbation $\epsilon(k) \sim \mathcal{N}(0, \sigma^2 \Delta t)$ to the
 temperature state.
 
 \noindent
-\textbf{MATLAB} (\texttt{Fig2a\_attacked.m}, lines~31--37):
-\begin{lstlisting}[style=matlab]
-sigma = 2;
-Ik = sigma * sqrt(dt) * randn();
-
-f1(i) = x(i) + dt*(-alpha*x(i) + Da*(1-x(i))*exp(y(i)/(1+y(i)/gamma))) + Ik;
-\end{lstlisting}
+\textbf{MATLAB} (\texttt{cstr\_state\_tracking\_attacked.m}, lines~31--37):
+\lstinputlisting[style=matlab, firstline=31, lastline=32]{\srcmatlab/cstr/attacked/cstr_state_tracking_attacked.m}
+\lstinputlisting[style=matlab, firstline=37, lastline=37, firstnumber=37]{\srcmatlab/cstr/attacked/cstr_state_tracking_attacked.m}
 
 \noindent
 In MATLAB, the noise sample is drawn via \texttt{randn()} scaled by
 $\sigma \Delta t$, and is added only to the attacked $x_2$ update.
 
 \noindent
-\textbf{C++} (\texttt{state\_space.cpp}, lines~46--73):
-\begin{lstlisting}[style=cpp]
-std::normal_distribution<double> noise(0.0, 2);
-std::default_random_engine randomNumberGenerator;
-// ...
-stateConditions.stateMatrix(1, i) =
-    *prevX2 +
-    settings.tau * (-internalConditions.beta * sgn(e2) + *deltaR2) +
-    noise(randomNumberGenerator);
-\end{lstlisting}
+\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~46--73):
+\lstinputlisting[style=cpp, firstline=46, lastline=47]{\srccpp/cstr/cstr_dynamics.cpp}
+\lstinputlisting[style=cpp, firstline=70, lastline=73, firstnumber=70]{\srccpp/cstr/cstr_dynamics.cpp}
 
 \noindent
 The C++ implementation uses the \texttt{<random>} standard library with a
@@ -329,28 +266,28 @@ the MATLAB reference implementation and the C++ port.
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_x1_r1}
-		\caption{MATLAB (\texttt{Fig2a.m}), conversion $x_1$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking.m}), conversion $x_1$.}
 		\label{fig:fig2-matlab-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_x2_r2}
-		\caption{MATLAB (\texttt{Fig2a.m}), temperature $x_2$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking.m}), temperature $x_2$.}
 		\label{fig:fig2-matlab-x2}
 	\end{subfigure}
 	\par\medskip
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1}
-		\caption{C++ (\texttt{fig2a}), conversion $x_1$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking}), conversion $x_1$.}
 		\label{fig:fig2-cpp-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2}
-		\caption{C++ (\texttt{fig2a}), temperature $x_2$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking}), temperature $x_2$.}
 		\label{fig:fig2-cpp-x2}
 	\end{subfigure}
 	\caption{Comparison of CSTR state trajectories from the MATLAB reference
@@ -374,28 +311,28 @@ a state-aligned comparison, with MATLAB and C++ occupying separate rows.
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
-		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), conversion $x_1$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), conversion $x_1$.}
 		\label{fig:fig2-attacked-matlab-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
-		\caption{MATLAB (\texttt{Fig2a\_attacked.m}), temperature $x_2$.}
+		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), temperature $x_2$.}
 		\label{fig:fig2-attacked-matlab-x2}
 	\end{subfigure}
 	\par\medskip
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1}
-		\caption{C++ (\texttt{fig2a\_attacked}), conversion $x_1$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), conversion $x_1$.}
 		\label{fig:fig2-attacked-cpp-x1}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2}
-		\caption{C++ (\texttt{fig2a\_attacked}), temperature $x_2$.}
+		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), temperature $x_2$.}
 		\label{fig:fig2-attacked-cpp-x2}
 	\end{subfigure}
 	\caption{Comparison of attacked CSTR state trajectories. Both
@@ -420,22 +357,10 @@ in tracking performance under the specified noise intensity.
 
 The C++ simulation includes instrumentation via
 \texttt{std::chrono::high\_resolution\_clock}. The MATLAB simulation uses
-\texttt{tic}/\texttt{toc}.  \autoref{fig:fig2-exec-time}
-compares execution times across implementations.
+\texttt{tic}/\texttt{toc}. \autoref{tab:runtime-comparison} summarises the
+runtime measurements across both simulation scenarios ($n = 50$ runs each).
 
-\begin{figure}[H]
-	\centering
-	\includesvg[width=\textwidth]{fig2_exec_time_comparison}
-	\caption{Execution time comparison for the CSTR tracking control
-		simulation ($n = 45{,}000$ steps, $\tau = 0.001$\,s). }
-	\label{fig:fig2-exec-time}
-\end{figure}
-
-Note that the MATLAB averages include a first-run JIT compilation overhead,
-which is representative of interactive usage. Excluding the warmup run, the
-steady-state MATLAB time is approximately 0.005\,s, reducing the speedup
-factor to approximately 4$\times$. The JIT overhead is a real cost in the
-MATLAB execution model and is therefore included in the reported averages.
+\input{chapters/migration/runtime_comparison_table}
 
 \subsection{Output Validation}
 \label{subsec:migration-validation}
@@ -454,7 +379,7 @@ reference data via \texttt{writematrix} at the end of the simulation loop;
 the C++ executable writes its output through \texttt{std::ofstream} with
 15-digit precision.
 
-A standalone validation executable (\texttt{validate\_output}) loads both CSV
+A standalone validation executable (\texttt{validate\_matlab\_cpp}) loads both CSV
 files, extracts corresponding columns into Eigen vectors, and computes the
 element-wise maximum absolute error for each variable:
 \begin{equation}
@@ -472,7 +397,7 @@ integration into automated build pipelines.
 \subsubsection{Validation Results}
 
 After correcting an off-by-one initialization error in the reference
-trajectory (see~\S\ref{subsubsec:reference}), the validation confirms
+trajectory (see \autoref{subsubsec:reference}), the validation confirms
 machine-precision agreement between the two implementations:
 
 \begin{table}[htbp]
