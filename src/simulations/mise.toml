@@ -13,7 +13,7 @@ run = [
 ]
 
 [tasks.run-clean]
-description = "Run clean CSTR simulations (50 runs each)"
+description = "Run nominal CSTR simulations"
 depends = ["build"]
 dir = "{{config_root}}/C++"
 run = [
@@ -23,7 +23,7 @@ run = [
 ]
 
 [tasks.run-attacked]
-description = "Run attacked CSTR simulation (50 runs)"
+description = "Run perturbed CSTR simulation"
 depends = ["build"]
 dir = "{{config_root}}/C++"
 run = [
@@ -45,9 +45,36 @@ run = [
   "python3 $SIM_ROOT/generate_runtime_table.py --base-dir $SIM_ROOT --output \"$PAPER_DIR/chapters/migration/runtime_comparison_table.tex\"",
 ]
 
+[tasks.plot]
+description = "Generate figures from C++ simulation CSV output using gnuplot"
+depends = ["run-clean", "run-attacked"]
+dir = "{{config_root}}/C++"
+run = [
+  "gnuplot -e \"csv='cstr_state_tracking_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking.gp",
+  "gnuplot -e \"csv='cstr_state_tracking_attacked_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking_attacked.gp",
+  "gnuplot -e \"csv='cstr_control_input_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_control_input.gp",
+  "gnuplot -e \"csv='cstr_tracking_error_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_tracking_error.gp",
+]
+
+[tasks.matlab-clean]
+description = "Run nominal CSTR MATLAB simulations"
+dir = "{{config_root}}/matlab/cstr/clean"
+run = [
+  "matlab -batch cstr_state_tracking",
+  "matlab -batch cstr_control_input",
+  "matlab -batch cstr_tracking_error",
+]
+
+[tasks.matlab-attacked]
+description = "Run perturbed CSTR MATLAB simulation"
+dir = "{{config_root}}/matlab/cstr/attacked"
+run = [
+  "matlab -batch cstr_state_tracking_attacked",
+]
+
 [tasks.all]
 description = "Build, run all simulations, validate, and generate runtime table"
-depends = ["validate", "generate-table"]
+depends = ["validate", "generate-table", "matlab-clean", "matlab-attacked", "plot"]
 
 [tasks.debug-clean]
 description = "Build (Debug) and run clean CSTR simulations"
