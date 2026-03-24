@@ -9,10 +9,9 @@ int main() {
   SimSettings settings;
   StateConditions stateConditions(settings.timeSteps);
   InternalConditions internalConditions;
-  std::vector<double> timeVector, controlVector;
+  std::vector<double> controlVector;
 
   for (int i = 0; i < settings.timeSteps; i++) {
-    timeVector.push_back(i * settings.tau);
     stateConditions.referenceMatrix(0, i) =
         i > 15000 && i < 30000 ? 0.7646 : 0.4472;
     stateConditions.referenceMatrix(1, i) =
