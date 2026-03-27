@@ -1,0 +1,85 @@
+\subsection{Convergence Analysis}
+
+\begin{theorem}[Defended Tracking Error Bound]
+\label{thm:defended_convergence}
+Consider the defended system (\autoref{eq:defended_closed_loop}) with three
+redundant channels (\autoref{eq:channel_error}), where exactly one channel is
+corrupted ($\sum_{i=1}^{3} \alpha_i = 1$), sensor noise is bounded by
+$\|\delta_i(k)\| \leq \delta_{\max}$ for all $i$, and the adversarial
+perturbation satisfies $\epsilon(k) \sim \mathcal{N}(0, \sigma^2 \mathcal{I}_n)$
+with $\sigma > 2\delta_{\max}$. Then:
+
+\begin{enumerate}
+    \item \textbf{(Detection)} The minimum-variance pair selection
+    (\autoref{eq:pair_selection}) excludes the corrupted channel for all $k$
+    such that $\|\epsilon(k)\| > 2\delta_{\max}$.
+
+    \item \textbf{(Bounded error)} The defended error satisfies
+    \begin{equation}
+        \label{eq:defended_error_bound}
+        \|\hat{e}(k) - e(k)\| \leq \delta_{\max}
+    \end{equation}
+
+    \item \textbf{(Tracking convergence)} If $\delta_{\max} < \beta$, then
+    $\operatorname{sgn}(\hat{e}_n(k)) = \operatorname{sgn}(e_n(k))$ for all
+    components satisfying $|e_n(k)| > \delta_{\max}$, and the defended
+    closed-loop (\autoref{eq:defended_closed_loop}) drives the tracking error
+    into the ball $\|e(k)\| \leq \beta + \delta_{\max}$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+Without loss of generality, let channel $3$ be corrupted
+($\alpha_3 = 1$, $\alpha_1 = \alpha_2 = 0$).
+
+\textbf{Detection.}
+The three pairwise disagreements are
+\begin{align}
+    V_{12}(k) &= \|\delta_1(k) - \delta_2(k)\|^2 \leq (2\delta_{\max})^2
+    \label{eq:v12_bound} \\
+    V_{13}(k) &= \|\delta_1(k) + \epsilon(k) - \delta_3(k)\|^2
+    \label{eq:v13} \\
+    V_{23}(k) &= \|\delta_2(k) + \epsilon(k) - \delta_3(k)\|^2
+    \label{eq:v23}
+\end{align}
+By the reverse triangle inequality, for $\ell \in \{1, 2\}$:
+\[
+    V_{\ell 3}(k) \geq \bigl(\|\epsilon(k)\| - 2\delta_{\max}\bigr)^2
+\]
+When $\|\epsilon(k)\| > 2\delta_{\max}$, we have
+$V_{\ell 3}(k) > 0 \geq 0$ and moreover
+$V_{\ell 3}(k) > (2\delta_{\max})^2 \geq V_{12}(k)$.
+Thus the pair $(1, 2)$ is selected and channel $3$ is excluded.
+
+\textbf{Bounded error.}
+With pair $(1, 2)$ selected:
+\[
+    \hat{e}(k) = \frac{e_1(k) + e_2(k)}{2}
+    = e(k) - \frac{\delta_1(k) + \delta_2(k)}{2}
+\]
+By the triangle inequality:
+\[
+    \|\hat{e}(k) - e(k)\| = \left\|\frac{\delta_1(k) + \delta_2(k)}{2}\right\|
+    \leq \frac{\|\delta_1(k)\| + \|\delta_2(k)\|}{2}
+    \leq \delta_{\max}
+\]
+
+\textbf{Tracking convergence.}
+For any component $n$ with $|e_n(k)| > \delta_{\max}$:
+\[
+    |\hat{e}_n(k) - e_n(k)| \leq \delta_{\max} < |e_n(k)|
+\]
+so $\hat{e}_n(k)$ has the same sign as $e_n(k)$, giving
+$\operatorname{sgn}(\hat{e}_n(k)) = \operatorname{sgn}(e_n(k))$.
+Substituting into the defended closed-loop (\autoref{eq:defended_closed_loop}):
+\[
+    e(k+1) = e(k) - \beta \operatorname{sgn}(\hat{e}(k))
+\]
+which drives $|e_n(k)|$ toward zero at rate $\beta$ per step whenever
+$|e_n(k)| > \delta_{\max}$. The error converges to the ball
+$\|e(k)\| \leq \beta + \delta_{\max}$.
+
+Under ideal sensor conditions ($\delta_{\max} = 0$), detection succeeds
+whenever $\epsilon(k) \neq 0$, $\hat{e}(k) = e(k)$ exactly, and the defended
+closed-loop reduces to the nominal system (\autoref{eq:closed_loop}).
+\end{proof}
