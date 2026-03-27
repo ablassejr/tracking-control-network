@@ -7,3 +7,4 @@ target_include_directories(cstr_dynamics_lib PUBLIC
 
 add_subdirectory(clean)
 add_subdirectory(attacked)
+add_subdirectory(defended)

@@ -1,0 +1,6 @@
+add_executable(cstr_state_tracking_defended cstr_state_tracking_defended.cpp)
+target_link_libraries(cstr_state_tracking_defended PUBLIC cstr_dynamics_lib)
+
+add_executable(test_defended_stability test_defended_stability.cpp)
+target_link_libraries(test_defended_stability PUBLIC cstr_dynamics_lib)
+add_test(NAME test_defended_stability COMMAND test_defended_stability)
