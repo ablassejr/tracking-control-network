@@ -23,11 +23,21 @@ run = [
 ]
 
 [tasks.run-attacked]
-description = "Run perturbed CSTR simulation"
+description = "Run perturbed CSTR simulations"
 depends = ["build"]
 dir = "{{config_root}}/C++"
 run = [
   "./build/cstr/attacked/cstr_state_tracking_attacked",
+  "./build/cstr/attacked/cstr_control_input_attacked",
+  "./build/cstr/attacked/cstr_tracking_error_attacked",
+]
+
+[tasks.run-defended]
+description = "Run defended CSTR simulations"
+depends = ["build"]
+dir = "{{config_root}}/C++"
+run = [
+  "./build/cstr/defended/cstr_state_tracking_defended",
 ]
 
 [tasks.validate]
@@ -47,13 +57,14 @@ run = [
 
 [tasks.plot]
 description = "Generate figures from C++ simulation CSV output using gnuplot"
-depends = ["run-clean", "run-attacked"]
+depends = ["run-clean", "run-attacked", "run-defended"]
 dir = "{{config_root}}/C++"
 run = [
   "gnuplot -e \"csv='cstr_state_tracking_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking.gp",
   "gnuplot -e \"csv='cstr_state_tracking_attacked_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking_attacked.gp",
   "gnuplot -e \"csv='cstr_control_input_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_control_input.gp",
   "gnuplot -e \"csv='cstr_tracking_error_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_tracking_error.gp",
+  "gnuplot -e \"csv_defended='cstr_state_tracking_defended_cpp_output.csv'; csv_attacked='cstr_state_tracking_attacked_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking_defended.gp",
 ]
 
 [tasks.matlab-clean]
@@ -74,7 +85,7 @@ run = [
 
 [tasks.all]
 description = "Build, run all simulations, validate, and generate runtime table"
-depends = ["validate", "generate-table", "matlab-clean", "matlab-attacked", "plot"]
+depends = ["validate", "generate-table", "matlab-clean", "matlab-attacked", "plot", "run-defended"]
 
 [tasks.debug-clean]
 description = "Build (Debug) and run clean CSTR simulations"
@@ -89,12 +100,14 @@ run = [
 ]
 
 [tasks.debug-attacked]
-description = "Build (Debug) and run attacked CSTR simulation"
+description = "Build (Debug) and run attacked CSTR simulations"
 dir = "{{config_root}}/C++"
 run = [
   "cmake . -B ./build -DCMAKE_BUILD_TYPE=Debug",
   "make -C ./build -j$(sysctl -n hw.ncpu)",
   "./build/cstr/attacked/cstr_state_tracking_attacked",
+  "./build/cstr/attacked/cstr_control_input_attacked",
+  "./build/cstr/attacked/cstr_tracking_error_attacked",
 ]
 
 [tasks.test-clean]
@@ -114,4 +127,23 @@ run = [
   "cmake . -B ./build -DCMAKE_BUILD_TYPE=Release",
   "make -C ./build -j$(sysctl -n hw.ncpu)",
   "./build/cstr/attacked/cstr_state_tracking_attacked",
+  "./build/cstr/attacked/cstr_control_input_attacked",
+  "./build/cstr/attacked/cstr_tracking_error_attacked",
+]
+
+[tasks.debug-defended]
+description = "Build (Debug) and run defended CSTR simulations"
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Debug",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/defended/cstr_state_tracking_defended",
+]
+
+[tasks.test-defended]
+dir = "{{config_root}}/C++"
+run = [
+  "cmake . -B ./build -DCMAKE_BUILD_TYPE=Release",
+  "make -C ./build -j$(sysctl -n hw.ncpu)",
+  "./build/cstr/defended/cstr_state_tracking_defended",
 ]
