@@ -1,4 +1,14 @@
-% Switching controller -
-% Use the tracking equations from [1] until the error dynamics reach a certain
-%   threshold, then switch to the more robust controller from [2] until the error
-%   dynamics are back within acceptable bounds.
+\section{Defense Mechanisms}
+
+The adversarial perturbation described in the preceding section degrades tracking
+performance by corrupting the error signal used in the control law. A defense
+mechanism must recover a sufficiently accurate error signal to preserve the
+convergence properties of the nominal system. Among several candidate approaches
+--- including feed-forward switching, variance-based mitigation, and control
+update skipping --- a redundant sensor voting scheme is developed and analyzed below.
+The remaining methods are left for future investigation.
+
+\input{chapters/defense/voting-scheme.tex}
+\input{chapters/diagrams/defended-system.tex}
+\input{chapters/defense/voting-theorem.tex}
+\input{chapters/defense/defended-simulation.tex}
