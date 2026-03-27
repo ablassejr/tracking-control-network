@@ -75,6 +75,63 @@ void attackedSystemFunction(SimSettings &settings,
   }
 }
 
+void defendedSystemFunction(SimSettings &settings,
+                            StateConditions &stateConditions,
+                            InternalConditions &internalConditions) {
+  double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
+  std::normal_distribution<double> epsilon(0.0, 1);
+  std::default_random_engine randomNumberGenerator;
+
+  for (int i = 1; i < settings.timeSteps; i++) {
+    prevX1 = &stateConditions.stateMatrix(0, i - 1);
+    prevX2 = &stateConditions.stateMatrix(1, i - 1);
+    x1Ref = &stateConditions.referenceMatrix(0, i);
+    x2Ref = &stateConditions.referenceMatrix(1, i);
+
+    double e2 = *prevX2 - stateConditions.referenceMatrix(1, i - 1);
+    stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
+    stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
+
+    // 3 redundant channels: channels 1,2 are clean, channel 3 is corrupted
+    // Attack enters on the reference channel: r_3(k) = r(k) + epsilon(k)
+    double noise = epsilon(randomNumberGenerator);
+    double e2_ch1 = e2;           // clean
+    double e2_ch2 = e2;           // clean
+    double e2_ch3 = e2 - noise;   // corrupted: x(k) - (r(k) + eps) = e(k) - eps
+
+    // Pairwise disagreement: V_ij = (e_i - e_j)^2
+    double v12 = (e2_ch1 - e2_ch2) * (e2_ch1 - e2_ch2);
+    double v13 = (e2_ch1 - e2_ch3) * (e2_ch1 - e2_ch3);
+    double v23 = (e2_ch2 - e2_ch3) * (e2_ch2 - e2_ch3);
+
+    // Select minimum-variance pair and average
+    double e2_hat;
+    if (v12 <= v13 && v12 <= v23) {
+      e2_hat = (e2_ch1 + e2_ch2) / 2.0;
+    } else if (v13 <= v23) {
+      e2_hat = (e2_ch1 + e2_ch3) / 2.0;
+    } else {
+      e2_hat = (e2_ch2 + e2_ch3) / 2.0;
+    }
+
+    // x1 open-loop natural dynamics (unchanged)
+    stateConditions.stateMatrix(0, i) =
+        *prevX1 +
+        settings.tau *
+            (-internalConditions.alpha * *prevX1 +
+             internalConditions.Da * (1 - *prevX1) *
+                 exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
+
+    // x2 closed-loop dynamics with defended error
+    deltaR2 = &stateConditions.deltaReference(1, i - 1);
+    stateConditions.stateMatrix(1, i) =
+        *prevX2 + settings.tau * (-internalConditions.beta * sgn(e2_hat) +
+                                  *deltaR2);
+
+    stateConditions.time = i * settings.tau;
+  }
+}
+
 void controller(StateConditions &stateConditions,
                 const InternalConditions &internalConditions,
                 const int &iteration, double &x1Control, double &x2Control) {

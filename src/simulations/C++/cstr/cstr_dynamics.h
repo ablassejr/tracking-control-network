@@ -6,6 +6,10 @@ void attackedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions);
 
+void defendedSystemFunction(SimSettings &settings,
+                            StateConditions &stateConditions,
+                            InternalConditions &internalConditions);
+
 void controller(StateConditions &stateConditions,
                 const InternalConditions &internalConditions,
                 const int &iteration, double &x1Control, double &x2Control);
