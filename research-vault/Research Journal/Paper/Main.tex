@@ -76,19 +76,26 @@
 }
 \maketitle
 
+% =============================================================================
 \begin{abstract}
-	A neural network (NN) tracking control for discrete-time nonlinear systems with known internal dynamics is designed. The adversarial attack on the tracking control NN is described by Gaussian distributed additive stochastic noise. The adversarially perturbed system and the corresponding closed-loop tracking dynamics are derived. A functional block-diagram of the controlled nonlinear system is presented. Computer simulations of the controller operation under nominal and adversarial conditions are provided. A C++ implementation of the simulation is compared against a MATLAB reference to confirm numerical consistency.
-
-	% \begin{IEEEkeywords}
-
-	\keywords{ control systems, neural networks, adversarial attacks}
-	% \end{IEEEkeywords}
+	A neural network (NN) tracking control for discrete-time nonlinear systems
+	with known internal dynamics is designed. The adversarial attack on the
+	tracking control NN is described by Gaussian distributed additive stochastic
+	noise. The adversarially perturbed system and the corresponding closed-loop
+	tracking dynamics are derived. A functional block-diagram of the controlled
+	nonlinear system is presented. Computer simulations of the controller operation
+	under nominal and adversarial conditions are provided. A redundant sensor voting scheme defense is proposed,
+	analyzed, and simulated, recovering nominal tracking performance under attack.
+	A C++ implementation of
+	the simulation is compared against a MATLAB reference to confirm numerical consistency.
 \end{abstract}
 % =============================================================================
-
-\section{Introduction}
+\keywords{ control systems, neural networks, adversarial attacks}
+% =============================================================================
+\section*{Introduction}
 \input{chapters/introduction/intro.tex}
 \input{chapters/attacks/adversarial-attacks.tex}
+\input{chapters/defense/defense.tex}
 \newpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
