@@ -1,5 +1,21 @@
+The corresponding functional block-diagram of the defended nonlinear system is
+presented in \autoref{fig:defended-system}. The diagram extends the attacked
+system (\autoref{fig:attacked-system}) by adding three redundant reference
+channels and a voter block $V$. The reference signal $r(k)$ is broadcast to
+three channels; one channel is corrupted by the adversarial perturbation
+$\epsilon(k)$. Each channel computes its own tracking error $e_i(k)$. The
+voter block receives all three error signals, computes the pairwise
+disagreement $V_{ij}(k)$ from \autoref{eq:pairwise_disagreement}, selects
+the minimum-variance pair via \autoref{eq:pair_selection}, and outputs the
+defended error $\hat{e}(k)$. The remainder of the control path --- sign
+activation $S$, learning rate $\beta$, nonlinear functions $f(x)$ and $g(x)$,
+and NN solver $LAESS$ --- is identical to the nominal system in
+\autoref{fig:clean-system}.
 
 \begin{figure}[H]
-	\centering
-	\caption{Functional block-diagram of the controlled nonlinear system with defensive measures.}
+    \centering
+    \includesvg[width=0.9\textwidth]{defended-system}
+    \caption{Functional block-diagram of the controlled nonlinear system with
+    voting scheme defense.}
+    \label{fig:defended-system}
 \end{figure}
