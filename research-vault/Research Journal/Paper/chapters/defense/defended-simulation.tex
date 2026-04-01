@@ -1,42 +1,27 @@
 \subsection{Simulation of Defended CSTR System}
 
 The voting scheme defense is applied to the CSTR system from
-\autoref{eq:attacked_cstr_dynamics} under the same adversarial perturbation
-($\sigma = 1$) used in \autoref{fig:attacked-state-tracking}. Three redundant
-channels measure the reference signal; channel~3 is corrupted by additive
-Gaussian noise on the reference path, while channels~1 and~2 receive the
-reference exactly ($\delta_i = 0$). The minimum-variance pair selection
-(\autoref{eq:pair_selection}) identifies and excludes the corrupted channel at
-each time step, and the defended error $\hat{e}(k)$ from
-\autoref{eq:defended_error} is used in the control law.
+\eqref{eq:cstr_dynamics} under a mathematically identical adversarial perturbation
+as was used in Fig.~\ref{fig:attacked-state-tracking}. Three parallel processing units
+independently compute the tracking error. Unit~3 is corrupted with noise
+$\text{std} = 2$, while units~1 and~2 are ideal.
 
-\autoref{fig:defended-state-tracking} presents the defended state trajectories
-alongside the attacked trajectories from \autoref{fig:attacked-state-tracking}.
+Fig.~\ref{fig:defended-state-tracking} presents the defended state trajectories.
 Under the voting scheme, the state variables $x_1(t)$ and $x_2(t)$ recover
-nominal tracking performance, confirming the theoretical result of
-\autoref{thm:defended_convergence} under ideal sensor conditions.
+nominal tracking performance, confirming the validity of
+Theorem~\ref{thm:defended_convergence}.
 
 \begin{figure}[H]
-    \centering
-    \begin{subfigure}[H]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{cxxplot_defended_time_vs_x1_r1}
-        \caption{Trajectories of state $x_1(t)$ and reference $r_1(t)$.
-        Grey: attacked system. Blue: defended system.}
-        \label{fig:defended-x1-r1}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[H]{0.48\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{cxxplot_defended_time_vs_x2_r2}
-        \caption{Trajectories of state $x_2(t)$ and reference $r_2(t)$.
-        Grey: attacked system. Blue: defended system.}
-        \label{fig:defended-x2-r2}
-    \end{subfigure}
-    \caption{Defended state trajectories for the CSTR system under the
-        voting scheme defense with three redundant channels. The attacked
-        trajectories (grey) from \autoref{fig:attacked-state-tracking} are
-        overlaid for comparison. The defended system recovers nominal
-        tracking performance.}
-    \label{fig:defended-state-tracking}
+	\centering
+	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x1_r1}
+	\caption{Conversion $x_1$ and reference $r_1$ trajectories for the defended CSTR.}
+	\label{fig:defended-state-tracking}
+	\label{fig:defended-x1-r1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x2_r2}
+	\caption{Temperature $x_2$ and reference $r_2$ trajectories for the defended CSTR.}
+	\label{fig:defended-x2-r2}
 \end{figure}

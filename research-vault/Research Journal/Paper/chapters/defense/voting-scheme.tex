@@ -1,52 +1,54 @@
 \subsection{Voting Scheme Defense}
 
-Consider three redundant sensor channels, each receiving the reference signal
-$r(k)$. Channel $i$ receives
-\begin{equation}
-    \label{eq:channel_reference}
-    r_i(k) = r(k) + \delta_i(k) + \alpha_i \epsilon(k)
-\end{equation}
-where $\delta_i(k)$ is bounded sensor noise with $\|\delta_i(k)\| \leq \delta_{\max}$
-for all $i$, $\epsilon(k) \sim \mathcal{N}(0, \sigma^2 \mathcal{I}_n)$ is the
-adversarial perturbation, and $\alpha_i \in \{0, 1\}$ with
-$\sum_{i=1}^{3} \alpha_i = 1$ indicates the single corrupted channel.
+The defense mechanism employs $n \geq 3$ parallel processing units, each
+independently computing the tracking error $e(k)$.
+This approach follows the redundant voting paradigm used in
+safety-critical systems~\cite{lyons1962tmr, siewiorek1998reliable}.
+Under nominal conditions, all units compute the error identically.
+An adversarial attack corrupts at most one unit by injecting additive noise
+into its error computation. This redundancy enables detection and exclusion
+of the corrupted processing unit through pairwise comparison.
 
-Each channel computes its tracking error as
+\centering{WORK IN PROGRESS}
+\par
+Consider $n = 3$ processing units computing the tracking error. Unit $i$ produces
 \begin{equation}
-    \label{eq:channel_error}
-    e_i(k) = x(k) - r_i(k) = e(k) - \delta_i(k) - \alpha_i \epsilon(k)
+	\label{eq:channel_error}
+	e_i(k) = e(k) + \delta_i(k),
 \end{equation}
-where $e(k) = x(k) - r(k)$ is the true error from \autoref{eq:error_dynamics}.
-Under ideal sensor conditions ($\delta_i(k) = 0$), the two clean channels
-recover $e(k)$ exactly, while the corrupted channel yields
-$e(k) - \epsilon(k)$.
+where $\delta_i(k)$ represents the noise on processing unit $i$.
+Clean units are ideal, with $\delta_i(k) = 0$, which gives
+\begin{displaymath}
+	e_i(k) = e(k)\text{.}
+\end{displaymath}
 
-The pairwise disagreement metric between channels $i$ and $j$ is defined as
-\begin{equation}
-    \label{eq:pairwise_disagreement}
-    V_{ij}(k) = \|e_i(k) - e_j(k)\|^2
-\end{equation}
 
-The minimum-variance pair is selected by
-\begin{equation}
-    \label{eq:pair_selection}
-    (i^*, j^*) = \underset{(i,j)}{\arg\min} \; V_{ij}(k)
-\end{equation}
-
-The defended error signal is the average of the selected pair:
-\begin{equation}
-    \label{eq:defended_error}
-    \hat{e}(k) = \frac{e_{i^*}(k) + e_{j^*}(k)}{2}
-\end{equation}
-
-Substituting $\hat{e}(k)$ into the control law from \autoref{eq:control_function}
-gives the defended control input
-\begin{equation}
-    \label{eq:defended_control}
-    \hat{u}(k) = g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(\hat{e}(k)) \bigr)
-\end{equation}
-and the defended closed-loop state equation
-\begin{equation}
-    \label{eq:defended_closed_loop}
-    x(k+1) = x(k) - \beta \operatorname{sgn}(\hat{e}(k)) + \Delta r(k)
-\end{equation}
+% The pairwise disagreement metric between units $i$ and $j$ is defined as
+% \begin{equation}
+% 	\label{eq:pairwise_disagreement}
+% 	V_{ij}(k) = \|e_i(k) - e_j(k)\|^2.
+% \end{equation}
+%
+% The minimum-variance pair is selected by
+% \begin{equation}
+% 	\label{eq:pair_selection}
+% 	(i^*, j^*) = \underset{(i,j)}{\arg\min} \; V_{ij}(k).
+% \end{equation}
+%
+% The defended error signal is the average of the selected pair,
+% \begin{equation}
+% 	\label{eq:defended_error}
+% 	\hat{e}(k) = \frac{e_{i^*}(k) + e_{j^*}(k)}{2}.
+% \end{equation}
+%
+% Substituting $\hat{e}(k)$ into the control law from \eqref{eq:control_function}
+% gives the defended control input
+% \begin{equation}
+% 	\label{eq:defended_control}
+% 	\hat{u}(k) = g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(\hat{e}(k)) \bigr),
+% \end{equation}
+% and the defended closed-loop state equation
+% \begin{equation}
+% 	\label{eq:defended_closed_loop}
+% 	x(k+1) = x(k) - \beta \operatorname{sgn}(\hat{e}(k)) + \Delta r(k).
+% \end{equation}
