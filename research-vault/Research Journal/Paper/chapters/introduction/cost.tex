@@ -1,40 +1,40 @@
 \section{Cost Function and Optimal Tracking Control}
 
-The solution to the tracking control problem has been designed by minimizing a cost function based on the tracking error. This approach follows the foundational framework established in \textsubscript{\cite{tymoshchuk2024tracking}} (PDF document [1]).
+The solution to the tracking control problem has been designed by minimizing a cost function based on the tracking error. This approach follows the foundational framework established in \cite{tymoshchuk2024tracking}.
 
 \subsection{Cost Function}
 
-The cost function for the discrete-time tracking control problem is defined as:
+The cost function for the discrete-time tracking control problem is
 
 \begin{equation}
-C(x) = \|e\|
+C(x) = \|e\|,
 \label{eq:cost_function}
 \end{equation}
 
-where:
+where
 \begin{itemize}
-	\item $C(x)$ represents the cost associated with state $x(k)$
-	\item $e = r(k) - x(k)$ is the tracking error (the difference between the reference trajectory and the system state)
-	\item $\|\cdot\|$ denotes the norm of the tracking error vector
+	\item $C(x)$ represents the cost associated with state $x(k)$,
+	\item $e = x(k) - r(k)$ is the tracking error (the difference between the system state and the reference trajectory),
+	\item $\|\cdot\|$ denotes the norm of the tracking error vector.
 \end{itemize}
 
 The cost function measures the magnitude of the tracking error at each time step. By minimizing this cost function, the control system drives the state trajectory to follow the reference trajectory with minimal error.
 
 \subsection{Optimal Value Function}
 
-The optimal value function is obtained by minimizing the cost function over all possible control inputs:
+The optimal value function is obtained by minimizing the cost function over all possible control inputs,
 
 \begin{equation}
-C^*(x) = \min_u \|e\| = u^*(k)
+C^*(x) = \min_u \|e\| = u^*(k),
 \label{eq:optimal_value_function}
 \end{equation}
 
-where:
+where
 \begin{itemize}
-	\item $C^*(x)$ is the optimal value function representing the minimum achievable cost
-	\item $u^*(k)$ is the optimal control input that minimizes the tracking error
-	\item The minimization is performed over all admissible control inputs $u(k)$
-	\item The state $x(k)$ remains bounded during the optimization process
+	\item $C^*(x)$ is the optimal value function representing the minimum achievable cost,
+	\item $u^*(k)$ is the optimal control input that minimizes the tracking error,
+	\item the minimization is performed over all admissible control inputs $u(k)$,
+	\item the state $x(k)$ remains bounded during the optimization process.
 \end{itemize}
 
 This optimal value function defines the minimum tracking error achievable at each time step through optimal choice of the control input $u^*(k)$. The control equation derived from this optimization ensures that the system state converges to the reference trajectory with finite convergence time.

@@ -1,4 +1,4 @@
-The tracking control problem is one of the most fundmaental practical problems
+The tracking control problem is one of the most fundamental practical problems
 in control theory, where the goal is to design a controller that allows a system
 to follow a desired trajectory or reference signal over time. In recent years,
 neural networks have been increasingly used in control systems due to their ability
@@ -9,24 +9,49 @@ in the input of a neural network can lead to outsized adverse effects on the out
 which can be particularly problematic in control systems where safety and reliability are paramount.
 \par
 A tracking control problem can be formulated as designing such a system whose output
-approximately repeats a given time-varying reference trajectory \textsubscript{\cite{tymoshchuk2024tracking}}.
+approximately repeats a given time-varying reference trajectory~\cite{tymoshchuk2024tracking}.
 The defense of a tracking control neural network against adversarial perturbations
 requires that, under the influence of such perturbations, tracking performance
 remains acceptable within certain conditions. These conditions vary and are dependent
 upon the designed control law's inherent robustness, the magnitude and nature of
-the perturbation and the performance metrics required of the system for safe operation.
+the perturbation, and the performance metrics required of the system for safe operation.
 The channel of attack chosen for this analysis is the error dynamics of the tracking
-control system described in \autoref{eq:error_dynamics} \textsubscript{\cite{tymoshchuk2024tracking}}.
+control system described in \eqref{eq:error_dynamics}~\cite{tymoshchuk2024tracking}.
 \par
-A continuous stirred tank reactior (CSTR) system is chosen as a common close analog
+A Continuous Stirred-Tank Reactor (CSTR) system is chosen as a common close analog
 to compare and confirm the results of the analysis. The CSTR is a widely studied
 system in control theory, making it suitable for comparison with competitive analogs.
-
-\subsubsection*{\centering System Model}
-We consider a known affine discrete-time nonlinear system described by the
-following difference equation \textsubscript{\cite{tymoshchuk2024tracking}}:\label{eq:dynamic}
+\par
+A tracking control neural network (NN) for the known affine in the inputs, discrete-time
+nonlinear system was presented in \cite{tymoshchuk2024tracking}. The paper describes
+a method of tracking control that is of moderate complexity and requires no training.
+This method uses a signum activation function of the tracking error, as well as a diagonal matrix of the
+learning rate parameters to drive the system state towards the reference trajectory
+in finite time. The method is inherently robust to bounded uncertainties and disturbances.
+A block diagram of the controlled nonlinear system was presented, and the operation of the
+controller simulated using a virtual CSTR analog designed in MATLAB.
+\par
+This paper extends the method presented in \cite{tymoshchuk2024tracking} by designing
+an active defense against adversarial perturbations exceeding the inherent robustness
+stability threshold on the tracking control NN. A block diagram of the defended
+system is presented, and the operation of the defended controller is simulated
+using a virtual CSTR analog. The results and performance of the nominal simulations are
+compared between C++ and MATLAB implementations to confirm numerical consistency,
+and reasonable complexity across platforms.
+\section{A Discrete Time Tracking Control Neural Network}
+Discrete-time neural networks, when compared to their continuous-time counterparts,
+offer several advantages in control applications. They are often easier to implement
+in digital hardware, can be more computationally efficient, and can be designed to
+operate at specific sampling rates. Another distinct advantage is their relative
+resilience to perturbations~\cite{cichocki1993neural}. They can
+also be efficiently implemented and miniaturized with digital hardware.
+% equation ====================================================================
+Using Euler approximation, we consider a known affine discrete-time nonlinear
+system described by the following difference equation~\cite{tymoshchuk2023nnoptimal}\label{eq:dynamic}
 \input{chapters/introduction/sysModel.tex}
 \input{chapters/introduction/semanticModel.tex}
+\input{chapters/introduction/uncontrolled.tex}
 \input{chapters/introduction/control.tex}
 \input{chapters/introduction/closed-loop.tex}
-\input{./chapters/diagrams/clean-system.tex}
+\input{chapters/diagrams/clean-system.tex}
+\input{chapters/introduction/nominal-simulation.tex}

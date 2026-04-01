@@ -1,0 +1,11 @@
+We suppose that $f(0)=0$ and the system is stabilizable on a set, $\psi \in \mathfrak{R}^m$
+that includes the origin, i.e., there exists such a function $u(k) \in \mathcal{U}$
+of discrete-time control that the system is  asymptotically stabilized on $\psi$ .
+The functions of system internal dynamics $f(x(k))$ and $g(x(k))$ are presumably
+known for any $k \in [1, k_{max}], k_{max} < \infty$. We also suppose that the system
+is observable and controllable, i.e., $g(x(k)) \neq 0$. If $g(x(k)) = 0$,
+the system is  uncontrolled and can be given by
+\begin{equation}
+	\label{eq:uncontrolled_system}
+	x(k+1) = x(k) +\tau f(x(k)), \quad x(1) = x_1.
+\end{equation}

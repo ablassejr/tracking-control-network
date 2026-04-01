@@ -1,17 +1,16 @@
-\subsubsection*{\centering Control Function}
 
-The control $u(k)$ can be determined from \autoref{systemModel} considering
-the tracking error by the following control equation \textsubscript{\cite{tymoshchuk2024tracking}}:
+The control, $u(k)$, can be determined from \eqref{systemModel} considering
+the tracking error by the control equation~\cite{tymoshchuk2024tracking}
 \begin{equation}
 	u(k) = \begin{cases}
-		g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \text{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
-		0                                                                                 & \text{if } g(x(k)) = 0
-	\end{cases}
+		g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
+		0                                                                                         & \text{if } g(x(k)) = 0
+	\end{cases},
 	\label{eq:control_function}
 \end{equation}
 
-such that, given a reference trajectory $r(k)$, the system \autoref{systemModel} seeks to minimize
-the closed-loop tracking error. The following associated difference equation with variable structure
-describes the closed-loop tracking error dynamics \textsubscript{\cite{tymoshchuk2024tracking}}:
+such that, given a reference trajectory $r(k)$, the system \eqref{systemModel}
+seeks to minimize the closed-loop tracking error, described by the
+associated difference equation with variable structure~\cite{tymoshchuk2024tracking}
 
 \input{chapters/introduction/error.tex}

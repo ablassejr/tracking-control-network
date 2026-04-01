@@ -1,14 +1,13 @@
 \begin{equation}
 	\label{eq:error_dynamics}
-	\begin{aligned}
-		 & e(k+1) = e(k) - \beta \text{sgn}(e(k))      \\ \\
-		 & \text{where:}                               \\
-		 & \text{sgn}(e(k)) = \begin{cases}
-			                      1  & \text{if } e(k) > 0 \\
-			                      0  & \text{if } e(k) = 0 \\
-			                      -1 & \text{if } e(k) < 0 \\
-		                      \end{cases} \\
-		 & \text{ and }                                \\ \\
-		 & e(k) = x(k) - r(k)
-	\end{aligned}
+	e(k+1) = e(k) - \beta \operatorname{sgn}(e(k)),
 \end{equation}
+where
+\begin{equation*}
+	\operatorname{sgn}(e(k)) = \begin{cases}
+		1  & \text{if } e(k) > 0 \\
+		0  & \text{if } e(k) = 0 \\
+		-1 & \text{if } e(k) < 0
+	\end{cases},
+\end{equation*}
+and $e(k) = x(k) - r(k)$.

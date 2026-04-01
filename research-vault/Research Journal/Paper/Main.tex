@@ -1,5 +1,5 @@
 %! Tex Root=**/Main.tex
-\documentclass[onecolumn]{svjour3}
+\documentclass{article}
 % \usepackage[utf8]{inputenc}
 % \usepackage[T1]{fontenc}
 \usepackage{geometry}
@@ -61,8 +61,8 @@
 \newcommand{\func}[1]{\ensuremath{f(#1)}}
 \newcommand{\control}[1]{\ensuremath{u(#1)}}
 \newcommand{\coupling}[1]{\ensuremath{g(#1)}}
-% \newtheorem{definition}{Definition}
-% \newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
 \begin{document}
 
 
@@ -86,24 +86,23 @@
 	nonlinear system is presented. Computer simulations of the controller operation
 	under nominal and adversarial conditions are provided. A redundant sensor voting scheme defense is proposed,
 	analyzed, and simulated, recovering nominal tracking performance under attack.
-	A C++ implementation of
-	the simulation is compared against a MATLAB reference to confirm numerical consistency.
+	A C++ port of the simulation is validated against the MATLAB reference and
+	demonstrates significant runtime speedup.
 \end{abstract}
 % =============================================================================
-\keywords{ control systems, neural networks, adversarial attacks}
+\noindent \textbf{Keywords:}
+control systems, neural networks, adversarial attacks,
+Gaussian noise, discrete-time nonlinear systems, tracking control,
+sensor voting scheme
 % =============================================================================
 \section*{Introduction}
 \input{chapters/introduction/intro.tex}
+\newpage
 \input{chapters/attacks/adversarial-attacks.tex}
 \input{chapters/defense/defense.tex}
+\input{chapters/migration/migration.tex}
 \newpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
-
-% =============================================================================
-% Appendix
-% =============================================================================
-\appendix
-\input{chapters/migration/migration.tex}
 
 \end{document}
