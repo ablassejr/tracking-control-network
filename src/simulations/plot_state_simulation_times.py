@@ -82,7 +82,7 @@ def create_chart(
             f"{value:.6f}s",
             ha="center",
             va="bottom",
-            fontsize=9,
+            fontsize=14,
         )
 
     fig.tight_layout()

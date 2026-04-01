@@ -6,29 +6,19 @@ import generate_runtime_table as grt
 
 
 class TestComputeStats(unittest.TestCase):
-    def test_single_sample_no_std(self) -> None:
+    def test_single_sample(self) -> None:
         stats = grt.compute_stats("test", [0.005])
         self.assertAlmostEqual(stats.avg, 0.005)
-        self.assertIsNone(stats.std)
 
-    def test_multi_sample_has_std(self) -> None:
+    def test_multi_sample_averages(self) -> None:
         stats = grt.compute_stats("test", [0.001, 0.002, 0.003])
         self.assertAlmostEqual(stats.avg, 0.002)
-        self.assertIsNotNone(stats.std)
-        assert stats.std is not None
-        self.assertGreater(stats.std, 0)
-
-    def test_identical_samples_zero_std(self) -> None:
-        stats = grt.compute_stats("test", [0.005, 0.005, 0.005])
-        self.assertAlmostEqual(stats.avg, 0.005)
-        assert stats.std is not None
-        self.assertAlmostEqual(stats.std, 0.0)
 
 
 class TestRenderTable(unittest.TestCase):
     def _make_rows(self) -> list[grt.ComparisonRow]:
-        matlab = grt.RuntimeStats(name="MATLAB", times=[0.1, 0.2], avg=0.15, std=0.05)
-        cpp = grt.RuntimeStats(name="C++", times=[0.01, 0.02], avg=0.015, std=0.005)
+        matlab = grt.RuntimeStats(name="MATLAB", times=[0.15], avg=0.15)
+        cpp = grt.RuntimeStats(name="C++", times=[0.015], avg=0.015)
         return [grt.ComparisonRow(simulation="Test", matlab=matlab, cpp=cpp, speedup=10.0)]
 
     def test_output_contains_booktabs(self) -> None:
@@ -52,18 +42,18 @@ class TestMain(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp_dir:
             cpp_log = Path(tmp_dir) / "C++" / "cpp_output.log"
             cpp_log.parent.mkdir(parents=True)
-            cpp_log.write_text("Execution time: 0.001 seconds\nExecution time: 0.002 seconds\n")
+            cpp_log.write_text("Execution time: 0.001 seconds\n")
 
             matlab_log = Path(tmp_dir) / "matlab" / "cstr" / "clean" / "matlab_output.log"
             matlab_log.parent.mkdir(parents=True)
-            matlab_log.write_text("Elapsed time is 0.005 seconds.\nElapsed time is 0.006 seconds.\n")
+            matlab_log.write_text("Elapsed time is 0.005 seconds.\n")
 
             attacked_cpp = Path(tmp_dir) / "C++" / "cpp_attacked_output.log"
-            attacked_cpp.write_text("Execution time: 0.001 seconds\nExecution time: 0.002 seconds\n")
+            attacked_cpp.write_text("Execution time: 0.001 seconds\n")
 
             attacked_matlab = Path(tmp_dir) / "matlab" / "cstr" / "attacked" / "matlab_output.log"
             attacked_matlab.parent.mkdir(parents=True)
-            attacked_matlab.write_text("Elapsed time is 0.3 seconds.\nElapsed time is 0.4 seconds.\n")
+            attacked_matlab.write_text("Elapsed time is 0.3 seconds.\n")
 
             output = Path(tmp_dir) / "table.tex"
             rc = grt.main(["--base-dir", tmp_dir, "--output", str(output)])
