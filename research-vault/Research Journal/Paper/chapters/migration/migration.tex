@@ -1,439 +1,163 @@
 % =============================================================================
-% Appendix: Code Migration — MATLAB to C++
+% Section: C++ Implementation and Performance Comparison
 % =============================================================================
-\newpage
-\section{Code Migration: MATLAB to C++}
-\label{sec:migration}
+\section{C++ Implementation and Performance Comparison}
+\label{sec:cpp-implementation}
 
-\subsection{Motivation}
-\label{subsec:migration-motivation}
+To verify the simulation results and assess computational efficiency, the
+MATLAB reference implementation was ported to C++. The port uses Eigen
+matrices for a column-major $2 \times N$ data layout (row~0: conversion
+$x_1$, row~1: temperature $x_2$), pre-computes the reference difference
+matrix $\Delta R$ before the simulation loop, and replaces MATLAB's
+conditional signum with a branchless arithmetic template. Gnuplot replaces
+MATLAB's native plotting for publication-quality figures.
 
-The original tracking control simulation was implemented as a collection of
-MATLAB scripts (\texttt{cstr\_state\_tracking.m}--\texttt{cstr\_tracking\_error.m}),
-following the reference implementation in \textsubscript{\cite{tymoshchuk2024tracking}}.
-While MATLAB provides rapid prototyping through built-in matrix operations and
-plotting, several factors motivated a migration to C++:
+\subsection{Output Comparison}
 
-\begin{enumerate}
-	\item \textbf{Execution speed.} The simulation loop iterates 45{,}000 time
-	      steps with per-step nonlinear dynamics evaluation. C++ compiled code
-	      with direct memory access eliminates the interpreter overhead inherent
-	      to MATLAB's execution model.
-	\item \textbf{Memory control.} C++ provides explicit control over stack
-	      versus heap allocation, cache-aligned data layouts, and
-	      zero-copy data access through pointers---critical when storing
-	      $2 \times 45{,}000$ state matrices.
-\end{enumerate}
-
-\subsection{Architecture Decisions}
-\label{subsec:migration-architecture}
-
-The MATLAB implementation uses a procedural style: separate 1-D arrays for
-each state variable (\texttt{x}, \texttt{y}, \texttt{r1}, \texttt{r2},
-\texttt{e1}, \texttt{e2}, \texttt{u}) with a single \texttt{for} loop
-driving the simulation. The C++ port uses 2d arrays for the state variables
-with a single for loop as well. It adopts a struct-based architecture that
-groups related data and separates concerns across compilation units.
-
-\subsubsection{Data Layout}
-\begin{table}[htbp]
-	\centering
-	\caption{Data structure mapping between MATLAB and C++ implementations.}
-	\label{tab:data-layout}
-	\begin{tabular}{lll}
-		\toprule
-		MATLAB Variable                        & C++ Equivalent                                 & Type                                \\
-		\midrule
-		\texttt{x(1:n)}, \texttt{y(1:n)}       & \texttt{stateMatrix}                           & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r1(1:n)}, \texttt{r2(1:n)}     & \texttt{referenceMatrix}                       & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{e1(1:n)}, \texttt{e2(1:n)}     & \texttt{x1ErrorMatrix}, \texttt{x2ErrorMatrix} & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{r2(i+1)-r2(i)}                 & \texttt{deltaReference}                        & \texttt{Matrix<double, 2, Dynamic>} \\
-		\texttt{alpha}, \texttt{beta}, \ldots  & \texttt{InternalConditions}                    & \texttt{struct}                     \\
-		\texttt{n}, \texttt{tmax}, \texttt{dt} & \texttt{SimSettings}                           & \texttt{struct}                     \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-The key design choice is consolidating per-variable 1-D arrays into
-$2 \times N$ Eigen matrices. Row~0 stores the conversion state
-$x_1$, and row~1 stores the temperature state $x_2$. This layout
-preserves temporal locality: accessing both states at time step $k$ requires
-reading two adjacent memory locations in the same column.
-
-\subsubsection{Build System}
-
-The C++ project uses CMake 3.15+ with \texttt{FetchContent} to manage two
-external dependencies:
-
-\begin{table}[htbp]
-	\centering
-	\caption{C++ build dependencies fetched at configure time.}
-	\label{tab:dependencies}
-	\begin{tabular}{llll}
-		\toprule
-		Library & Source                & Version & Purpose                       \\
-		\midrule
-		Eigen   & GitLab                & master  & Matrix algebra                \\
-		cxxplot & US Naval Research Lab & v0.4.1  & Interactive Qt-based plotting \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-The build system produces four executables from separate translation units:
-\texttt{cstr\_state\_tracking}, \texttt{cstr\_control\_input}, \texttt{cstr\_tracking\_error} (CSTR system under normal
-operation) and \texttt{cstr\_state\_tracking\_attacked} (CSTR system under adversarial attack).
-Each executable contains its own \texttt{main()} function, with shared
-simulation logic factored into \texttt{cstr\_dynamics.cpp}.
-
-\subsection{Implementation --- CSTR System (Fig.~2)}
-\label{subsec:migration-implementation}
-
-This section presents side-by-side comparisons of the MATLAB and C++
-implementations for each major component of the CSTR simulation.
-
-\subsubsection{System Dynamics}
-\label{subsubsec:dynamics}
-
-The CSTR system has two states: conversion $x_1$ and temperature $x_2$.
-Since the control gain $g_1 = 0$, the conversion state evolves under
-open-loop natural dynamics. The temperature state uses feedback-linearizing
-sliding-mode control.
-
-\paragraph{Conversion state $x_1$ --- open loop.}
-The natural dynamics follow the discretized CSTR model:
-\begin{equation}
-	x_1(k{+}1) = x_1(k) + \tau\!\left[
-		-\alpha\, x_1(k) + D_a\bigl(1 - x_1(k)\bigr)
-		\exp\!\left(\frac{x_2(k)}{1 + x_2(k)/\gamma}\right)
-		\right]
-	\label{eq:x1-dynamics}
-\end{equation}
-
-\noindent
-\textbf{MATLAB} (\texttt{cstr\_state\_tracking.m}, line~34):
-\lstinputlisting[style=matlab, firstline=34, lastline=34]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
-
-\noindent
-\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~24--29):
-\lstinputlisting[style=cpp, firstline=24, lastline=29]{\srccpp/cstr/cstr_dynamics.cpp}
-
-The C++ version accesses parameters through the \texttt{InternalConditions}
-struct rather than workspace variables, and uses cached pointer variables
-(\texttt{prevX1}, \texttt{prevX2}) to avoid repeated matrix
-indexing within the inner loop.
-
-\paragraph{Temperature state $x_2$ --- closed loop.}
-The feedback-linearizing control law cancels the nonlinear dynamics $f_2(x)$,
-yielding the simplified closed-loop update:
-\begin{equation}
-	x_2(k{+}1) = x_2(k) + \tau\!\left[
-	-\beta\,\operatorname{sgn}(e_2(k)) + \Delta r_2(k)
-	\right]
-	\label{eq:x2-closedloop}
-\end{equation}
-where $e_2(k) = x_2(k) - r_2(k)$ is the tracking error and
-$\Delta r_2(k) = r_2(k{+}1) - r_2(k)$ is the reference change.
-
-\noindent
-\textbf{MATLAB} (\texttt{cstr\_state\_tracking.m}, line~68):
-\lstinputlisting[style=matlab, firstline=68, lastline=68]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
-
-\noindent
-\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~32--35):
-\lstinputlisting[style=cpp, firstline=32, lastline=35]{\srccpp/cstr/cstr_dynamics.cpp}
-
-A notable difference is that the C++ implementation pre-computes the
-$\Delta r_2$ matrix in a single Eigen operation before entering the simulation
-loop, whereas MATLAB computes \texttt{r2(i+1)-r2(i)} inline at each step.
-
-\subsubsection{Reference Trajectory}
-\label{subsubsec:reference}
-
-The piecewise-constant reference switches between two operating points at
-$t = 15$\,s and $t = 30$\,s.
-
-\noindent
-\textbf{MATLAB} uses time-based conditionals:
-\lstinputlisting[style=matlab, firstline=40, lastline=46]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
-
-\noindent
-\textbf{C++} uses index-based ternary expressions:
-\lstinputlisting[style=cpp, firstline=28, lastline=29]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
-
-The index-based approach is valid because $t = i \cdot \tau$ and
-$\tau = 45/45000 = 0.001$\,s, so $t = 15$ corresponds to $i = 15{,}000$.
-Additionally, the C++ version pre-computes the reference difference matrix
-$\Delta R$ via Eigen column operations:
-\lstinputlisting[style=cpp, firstline=37, lastline=39]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
-
-\subsubsection{Signum Function}
-\label{subsubsec:signum}
-
-The signum function $\operatorname{sgn}(\cdot)$ is central to the
-sliding-mode controller.
-
-\noindent
-\textbf{MATLAB} implements it with explicit branching:
-\lstinputlisting[style=matlab, firstline=56, lastline=62]{\srcmatlab/cstr/clean/cstr_state_tracking.m}
-
-\noindent
-\textbf{C++} uses a branchless template:
-\lstinputlisting[style=cpp, firstline=93, lastline=95]{\srccpp/cstr/cstr_dynamics.cpp}
-
-The C++ implementation avoids conditional branching by exploiting boolean
-arithmetic: the expression evaluates to $+1$, $-1$, or $0$ without any
-\texttt{if}/\texttt{else} statements, which can improve pipeline utilization
-on modern processors.
-
-\subsubsection{Visualization}
-\label{subsubsec:visualization}
-
-MATLAB's native \texttt{subplot}/\texttt{plot} functions were replaced with
-the \texttt{cxxplot} library from the US Naval Research Laboratory. The
-library provides interactive Qt-based plot windows with a named-parameter API:
-
-\lstinputlisting[style=cpp, firstline=84, lastline=87]{\srccpp/cstr/clean/cstr_state_tracking.cpp}
-
-To handle the 45{,}000 data points efficiently, a min/max envelope
-downsampling utility reduces the data to approximately 2{,}000 points
-while preserving visual fidelity of peaks and transients.
-
-\autoref{tab:plot-mapping} maps the MATLAB plotting calls to their C++
-equivalents.
-
-\begin{table}[htbp]
-	\centering
-	\caption{Visualization API mapping.}
-	\label{tab:plot-mapping}
-	\begin{tabular}{ll}
-		\toprule
-		MATLAB                          & C++ (cxxplot)                                         \\
-		\midrule
-		\texttt{plot(t, x, 'k-')}       & \texttt{cxxplot::plot(t, x)}                          \\
-		\texttt{xlabel('Time (s)')}     & \texttt{xlabel\_ = "Time (s)"}                        \\
-		\texttt{ylabel('x\_1, r\_1')}   & \texttt{ylabel\_ = "x1, r1"}                          \\
-		\texttt{legend('x\_1', 'r\_1')} & \texttt{show\_legend\_ = true}, \texttt{name\_ = ...} \\
-		\texttt{subplot(2,1,k)}         & separate \texttt{cxxplot::plot()} call per window     \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-\subsection{Implementation --- Attacked CSTR System}
-\label{subsec:migration-attacked}
-
-The adversarial attack simulation extends the normal CSTR dynamics by
-injecting additive Gaussian noise into the temperature state update at each
-time step. The attack is implemented in both MATLAB
-(\texttt{cstr\_state\_tracking\_attacked.m}) and C++ (\texttt{cstr\_state\_tracking\_attacked.cpp}), with the
-core attacked dynamics defined in the shared
-\texttt{attackedSystemFunction()} in \texttt{cstr\_dynamics.cpp}.
-
-\subsubsection{Noise Injection}
-\label{subsubsec:noise-injection}
-
-The key difference from the normal system is the addition of a stochastic
-perturbation $\epsilon(k) \sim \mathcal{N}(0, \sigma^2 \Delta t)$ to the
-temperature state.
-
-\noindent
-\textbf{MATLAB} (\texttt{cstr\_state\_tracking\_attacked.m}, lines~31--37):
-\lstinputlisting[style=matlab, firstline=31, lastline=32]{\srcmatlab/cstr/attacked/cstr_state_tracking_attacked.m}
-\lstinputlisting[style=matlab, firstline=37, lastline=37, firstnumber=37]{\srcmatlab/cstr/attacked/cstr_state_tracking_attacked.m}
-
-\noindent
-In MATLAB, the noise sample is drawn via \texttt{randn()} scaled by
-$\sigma \Delta t$, and is added only to the attacked $x_2$ update.
-
-\noindent
-\textbf{C++} (\texttt{cstr\_dynamics.cpp}, lines~46--73):
-\lstinputlisting[style=cpp, firstline=46, lastline=47]{\srccpp/cstr/cstr_dynamics.cpp}
-\lstinputlisting[style=cpp, firstline=70, lastline=73, firstnumber=70]{\srccpp/cstr/cstr_dynamics.cpp}
-
-\noindent
-The C++ implementation uses the \texttt{<random>} standard library with a
-\texttt{std::normal\_distribution} of standard deviation $\sigma = 2$, adding
-the noise to the $x_2$ closed-loop update. This follows the perturbed
-closed-loop formulation in~\autoref{eq:x2-attacked}.
-
-\newpage
-\subsubsection{Output Comparison --- CSTR System}
-
-\autoref{fig:fig2-plot-comparison} presents a state-aligned comparison of
-the MATLAB reference implementation and the C++ port.
+Fig.~\ref{fig:state-comparison} compares the nominal state trajectories
+from both implementations.
 
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_x1_r1}
-		\caption{MATLAB (\texttt{cstr\_state\_tracking.m}), conversion $x_1$.}
-		\label{fig:fig2-matlab-x1}
+		\caption{MATLAB, conversion $x_1$.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_x2_r2}
-		\caption{MATLAB (\texttt{cstr\_state\_tracking.m}), temperature $x_2$.}
-		\label{fig:fig2-matlab-x2}
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1_comparison}
+		\caption{C++, conversion $x_1$.}
 	\end{subfigure}
 	\par\medskip
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1}
-		\caption{C++ (\texttt{cstr\_state\_tracking}), conversion $x_1$.}
-		\label{fig:fig2-cpp-x1}
+		\includegraphics[width=\textwidth]{matlab_fig2a_x2_r2}
+		\caption{MATLAB, temperature $x_2$.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2}
-		\caption{C++ (\texttt{cstr\_state\_tracking}), temperature $x_2$.}
-		\label{fig:fig2-cpp-x2}
+		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2_comparison}
+		\caption{C++, temperature $x_2$.}
 	\end{subfigure}
-	\caption{Comparison of CSTR state trajectories from the MATLAB reference
-		implementation and the C++ port. The top row shows MATLAB, the bottom
-		row shows C++, the left column compares $x_1$ against $r_1$, and the
-		right column compares $x_2$ against $r_2$. Both simulations use
-		identical parameters ($\alpha = 1$, $\beta = 100$, $\lambda = 0.3$,
-		$\gamma = 20$, $D_a = 0.072$) and initial conditions
-		$x(0) = \mathbf{0}$.}
-	\label{fig:fig2-plot-comparison}
+	\caption{Nominal CSTR state trajectories: MATLAB (left) vs.\ C++ (right).
+		Both use identical parameters and initial conditions $x(0) = \mathbf{0}$.}
+	\label{fig:state-comparison}
 \end{figure}
 
-\newpage
-\subsubsection{Output Comparison --- Attacked CSTR System}
+Fig.~\ref{fig:control-comparison} compares the control input $u(k)$.
 
-\autoref{fig:fig2-attacked-plot-comparison} presents the attacked outputs in
-a state-aligned comparison, with MATLAB and C++ occupying separate rows.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2b}
+		\caption{MATLAB, full range.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_fig2b_comparison}
+		\caption{C++, full range.}
+	\end{subfigure}
+	\par\medskip
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2b_zoomed}
+		\caption{MATLAB, zoomed $k \in [0, 100]$.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_fig2b_zoomed_comparison}
+		\caption{C++, zoomed $k \in [0, 100]$.}
+	\end{subfigure}
+	\caption{Control input $u(k)$: MATLAB (left) vs.\ C++ (right).
+		Both produce identical control signals.}
+	\label{fig:control-comparison}
+\end{figure}
+
+Fig.~\ref{fig:error-comparison} compares the tracking errors.
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2c_e1}
+		\caption{MATLAB, error $e_1$.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_fig2c_e1_comparison}
+		\caption{C++, error $e_1$.}
+	\end{subfigure}
+	\par\medskip
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{matlab_fig2c_e2}
+		\caption{MATLAB, error $e_2$.}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[t]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{cxxplot_fig2c_e2_comparison}
+		\caption{C++, error $e_2$.}
+	\end{subfigure}
+	\caption{Tracking errors: MATLAB (left) vs.\ C++ (right).
+		Both produce identical error trajectories.}
+	\label{fig:error-comparison}
+\end{figure}
+
+Fig.~\ref{fig:attacked-comparison} compares the attacked state
+trajectories. Because each run draws independent noise samples, exact
+numerical equivalence is not expected; the qualitative degradation pattern
+is consistent across both implementations.
 
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
 		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
-		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), conversion $x_1$.}
-		\label{fig:fig2-attacked-matlab-x1}
+		\caption{MATLAB, attacked $x_1$.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
-		\caption{MATLAB (\texttt{cstr\_state\_tracking\_attacked.m}), temperature $x_2$.}
-		\label{fig:fig2-attacked-matlab-x2}
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1_comparison}
+		\caption{C++, attacked $x_1$.}
 	\end{subfigure}
 	\par\medskip
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1}
-		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), conversion $x_1$.}
-		\label{fig:fig2-attacked-cpp-x1}
+		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
+		\caption{MATLAB, attacked $x_2$.}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[t]{0.48\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2}
-		\caption{C++ (\texttt{cstr\_state\_tracking\_attacked}), temperature $x_2$.}
-		\label{fig:fig2-attacked-cpp-x2}
+		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2_comparison}
+		\caption{C++, attacked $x_2$.}
 	\end{subfigure}
-	\caption{Comparison of attacked CSTR state trajectories. Both
-		simulations use $\sigma = 2$ Gaussian noise injection with identical
-		system parameters. The top row shows MATLAB, the bottom row shows C++,
-		the left column compares $x_1$ against $r_1$, and the right column
-		compares $x_2$ against $r_2$. Due to the stochastic nature of the
-		attack, exact numerical equivalence is not expected; instead, the
-		qualitative loss of tracking performance is verified.}
-	\label{fig:fig2-attacked-plot-comparison}
+	\caption{Attacked CSTR state trajectories ($\text{std} = 2$): MATLAB (left)
+		vs.\ C++ (right). Both exhibit the same tracking degradation pattern.}
+	\label{fig:attacked-comparison}
 \end{figure}
 
-Unlike the nominal system (\autoref{fig:fig2-plot-comparison}), the attacked
-simulations do not produce identical numerical output because each run
-draws independent random noise samples. The validation criterion is therefore
-qualitative: both implementations should exhibit the same degradation pattern
-in tracking performance under the specified noise intensity.
+\subsection{Numerical Validation}
 
-\newpage
-\subsection{Performance Comparison}
-\label{subsec:migration-performance}
+Element-wise comparison of the nominal CSV outputs yields a maximum
+deviation of approximately $10^{-15}$ across all state variables, consistent
+with IEEE~754 double-precision machine epsilon
+($\approx 2.22 \times 10^{-16}$). The two implementations compute identical
+floating-point results up to rounding in the final digits.
 
-The C++ simulation includes instrumentation via
-\texttt{std::chrono::high\_resolution\_clock}. The MATLAB simulation uses
-\texttt{tic}/\texttt{toc}. \autoref{tab:runtime-comparison} summarises the
-runtime measurements across both simulation scenarios ($n = 50$ runs each).
+\subsection{Runtime Performance}
 
 \input{chapters/migration/runtime_comparison_table}
 
-\subsection{Output Validation}
-\label{subsec:migration-validation}
-
-Verifying numerical equivalence between two independent implementations
-requires more than visual comparison of plots. The migration includes a
-CSV-based validation pipeline that compares the C++ simulation output against
-MATLAB reference data at every time step.
-
-\subsubsection{Validation Pipeline}
-
-Both implementations export identical 7-column CSV files containing
-$\bigl(t,\; x_1,\; x_2,\; r_1,\; r_2,\; e_1,\; e_2\bigr)$
-at each of the $n = 45{,}000$ time steps. The MATLAB script writes its
-reference data via \texttt{writematrix} at the end of the simulation loop;
-the C++ executable writes its output through \texttt{std::ofstream} with
-15-digit precision.
-
-A standalone validation executable (\texttt{validate\_matlab\_cpp}) loads both CSV
-files, extracts corresponding columns into Eigen vectors, and computes the
-element-wise maximum absolute error for each variable:
-\begin{equation}
-	\varepsilon_{\max}^{(v)} = \max_{k=0}^{n-1}
-	\bigl| v_{\text{C++}}(k) - v_{\text{MATLAB}}(k) \bigr|,
-	\quad v \in \{x_1, x_2, e_1, e_2\}
-	\label{eq:max-abs-error}
-\end{equation}
-
-Each variable passes if $\varepsilon_{\max}^{(v)} < \epsilon$ for a
-configurable tolerance $\epsilon$. The validator reports per-variable
-pass/fail status and returns a nonzero exit code on any failure, enabling
-integration into automated build pipelines.
-
-\subsubsection{Validation Results}
-
-After correcting an off-by-one initialization error in the reference
-trajectory (see \autoref{subsubsec:reference}), the validation confirms
-machine-precision agreement between the two implementations:
-
-\begin{table}[htbp]
-	\centering
-	\caption{Maximum absolute error between C++ and MATLAB outputs
-		for the CSTR tracking control simulation
-		($n = 45{,}000$, $\tau = 0.001$\,s).}
-	\label{tab:validation-results}
-	\begin{tabular}{lcl}
-		\toprule
-		Variable               & $\varepsilon_{\max}$ & Status \\
-		\midrule
-		$x_1$ (conversion)     & $\sim 10^{-15}$      & PASS   \\
-		$x_2$ (temperature)    & $\sim 10^{-15}$      & PASS   \\
-		$e_1$ (tracking error) & $\sim 10^{-15}$      & PASS   \\
-		$e_2$ (tracking error) & $\sim 10^{-15}$      & PASS   \\
-		\bottomrule
-	\end{tabular}
-\end{table}
-
-The errors at $\mathcal{O}(10^{-15})$ are consistent with IEEE~754
-double-precision machine epsilon ($\approx 2.22 \times 10^{-16}$),
-confirming that the two implementations compute identical floating-point
-results up to rounding in the final digits. The default tolerance of
-$\epsilon = 10^{-6}$ provides a margin of nine orders of magnitude above
-the observed error floor.
-
-\subsection{Remaining Work}
-\label{subsec:migration-remaining}
-
-The adversarial attack simulation has been successfully migrated to C++.
-The following components remain for future work:
-
-\begin{enumerate}
-	\item \textbf {Design Defense Mechanism}
-	\item \textbf {Model Defense Mechanism}
-	\item \textbf {Diagram Defense Mechanism}
-	\item \textbf {Simulate Defense Mechanism}
-\end{enumerate}
+The C++ port achieves a \SpeedupNominal{} speedup on the nominal simulation and
+\SpeedupPerturbed{} on the perturbed simulation, primarily due to eliminating
+interpreter overhead and leveraging cache-friendly memory layout.
