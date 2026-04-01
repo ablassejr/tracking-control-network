@@ -1,4 +1,4 @@
-#include "../cstr_dynamics.h"
+#include "cstr_dynamics.h"
 #include <Eigen/Dense>
 #include <chrono>
 #include <fstream>
@@ -25,9 +25,8 @@ int main() {
   stateConditions.stateMatrix(0, 0) = 0.0;
   stateConditions.stateMatrix(1, 0) = 0.0;
 
-  systemFunction(settings, stateConditions, internalConditions);
+  attackedSystemFunction(settings, stateConditions, internalConditions);
 
-  // Compute control input u at each timestep
   auto start = std::chrono::high_resolution_clock::now();
   for (int i = 0; i < settings.timeSteps - 1; i++) {
     double x = stateConditions.stateMatrix(0, i);
@@ -48,12 +47,12 @@ int main() {
   auto end = std::chrono::high_resolution_clock::now();
   auto duration =
       std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-  std::ofstream outFile("cstr_control_input_cpp_output.log");
+  std::ofstream outFile("cstr_control_input_attacked_cpp_output.log");
   outFile << "Execution time: "
           << static_cast<double>(duration.count()) / 1000000 << " seconds"
           << std::endl;
 
-  std::ofstream csv("cstr_control_input_cpp_output.csv");
+  std::ofstream csv("cstr_control_input_attacked_cpp_output.csv");
   csv << std::setprecision(15);
   for (int i = 0; i < settings.timeSteps - 1; i++) {
     csv << i * settings.tau << "," << controlVector[i] << "\n";

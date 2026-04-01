@@ -1,6 +1,12 @@
 add_executable(cstr_state_tracking_attacked cstr_state_tracking_attacked.cpp)
 target_link_libraries(cstr_state_tracking_attacked PUBLIC cstr_dynamics_lib)
 
+add_executable(cstr_control_input_attacked cstr_control_input_attacked.cpp)
+target_link_libraries(cstr_control_input_attacked PUBLIC cstr_dynamics_lib)
+
+add_executable(cstr_tracking_error_attacked cstr_tracking_error_attacked.cpp)
+target_link_libraries(cstr_tracking_error_attacked PUBLIC cstr_dynamics_lib)
+
 add_executable(test_attacked_stability test_attacked_stability.cpp)
 target_link_libraries(test_attacked_stability PUBLIC cstr_dynamics_lib)
 add_test(NAME test_attacked_stability COMMAND test_attacked_stability)

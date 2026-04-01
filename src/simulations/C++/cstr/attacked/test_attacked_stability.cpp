@@ -1,4 +1,4 @@
-#include "cstr_dynamics.h"
+#include "../cstr_dynamics.h"
 #include <cmath>
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "cstr_dynamics.h"
+#include "../cstr_dynamics.h"
 #include <Eigen/Dense>
 #include <chrono>
 #include <fstream>
@@ -38,9 +38,12 @@ int main() {
   csv << std::setprecision(15);
   for (int i = 0; i < settings.timeSteps; i++) {
     double t = i * settings.tau;
-    double e1 = stateConditions.stateMatrix(0, i) - stateConditions.referenceMatrix(0, i);
-    double e2 = stateConditions.stateMatrix(1, i) - stateConditions.referenceMatrix(1, i);
-    csv << t << "," << stateConditions.stateMatrix(0, i) << "," << stateConditions.stateMatrix(1, i) << ","
+    double e1 = stateConditions.stateMatrix(0, i) -
+                stateConditions.referenceMatrix(0, i);
+    double e2 = stateConditions.stateMatrix(1, i) -
+                stateConditions.referenceMatrix(1, i);
+    csv << t << "," << stateConditions.stateMatrix(0, i) << ","
+        << stateConditions.stateMatrix(1, i) << ","
         << stateConditions.referenceMatrix(0, i) << ","
         << stateConditions.referenceMatrix(1, i) << "," << e1 << "," << e2
         << "\n";

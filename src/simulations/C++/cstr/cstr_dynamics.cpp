@@ -40,21 +40,21 @@ void systemFunction(SimSettings &settings, StateConditions &stateConditions,
 void attackedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
-  // Pre Simulation Variable Declarations
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> epsilon(0.0, 1);
+  std::normal_distribution<double> epsilon(0.0, 2);
   std::default_random_engine randomNumberGenerator;
 
-  // Simulation loop
   for (int i = 1; i < settings.timeSteps; i++) {
     prevX1 = &stateConditions.stateMatrix(0, i - 1);
     prevX2 = &stateConditions.stateMatrix(1, i - 1);
     x1Ref = &stateConditions.referenceMatrix(0, i);
     x2Ref = &stateConditions.referenceMatrix(1, i);
-    // Error Update
+
     double e2 = *prevX2 - stateConditions.referenceMatrix(1, i - 1);
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
+
+    double noise = epsilon(randomNumberGenerator);
 
     // x1 open-loop natural dynamics
     stateConditions.stateMatrix(0, i) =
@@ -64,12 +64,11 @@ void attackedSystemFunction(SimSettings &settings,
              internalConditions.Da * (1 - *prevX1) *
                  exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
 
-    // x2 closed-loop dynamics with control
+    // x2 closed-loop dynamics with additive noise on error channel
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
-        *prevX2 + settings.tau * (-internalConditions.beta *
-                                      sgn(e2 + epsilon(randomNumberGenerator)) +
-                                  *deltaR2);
+        *prevX2 +
+        settings.tau * (-internalConditions.beta * sgn(e2 + noise) + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
@@ -79,7 +78,7 @@ void defendedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> epsilon(0.0, 1);
+  std::normal_distribution<double> attackNoise(0.0, 2);
   std::default_random_engine randomNumberGenerator;
 
   for (int i = 1; i < settings.timeSteps; i++) {
@@ -92,12 +91,11 @@ void defendedSystemFunction(SimSettings &settings,
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
 
-    // 3 redundant channels: channels 1,2 are clean, channel 3 is corrupted
-    // Attack enters on the reference channel: r_3(k) = r(k) + epsilon(k)
-    double noise = epsilon(randomNumberGenerator);
-    double e2_ch1 = e2;           // clean
-    double e2_ch2 = e2;           // clean
-    double e2_ch3 = e2 - noise;   // corrupted: x(k) - (r(k) + eps) = e(k) - eps
+    // n=3 parallel processing units computing error independently
+    // Clean units are ideal (no noise), corrupted unit has σ²_a = 4
+    double e2_ch1 = e2;
+    double e2_ch2 = e2;
+    double e2_ch3 = e2 + attackNoise(randomNumberGenerator);
 
     // Pairwise disagreement: V_ij = (e_i - e_j)^2
     double v12 = (e2_ch1 - e2_ch2) * (e2_ch1 - e2_ch2);
@@ -122,11 +120,11 @@ void defendedSystemFunction(SimSettings &settings,
              internalConditions.Da * (1 - *prevX1) *
                  exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
 
-    // x2 closed-loop dynamics with defended error
+    // x2 closed-loop dynamics with defended error, clean deltaReference
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
-        *prevX2 + settings.tau * (-internalConditions.beta * sgn(e2_hat) +
-                                  *deltaR2);
+        *prevX2 +
+        settings.tau * (-internalConditions.beta * sgn(e2_hat) + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
