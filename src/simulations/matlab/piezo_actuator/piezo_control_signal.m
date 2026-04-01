@@ -47,18 +47,20 @@ u(n)=-1/g2(n)*(f2(n)-sqrt(f2(n)^2+Q*g2(n)^2/R));
 end
  
 subplot(2,1,1),plot(t,u,'k-')
- 
+
 axis([0 8 -1.1 1.1])
 ylabel('u (V)')
- 
+set(gca,'FontSize',22)
+
 hold on;
- 
+
 subplot(2,1,2),plot(t,u,'k-')
 axis([0 0.1 -0.8 1.1])
 ylabel('u (V)')
- 
+
 xlabel('Time t (s)')
- 
+set(gca,'FontSize',22)
+
 grid
 exportgraphics(gcf, '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/piezo_control_signal.png', 'Resolution', 300);
 clear all;

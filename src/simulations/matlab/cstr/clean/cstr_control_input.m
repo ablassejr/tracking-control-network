@@ -81,18 +81,20 @@ for j=1:n-1,
 end
 
 figure(1)
-plot(tt,u,'b-')
+plot(1:length(u),u,'b-')
 ylabel('u')
-xlabel('Time (s)')
-axis([0 tmax -350 400])
+xlabel('k (time steps)')
+axis([1 n-1 -350 400])
 grid
+set(gca,'FontSize',22)
 
 figure(2)
-plot(tt,u,'b-')
+plot(1:length(u),u,'b-')
 ylabel('u')
-xlabel('Time (s)')
-axis([0.25 0.5 -350 400])
+xlabel('k (time steps)')
+axis([1 100 -350 400])
 grid
+set(gca,'FontSize',22)
 
 exportgraphics(figure(1), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2b.png', 'Resolution', 300);
 exportgraphics(figure(2), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2b_zoomed.png', 'Resolution', 300);

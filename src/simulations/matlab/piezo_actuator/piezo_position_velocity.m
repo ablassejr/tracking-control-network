@@ -68,23 +68,26 @@ end
 subplot(3,1,1),plot(t,e,'k-')
 %axis([0 8 -4e-3 -2.5e-3])
 ylabel('x_1 (m)')
+set(gca,'FontSize',22)
 grid
 hold on;
 
 subplot(3,1,2),plot(t,x,'b-')
 %axis([0 8 -0.1 0.1])
 ylabel('y (m)')
+set(gca,'FontSize',22)
 grid
 hold on;
- 
+
 %subplot(2,1,2),plot(t,e,'r-')
 subplot(3,1,3),plot(t,dx,'r-')
 %subplot(2,1,2),plot(t,d2x,'r-')
 axis([0 8 -0.15 0.15])
 ylabel('dy/dt (m/s)')
- 
+
 xlabel('Time t (s)')
- 
+set(gca,'FontSize',22)
+
 grid
 exportgraphics(gcf, '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/piezo_position_velocity.png', 'Resolution', 300);
 clear all;

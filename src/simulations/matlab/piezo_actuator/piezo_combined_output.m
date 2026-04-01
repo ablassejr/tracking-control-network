@@ -48,31 +48,35 @@ end
 
 subplot(4,1,1),plot(t,x,'k-')
 axis([0 8 -0.1 0.1])
- 
+
 ylabel('y (m)')
- 
-hold on;
- 
-subplot(4,1,2),plot(t,e,'k-')
- 
-axis([0 8 -1e-3 -0e-3])
-ylabel('e (m)')
+set(gca,'FontSize',22)
 
 hold on;
- 
+
+subplot(4,1,2),plot(t,e,'k-')
+
+axis([0 8 -1e-3 -0e-3])
+ylabel('e (m)')
+set(gca,'FontSize',22)
+
+hold on;
+
 subplot(4,1,3),plot(t,u,'k-')
- 
+
 axis([0 8 -1.1 1.1])
 ylabel('u (V)')
- 
+set(gca,'FontSize',22)
+
 hold on;
- 
+
 subplot(4,1,4),plot(t,u,'k-')
 axis([0 0.1 -0.8 1.1])
 ylabel('u (V)')
- 
+
 xlabel('Time t (s)')
- 
+set(gca,'FontSize',22)
+
 grid
 exportgraphics(gcf, '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/piezo_combined_output.png', 'Resolution', 300);
 clear all;

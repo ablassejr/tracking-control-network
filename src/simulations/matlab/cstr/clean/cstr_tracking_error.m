@@ -78,18 +78,20 @@ for j=1:n-1,
 end
 
 figure(1)
-plot(t,e1,'g-')
+plot(1:n,e1,'-','Color',[0.494,0.184,0.556])
 ylabel('e_1')
-xlabel('Time (s)')
-axis([0 tmax -0.5 0.4])
+xlabel('k (time steps)')
+axis([0 n -0.5 0.4])
 grid
+set(gca,'FontSize',22)
 
 figure(2)
-plot(t,e2,'g-')
+plot(1:n,e2,'-','Color',[0.494,0.184,0.556])
 ylabel('e_2')
-xlabel('Time (s)')
-axis([0 tmax -3 2.5])
+xlabel('k (time steps)')
+axis([0 n -3 2.5])
 grid
+set(gca,'FontSize',22)
 
 exportgraphics(figure(1), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2c_e1.png', 'Resolution', 300);
 exportgraphics(figure(2), '/Users/Apple/work/tracking-control-network/research-vault/Research Journal/Paper/figures/images/matlab_fig2c_e2.png', 'Resolution', 300);
