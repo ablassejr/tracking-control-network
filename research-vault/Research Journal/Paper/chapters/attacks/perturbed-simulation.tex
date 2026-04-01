@@ -1,0 +1,29 @@
+\subsection{Simulation of Attacked CSTR System}
+
+The trajectories of state variables $x_1(k)$, $x_2(k)$ under adversarial
+perturbation and the reference trajectories $r_1(k)$, $r_2(k)$ are presented in
+Fig.~\ref{fig:attacked-state-tracking}. Both state variables exhibit degraded
+tracking performance once the stochastic perturbation with a standard
+deviation(std) of 2 is introduced, with visible oscillations around the
+reference trajectories throughout the simulation.
+
+The same CSTR plant from \eqref{eq:cstr_dynamics} is used with identical
+parameters. The reference trajectories are identical to
+\eqref{eq:cstr_references}. The tracking error from \eqref{eq:error_dynamics}, $e(k)$,
+is replaced by the perturbed error
+$\tilde{e}(k)$.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x1_r1}
+	\caption{Conversion $x_1$ and reference $r_1$ trajectories under adversarial perturbation.}
+	\label{fig:attacked-state-tracking}
+	\label{fig:attacked-x1-r1}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x2_r2}
+	\caption{Temperature $x_2$ and reference $r_2$ trajectories under adversarial perturbation.}
+	\label{fig:attacked-x2-r2}
+\end{figure}

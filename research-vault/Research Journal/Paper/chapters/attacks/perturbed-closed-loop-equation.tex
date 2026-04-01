@@ -1,7 +1,4 @@
 \begin{equation}
-	\begin{aligned}
-		 & x(k+1) = \state - \beta \text{sgn}((x(k) - r(k)) + \epsilon(k)) + \Delta r(k) \\
-		 & \text{where }                                                          \\
-		 & \epsilon(k) \sim \mathcal N(0, \mathcal Id_n)
-	\end{aligned}
+	\label{eq:perturbed_closed_loop}
+	\tilde{x}(k+1) = x(k) - \beta \operatorname{sgn}\bigl(e(k) + \epsilon(k)\bigr) + \Delta r(k).
 \end{equation}

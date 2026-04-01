@@ -1,11 +1,12 @@
 \begin{equation}
-	\begin{aligned}
-		 & x(k+1)    = x(k) + \mathlarger{\tau} \bigl[ f(x(k)) +  g(x(k)) \tilde{u}(k) \bigr] \\
-		 & \text{where }                                                                      \\
-		 & \tilde{u}(k) = (g(x(k)))^{-1} (-f(x(k)) + \Delta r(k) - \beta sgn(\tilde{e}(k) ))  \\
-		 & \text{and }                                                                        \\
-		 & \tilde{e}(k) = (r(k) - x(k)) + \epsilon(k)                                         \\
-		 & \text{and}                                                                         \\
-		 & \epsilon(k) \sim \mathcal N(0, \mathcal Id_n) \text{ is the standard normal.}
-	\end{aligned}
+	\label{eq:attacked_system}
+	\tilde{x}(k+1) = x(k) + \tau \bigl[ f(x(k)) + g(x(k)) \tilde{u}(k) \bigr],
 \end{equation}
+where
+\begin{align*}
+	\tilde{u}(k) & = g(x(k))^{-1} \bigl(-f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(\tilde{e}(k))\bigr), \\
+	\tilde{e}(k) & = e(k) + \epsilon(k),                                                                       \\
+	e(k)         & = x(k) - r(k),
+\end{align*}
+and $\epsilon(k)$ is distributed as the standard gaussian
+distribution with mean 0 across 2 standard deviations.
