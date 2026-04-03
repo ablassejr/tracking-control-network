@@ -11,6 +11,7 @@ int main() {
   InternalConditions internalConditions;
   std::vector<double> controlVector;
 
+  // ********* Pre compute reference trajectory and delta reference **********
   for (int i = 0; i < settings.timeSteps; i++) {
     stateConditions.referenceMatrix(0, i) =
         i > 15000 && i < 30000 ? 0.7646 : 0.4472;
@@ -21,11 +22,11 @@ int main() {
   stateConditions.deltaReference =
       stateConditions.referenceMatrix.rightCols(settings.timeSteps - 1) -
       stateConditions.referenceMatrix.leftCols(settings.timeSteps - 1);
+  // **************************************************************************
 
-  stateConditions.stateMatrix(0, 0) = 0.0;
-  stateConditions.stateMatrix(1, 0) = 0.0;
+  stateConditions.stateMatrix.setZero(); // Initialize state to zero
 
-  systemFunction(settings, stateConditions, internalConditions);
+  systemFunction(settings, stateConditions, internalConditions); // Simulation
 
   // Compute control input u at each timestep
   auto start = std::chrono::high_resolution_clock::now();

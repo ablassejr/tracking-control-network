@@ -10,7 +10,7 @@ using Eigen::Vector2d, Eigen::Vector;
 
 using StateMatrix = Eigen::Matrix<double, 2, Eigen::Dynamic>;
 
-inline Eigen::VectorXd loadCSV(const std::string& filepath) {
+inline Eigen::VectorXd loadCSV(const std::string &filepath) {
   std::ifstream file(filepath);
   assert(file.is_open() && "Failed to open CSV file");
   std::vector<double> values;
@@ -27,9 +27,9 @@ inline Eigen::VectorXd loadCSV(const std::string& filepath) {
   return result;
 }
 
-inline void results_validation(const std::string& matlab_csv,
-                               const Eigen::VectorXd& cpp_result,
-                               double tolerance = 1e-10) {
+inline void results_validation(const std::string &matlab_csv,
+                               const Eigen::VectorXd &cpp_result,
+                               double tolerance = 1e-12) {
   auto matlab_data = loadCSV(matlab_csv);
   double max_error = (cpp_result - matlab_data).cwiseAbs().maxCoeff();
   assert(max_error < tolerance && "C++ result diverges from MATLAB");

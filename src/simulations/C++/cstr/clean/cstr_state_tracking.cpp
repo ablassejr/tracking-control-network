@@ -9,6 +9,7 @@ int main() {
   StateConditions stateConditions(settings.timeSteps);
   InternalConditions internalConditions;
 
+  // ********* Pre compute reference trajectory and delta reference **********
   for (int i = 1; i < settings.timeSteps; i++) {
     stateConditions.referenceMatrix(0, i) =
         i > 15000 && i < 30000 ? 0.7646 : 0.4472;
@@ -19,17 +20,18 @@ int main() {
   stateConditions.deltaReference =
       stateConditions.referenceMatrix.rightCols(settings.timeSteps - 1) -
       stateConditions.referenceMatrix.leftCols(settings.timeSteps - 1);
+  // **************************************************************************
 
-  std::ofstream outFile("cpp_output.log");
+  std::ofstream outFile("cpp_output.log"); // Log file for execution time
 
-  stateConditions.stateMatrix.setZero();
+  stateConditions.stateMatrix.setZero(); // Initialize state to zero
 
-  auto start = std::chrono::high_resolution_clock::now();
-  systemFunction(settings, stateConditions, internalConditions);
-  auto end = std::chrono::high_resolution_clock::now();
+  auto start = std::chrono::high_resolution_clock::now();        // Start timer
+  systemFunction(settings, stateConditions, internalConditions); // Simulation
+  auto end = std::chrono::high_resolution_clock::now();          // End timer
 
-  auto duration =
-      std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+  auto duration = std::chrono::duration_cast<std::chrono::microseconds>(
+      end - start); // Calculate duration
   outFile << "Execution time: "
           << static_cast<double>(duration.count()) / 1000000 << " seconds"
           << std::endl;
