@@ -1,5 +1,5 @@
 if (!exists("csv")) csv = "cstr_state_tracking_cpp_output.csv"
-if (!exists("outdir")) outdir = "."
+if (!exists("outdir")) outdir = "`echo $IMAGES_DIR`"
 
 set datafile separator ","
 set grid

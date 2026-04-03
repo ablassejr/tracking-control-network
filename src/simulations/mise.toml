@@ -1,8 +1,10 @@
+settings.env_shell_expand = true
 [env]
 DCMAKE_EXPORT_COMPILE_COMMANDS = "ON"
 CPP_DIR = "{{config_root}}/C++"
 SIM_ROOT = "{{config_root}}"
 PAPER_DIR = "{{config_root}}/../../research-vault/Research Journal/Paper"
+IMAGES_DIR = "$PAPER_DIR/figures/images"
 
 [tasks.build]
 description = "Build all C++ simulation targets (Release)"
@@ -36,9 +38,7 @@ run = [
 description = "Run defended CSTR simulations"
 depends = ["build"]
 dir = "{{config_root}}/C++"
-run = [
-  "./build/cstr/defended/cstr_state_tracking_defended",
-]
+run = ["./build/cstr/defended/cstr_state_tracking_defended"]
 
 [tasks.validate]
 description = "Validate C++ output against MATLAB reference data"
@@ -79,13 +79,18 @@ run = [
 [tasks.matlab-attacked]
 description = "Run perturbed CSTR MATLAB simulation"
 dir = "{{config_root}}/matlab/cstr/attacked"
-run = [
-  "matlab -batch cstr_state_tracking_attacked",
-]
+run = ["matlab -batch cstr_state_tracking_attacked"]
 
 [tasks.all]
 description = "Build, run all simulations, validate, and generate runtime table"
-depends = ["validate", "generate-table", "matlab-clean", "matlab-attacked", "plot", "run-defended"]
+depends = [
+  "validate",
+  "generate-table",
+  "matlab-clean",
+  "matlab-attacked",
+  "plot",
+  "run-defended",
+]
 
 [tasks.debug-clean]
 description = "Build (Debug) and run clean CSTR simulations"

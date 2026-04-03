@@ -1,6 +1,6 @@
 if (!exists("csv_defended")) csv_defended = "cstr_state_tracking_defended_cpp_output.csv"
 if (!exists("csv_attacked")) csv_attacked = "cstr_state_tracking_attacked_cpp_output.csv"
-if (!exists("outdir")) outdir = "."
+if (!exists("outdir")) outdir = "`echo $IMAGES_DIR`"
 
 set datafile separator ","
 set terminal pngcairo size 1400,1050 enhanced font "Arial,24"
