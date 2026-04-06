@@ -44,10 +44,10 @@ A.~Madry, A.~Makelov, L.~Schmidt, D.~Tsipras, and A.~Vladu, ``Towards deep learn
 \BIBentrySTDinterwordspacing
 
 \bibitem{Hajari2023}
-H.~Hajari, M.~C{\'e}saire, L.~Schott, S.~Lamprier, and P.~Gallinari, ``Neural adversarial attacks with random noises,'' \emph{International Journal of Intelligent Systems}, vol.~32, no.~5, p.~22, aug 2023.
+H.~Hajri, M.~C{\'e}saire, L.~Schott, S.~Lamprier, and P.~Gallinari, ``Neural adversarial attacks with random noises,'' \emph{International Journal on Artificial Intelligence Tools}, vol.~32, no.~6, p. 2360010, aug 2023.
 
 \bibitem{lyons1962tmr}
-R.~E. Lyons and W.~Vanderkulk, ``The use of triple-modular redundancy to improve computer reliability,'' \emph{Bell System Technical Journal}, vol.~41, no.~2, pp. 489--524, 1962.
+R.~E. Lyons and W.~Vanderkulk, ``The use of triple-modular redundancy to improve computer reliability,'' \emph{IBM Journal of Research and Development}, vol.~6, no.~2, pp. 200--209, 1962.
 
 \bibitem{siewiorek1998reliable}
 D.~P. Siewiorek and R.~S. Swarz, \emph{Reliable Computer Systems: Design and Evaluation}, 3rd~ed.\hskip 1em plus 0.5em minus 0.4em\relax Natick, MA: A. K. Peters, 1998.
