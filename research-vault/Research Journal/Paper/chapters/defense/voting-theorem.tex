@@ -1,62 +1,38 @@
 \subsection{Convergence Analysis}
 
-\begin{theorem}[Defended Tracking Error Bound]
+\begin{theorem}[Convergence of the Defended System]
 	\label{thm:defended_convergence}
-	Consider the defended system \eqref{eq:defended_closed_loop} with $n = 3$
-	processing units \eqref{eq:channel_error}, where exactly one unit is corrupted with
-	noise $\text{std} > 0$ and the remaining two are ideal
-	($\delta_i(k) = 0$). Then
-
-	\begin{enumerate}
-		\item \textbf{(Detection)} The minimum-variance pair selection
-		      \eqref{eq:pair_selection} deterministically excludes the corrupted unit
-		      at every time step.
-
-		\item \textbf{(Exact recovery)} When the corrupted unit is excluded, the
-		      defended error satisfies
-		      \begin{equation}
-			      \label{eq:defended_error_bound}
-			      \hat{e}(k) = e(k)
-		      \end{equation}
-		      with zero residual noise.
-
-		\item \textbf{(Tracking convergence)} The defended closed-loop
-		      \eqref{eq:defended_closed_loop} preserves
-		      $\operatorname{sgn}(\hat{e}_n(k)) = \operatorname{sgn}(e_n(k))$ for all
-		      nonzero components and drives the tracking error toward zero, recovering
-		      nominal performance.
-	\end{enumerate}
+	Let $p \in [1, n], n=3$ be the set of three parallel processing units(PPU), each independently
+	computing the ideal tracking error $p_i(k)$ according to \eqref{eq:channel_error}.
+	At most one PPU is corrupted by an adversarial attack, described by \eqref{eq:attacked_system}.
+	If the system is deployed with the voting scheme described by \eqref{eq:pairwise_disagreement},
+	\eqref{eq:pair_selection} to identify and exclude the corrupted PPU,
+	then computes the true tracking error with \eqref{eq:defended_error},
+	then the defended closed-loop system \eqref{eq:defended_closed_loop}
+	is almost surely identical to the nominal system \eqref{eq:closed_loop}.
 \end{theorem}
 
-% \begin{proof}
-% Without loss of generality, let unit $3$ be corrupted
-% ($\delta_3(k) \sim \mathcal{N}(0, \text{std}^2 \mathcal{I}_n)$,
-% $\delta_1(k) = \delta_2(k) = 0$).
-%
-% \textbf{Detection.}
-% The pairwise disagreements are
-% \begin{align}
-%     V_{12}(k) &= \|\delta_1(k) - \delta_2(k)\|^2 = 0
-%     \label{eq:v12_dist} \\
-%     V_{\ell 3}(k) &= \|\delta_3(k)\|^2 > 0 \quad \text{almost surely}
-%     \label{eq:vl3_dist}
-% \end{align}
-% for $\ell \in \{1, 2\}$. Since $V_{12}(k) = 0 < V_{\ell 3}(k)$ with
-% probability $1$, the minimum-variance pair selection \eqref{eq:pair_selection}
-% always selects the clean pair $(1, 2)$ and excludes the corrupted unit
-% deterministically.
-%
-% \textbf{Exact recovery.}
-% With pair $(1, 2)$ selected,
-% \[
-%     \hat{e}(k) = \frac{e_1(k) + e_2(k)}{2}
-%     = \frac{e(k) + e(k)}{2} = e(k).
-% \]
-% The defended error exactly recovers the true tracking error.
-%
-% \textbf{Tracking convergence.}
-% Since $\hat{e}(k) = e(k)$, the defended system \eqref{eq:defended_closed_loop}
-% reduces to the nominal system \eqref{eq:closed_loop}. By the convergence result
-% of Theorem~\ref{thm:stability_convergence}, the tracking error is driven
-% toward zero.
-% \end{proof}
+\begin{proof}
+	Without loss of generality, let PPU $3$ be corrupted by Gaussian
+	noise with mean $0$ and $\sigma = 2$. PPUs 1 and 2 are ideal, meaning $\delta_1(k) = \delta_2(k) = 0$.
+	The pairwise disagreements are
+	\begin{align}
+		V_{12}(k) & = \|\delta_1(k) - \delta_2(k)\|^2 = 0                       \\
+		\label{eq:v12_dist}
+		V_{13}(k) & = \|\delta_3(k)\|^2 \sim \sigma^2 \chi^2(1), \quad \sigma=2 \\
+		\label{eq:v13_dist}
+		V_{23}(k) & = \|\delta_3(k)\|^2 \sim \sigma^2 \chi^2(1), \quad \sigma=2 \\
+		\label{eq:v23_dist}
+	\end{align}
+	Since $V_{12}(k) < V_{13}(k) \text{ and } V_{12}(k) < V_{23}(k)$ with
+	probability $1$, the minimum-variance pair selection \eqref{eq:pair_selection}
+	almost surely selects the clean pair and excludes the corrupted PPU.
+	When sensors $1$ and $2$ are selected,
+	\[
+		\hat{e}(k) = \frac{e_1(k) + e_2(k)}{2}
+		= \frac{e(k) + e(k)}{2} = e(k),
+	\]
+	according to \eqref{eq:defended_error}. Since $\hat{e}(k) = e(k)$,
+	the defended system \eqref{eq:defended_closed_loop} reduces to
+	the nominal system \eqref{eq:closed_loop}.
+\end{proof}
