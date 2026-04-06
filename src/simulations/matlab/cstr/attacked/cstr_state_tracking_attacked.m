@@ -27,9 +27,9 @@ for i=1:n-1,
 
 m(i+1)=m(i)+1;
 
-std = 2;
+sigma = 2;
 epsilon_prev = epsilon;
-epsilon = std * randn();
+epsilon = sigma * randn();
 deltaEpsilon = epsilon - epsilon_prev;
 
 g1(i)=0;
