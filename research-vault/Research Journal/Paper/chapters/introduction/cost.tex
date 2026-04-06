@@ -7,11 +7,12 @@ The solution to the tracking control problem has been designed by minimizing a c
 The cost function for the discrete-time tracking control problem is
 
 \begin{equation}
-C(x) = \|e\|,
-\label{eq:cost_function}
+	C(x) = \|e\|,
+	\label{eq:cost_function}
 \end{equation}
 
 where
+
 \begin{itemize}
 	\item $C(x)$ represents the cost associated with state $x(k)$,
 	\item $e = x(k) - r(k)$ is the tracking error (the difference between the system state and the reference trajectory),
@@ -25,8 +26,8 @@ The cost function measures the magnitude of the tracking error at each time step
 The optimal value function is obtained by minimizing the cost function over all possible control inputs,
 
 \begin{equation}
-C^*(x) = \min_u \|e\| = u^*(k),
-\label{eq:optimal_value_function}
+	C^*(x) = \min_u \|e\| = u^*(k),
+	\label{eq:optimal_value_function}
 \end{equation}
 
 where
