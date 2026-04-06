@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2" pages="7">
   <diagram name="clean-system" id="fig1-full">
-    <mxGraphModel grid="1" page="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
+    <mxGraphModel dx="1258" dy="680" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" adaptiveColors="auto">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -64,26 +64,26 @@
         <mxCell id="plus_dr" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontFamily=Helvetica;rounded=1;fontSize=22;" value="+" vertex="1">
           <mxGeometry height="12" width="12" x="130" y="592" as="geometry" />
         </mxCell>
-        <mxCell id="e_sys_xkdot" edge="1" parent="1" source="sys_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=none;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#9673a6;" target="xk_dot" value="&lt;i&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;x(k)&lt;/font&gt;&lt;/i&gt;">
+        <mxCell id="e_sys_xkdot" edge="1" parent="1" source="sys_box" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=none;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#000000;" target="xk_dot" value="&lt;i&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;x(k)&lt;/font&gt;&lt;/i&gt;">
           <mxGeometry relative="1" x="-0.0625" y="5" as="geometry">
             <mxPoint y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="e_xk_se" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=24;strokeColor=#9673a6;" target="sigma_e" value="">
+        <mxCell id="e_xk_se" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=24;strokeColor=#000000;" target="sigma_e" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="142" y="309" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e_xk_fx" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;" target="fx_blk" value="">
+        <mxCell id="e_xk_fx" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#000000;" target="fx_blk" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="496" y="309" />
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="e_xk_gx" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673a6;" target="gx_blk" value="">
+        <mxCell id="e_xk_gx" edge="1" parent="1" source="xk_dot" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#000000;" target="gx_blk" value="">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="628" y="309" />
@@ -110,7 +110,7 @@
         <mxCell id="e_cs_LAESS" edge="1" parent="1" source="ctrl_sum" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" target="LAESS_blk" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e_LAESS_sys" edge="1" parent="1" source="LAESS_blk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=24;strokeColor=#006EAF;" target="sys_box" value="&lt;i&gt;u(k)&lt;/i&gt;">
+        <mxCell id="e_LAESS_sys" edge="1" parent="1" source="LAESS_blk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;flowAnimation=1;endArrow=classic;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Helvetica;fontSize=24;strokeColor=#000000;" target="sys_box" value="&lt;i&gt;u(k)&lt;/i&gt;">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="720" y="434" />
@@ -693,13 +693,13 @@
           <mxGeometry height="320" width="690" x="70" y="260" as="geometry" />
         </mxCell>
         <mxCell id="lMFXHt8Mbs5RH15_1eoJ-3" parent="lMFXHt8Mbs5RH15_1eoJ-1" style="text;html=1;align=left;verticalAlign=bottom;fontFamily=Helvetica;fontSize=24;rounded=1;" value="&lt;b&gt;Controller&lt;/b&gt;" vertex="1">
-          <mxGeometry height="24" width="120" x="70" y="236" as="geometry" />
+          <mxGeometry height="24" width="120" x="106" y="236" as="geometry" />
         </mxCell>
         <mxCell id="lMFXHt8Mbs5RH15_1eoJ-4" parent="lMFXHt8Mbs5RH15_1eoJ-1" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=30;strokeWidth=2;fillColor=#FFD966;strokeColor=#BF9000;fontColor=default;" value="&lt;font style=&quot;font-size: 24px;&quot;&gt;&lt;i style=&quot;line-height:100%;&quot;&gt;x(k+1) = x(k) + τ[ f(x(k)) + g(x(k)) ũ(k) ],&lt;/i&gt;&lt;br&gt;&lt;i&gt;x(1) = x&lt;/i&gt;&lt;sub&gt;1&lt;/sub&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="130" width="525" x="152" y="70" as="geometry" />
         </mxCell>
         <mxCell id="lMFXHt8Mbs5RH15_1eoJ-5" parent="lMFXHt8Mbs5RH15_1eoJ-1" style="text;html=1;align=center;verticalAlign=top;fontFamily=Helvetica;fontSize=36;rounded=1;" value="&lt;b&gt;&lt;font style=&quot;font-size: 24px;&quot;&gt;System&lt;/font&gt;&lt;/b&gt;" vertex="1">
-          <mxGeometry height="26" width="120" x="132" y="20" as="geometry" />
+          <mxGeometry height="26" width="120" x="355" y="20" as="geometry" />
         </mxCell>
         <mxCell id="lMFXHt8Mbs5RH15_1eoJ-6" parent="lMFXHt8Mbs5RH15_1eoJ-1" style="ellipse;fillColor=#9673A6;strokeColor=#000000;strokeWidth=1;html=1;" value="" vertex="1">
           <mxGeometry height="10" width="10" x="410" y="270" as="geometry" />
