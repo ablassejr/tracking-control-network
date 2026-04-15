@@ -1,8 +1,19 @@
-The difference equation \eqref{systemModel} and control equation \eqref{eq:control_function}
-describe the full closed-loop dynamics. Substituting $u(k)$ from \eqref{eq:control_function}
-into \eqref{systemModel} gives the closed-loop state equation~\cite{tymoshchuk2024tracking}
+The difference equation \eqref{systemModel} and control equation
+\eqref{eq:control_function} describe the full closed-loop dynamics of the
+nonlinear system. Substituting $u(k)$ from \eqref{eq:control_function} into
+\eqref{systemModel} gives the following tracking
+equation~\cite{tymoshchuk2024tracking} that describes the discrete-time state
+variable trajectory of the designed system:
 \begin{equation}
 	\label{eq:closed_loop}
-	x(k+1) = x(k) - \beta \operatorname{sgn}(x(k) - r(k)) + \Delta r(k),
+	x(k+1) = x(k) - \beta \operatorname{sgn}(x(k) - r(k)) + \Delta r(k).
 \end{equation}
-where $\Delta r(k) = r(k+1) - r(k)$.
+As one can see in \eqref{eq:closed_loop}, $x(k)$ and
+$\Delta x(k) = x(k+1) - x(k)$ can be derived by solving the difference
+equation for each time step $k$, $k = 1, 2, \ldots$. Based on determined
+$x(k)$ and $\Delta x(k)$, the control $u(k)$ can be obtained using
+\eqref{eq:control_function} by solving the system of linear algebraic
+equations. The desired discrete-time state variable trajectory $x(k)$ of the
+controlled system is then found by numerical integration of the difference
+equation \eqref{systemModel} using known values of $x(1) = x_1$, $f(x)$,
+$g(x)$, and $u(k)$.

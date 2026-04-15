@@ -1,6 +1,31 @@
 
-The control, $u(k)$, can be determined from \eqref{systemModel} considering
-the tracking error by the control equation~\cite{tymoshchuk2024tracking}
+The real-valued cost function associated with \eqref{systemModel} can be
+presented as follows~\cite{tymoshchuk2024tracking}:
+\begin{equation}
+	C(x) = \sum_{k=1}^{\infty} \Phi(e(k), u(k)),
+	\label{eq:cost_function_sum}
+\end{equation}
+where $e(k) = x(k) - r(k)$ is the tracking error, $r(k) \in \mathfrak{R}^n$ is the
+reference trajectory, and $\Phi(e, u) \in \mathfrak{R}^n$ is the positive definite
+function. The tracking control problem is to determine a control $u(k)$ such
+that, starting from any finite initial state $-\infty < x(1) < \infty$, as
+$k \to \infty$, \eqref{eq:cost_function_sum} is minimized, i.e., the optimal
+value function
+\begin{equation}
+	C^*(x) = \min_u \sum_{k=1}^{\infty} \Phi(e(k), u(k)),
+	\label{eq:optimal_value}
+\end{equation}
+while the state $x(k)$ remains bounded. Equation~\eqref{eq:optimal_value}
+means that starting from any initial value,
+\eqref{eq:cost_function_sum} should converge to its minimum, i.e., the system
+should be stable. We design the cost function
+\eqref{eq:cost_function_sum} as $C(x) = \|e\|$. Since the cost function is
+convex, it has a unique global minimum. Its minimizer $C^* = 0$ can be found
+using a gradient descent method~\cite{cichocki1993neural}.
+
+The control $u(k)$ can be determined from \eqref{systemModel} considering
+\eqref{eq:optimal_value} by the following control
+equation~\cite{tymoshchuk2024tracking}:
 \begin{equation}
 	u(k) = \begin{cases}
 		g(x(k))^{-1} \bigl( -f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(x(k) - r(k)) \bigr) & \text{if } g(x(k)) \neq 0 \\
@@ -8,9 +33,11 @@ the tracking error by the control equation~\cite{tymoshchuk2024tracking}
 	\end{cases},
 	\label{eq:control_function}
 \end{equation}
-
-such that, given a reference trajectory $r(k)$, the system \eqref{systemModel}
-seeks to minimize the closed-loop tracking error, described by the
-associated difference equation with variable structure~\cite{tymoshchuk2024tracking}
+where $\beta = \operatorname{diag}(\beta_1, \ldots, \beta_n)$ is the diagonal
+matrix of learning rate parameters and $\Delta r(k) = r(k+1) - r(k)$.
+Given a reference trajectory $r(k)$, the system \eqref{systemModel} seeks to
+minimize the closed-loop tracking error, described by the associated
+difference equation with variable
+structure~\cite{tymoshchuk2024tracking}
 
 \input{chapters/introduction/error.tex}

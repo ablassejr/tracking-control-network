@@ -2,12 +2,21 @@
 	\label{eq:error_dynamics}
 	e(k+1) = e(k) - \beta \operatorname{sgn}(e(k)),
 \end{equation}
-where
+\noindent where
 \begin{equation*}
 	\operatorname{sgn}(e(k)) = \begin{cases}
-		1  & \text{if } e(k) > 0 \\
-		0  & \text{if } e(k) = 0 \\
+		1  & \text{if } e(k) > 0  \\
+		0  & \text{if } e(k) = 0  \\
 		-1 & \text{if } e(k) < 0
-	\end{cases},
+	\end{cases}
 \end{equation*}
-and $e(k) = x(k) - r(k)$.
+is the signum activation function~\cite{cichocki1993neural} of tracking error
+$e(k) = x(k) - r(k)$. Notice that the difference equation
+\eqref{eq:error_dynamics} includes the signum activation function and describes
+supervised learning with learning rate parameter $\beta$ that can be used for
+changing the convergence rate of the state variable trajectory $x(k)$ to the
+reference trajectory $r(k)$. Since the activation function and supervised
+learning are the basic characteristics of artificial
+NNs~\cite{cichocki1993neural}, we treat the discrete-time tracking controller
+described by the tracking equation \eqref{eq:closed_loop} and control equation
+\eqref{eq:control_function} as a tracking control NN.
