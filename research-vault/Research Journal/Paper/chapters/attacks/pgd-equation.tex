@@ -6,7 +6,7 @@
 			 & k = 0 ...N_{PGD} - 1\text{,}
 		\end{aligned}
 	\end{equation}
-	where
+	\noindent where
 
 	\begin{description}
 		\setlength{\itemsep}{0.35em}
@@ -15,6 +15,6 @@
 		\item $\tau$: Step size (implicit in $k$, often fixed for uniform steps).
 		\item $\operatorname{sgn}(\cdot)$: Signum (componentwise); from FGSM core.
 		\item $\nabla_y J(\hat{y}(\Delta y^{(k)}), x^*)$: Gradient of attack loss $J$ w.r.t. perturbed measurement; $\hat{y}$ is NN-estimated state from attacked obs; $x^*$ is target unsafe state (e.g., collision).
-		\item $N_{\text{PGD}}$: Total iterations
+		\item $N_{\text{PGD}}$: Total iterations.
 	\end{description}
 \end{definition}
