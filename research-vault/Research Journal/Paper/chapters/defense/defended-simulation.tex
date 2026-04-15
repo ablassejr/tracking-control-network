@@ -1,20 +1,22 @@
-\subsection{Simulation of Defended CSTR System}
+\subsection{Simulation of Defended System}
 
-The voting scheme defense is applied to the CSTR system from
-\eqref{eq:cstr_dynamics} under a mathematically identical adversarial perturbation
-as was used in Fig.~\ref{fig:attacked-state-tracking}. Three parallel processing units
-independently compute the tracking error. Unit~3 is corrupted with noise
-$\sigma = 2$, while units~1 and~2 are ideal.
+The rounding defense~\eqref{eq:rounding_defense} is applied to the CSTR
+system from \eqref{eq:cstr_dynamics}. Additive Gaussian noise with
+$\sigma = 0.3$ is injected into the output of the signal function. Because
+$\sigma < \tfrac{1}{2}$, the condition $|\epsilon(k)| < \tfrac{1}{2}$ holds
+with high probability ($\approx 90\%$ of time steps), and the rounding
+operation recovers the correct signal function value at those steps.
 
 Fig.~\ref{fig:defended-state-tracking} presents the defended state trajectories.
-Under the voting scheme, the state variables $x_1(t)$ and $x_2(t)$ recover
-nominal tracking performance, confirming the validity of
-Theorem~\ref{thm:defended_convergence}.
+Because the rounding correctly recovers $\operatorname{sgn}(e(k))$ for the
+vast majority of time steps, the closed-loop dynamics closely approximate
+the unperturbed system~\eqref{eq:closed_loop}, and the state variables
+$x_1(t)$ and $x_2(t)$ recover near-unperturbed tracking performance.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x1_r1}
-	\caption{Conversion $x_1$ and reference $r_1$ trajectories for the defended CSTR.}
+	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the defended CSTR.}
 	\label{fig:defended-state-tracking}
 	\label{fig:defended-x1-r1}
 \end{figure}
@@ -22,6 +24,6 @@ Theorem~\ref{thm:defended_convergence}.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x2_r2}
-	\caption{Temperature $x_2$ and reference $r_2$ trajectories for the defended CSTR.}
+	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the defended CSTR.}
 	\label{fig:defended-x2-r2}
 \end{figure}

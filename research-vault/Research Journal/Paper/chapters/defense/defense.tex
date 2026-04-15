@@ -1,16 +1,5 @@
-\section{Defense Mechanisms}
-
-The adversarial attacks discussed in this paper degrades tracking performance by
-perturbing the error signal used in the sign activation function. This implies
-that the computation is being attacked rather than the physical system. Therefore,
-we propose a system utilizing multiple, independent, parallel processing
-units. Under the condition that only 1 of the units are compromised by the attack,
-a defense mechanism can be designed which almost surely recovers the exact behavior
-of the nominal system, even under attack. This paper designs the implementation
-of a voting scheme using $n=3$ parallel processing units is
-developed and analyzed below. The remaining methods are left for future investigation.
+\section{Defense by Rounding of the Signal Function}
 
 \input{chapters/defense/voting-scheme.tex}
 \input{chapters/diagrams/defended-system.tex}
 \input{chapters/defense/voting-theorem.tex}
-\input{chapters/defense/defended-simulation.tex}

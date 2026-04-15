@@ -1,21 +1,18 @@
 \section{Adversarial Attacks}
 
-The current state-of-the-art method for adversarial attacks against neural networks
-is the projected gradient descent (PGD) attack~\cite{madry2019deeplearningmodelsresistant},
-an iterative method that seeks to find the optimal perturbation maximizing
-the loss function of the neural network. The simulation and defense of a neural network
-using the PGD method will be left for future analysis. In this paper, we examine
-an alternative method of attack simulation using additive stochastic
-disturbance~\cite{Hajari2023} on the error channel, $e(k)$.
+The projected gradient descent (PGD) method of defense of neural networks
+against adversarial attacks is described
+in~\cite{madry2019deeplearningmodelsresistant}. In this paper, we examine
+an alternative method of attack modeling using additive stochastic
+disturbance~\cite{Hajari2023} on the signal function of the controller.
 The adversarially perturbed system, considering \eqref{systemModel}, can be described by
 
 \input{chapters/attacks/modified-tracking.tex}
-
 The adversarial disturbance $\epsilon(k)$ is modeled as an additive stochastic perturbation
-injected into the error channel. This disturbance model follows the treatment of
+on the output of the signal function. This disturbance model follows the treatment of
 controller nonlinearities in \cite{tymoshchuk2023nnoptimal}, where random noises
-with normal distribution and zero mean are shown to affect the activation function
-and nonlinear dynamics of the controlled system.
+with normal distribution and zero mean are shown to affect the output of the activation
+function and nonlinear dynamics of the controlled system.
 
 Substituting the control function from \eqref{eq:control_function}
 into the perturbed system model gives the adversarially perturbed closed-loop state
@@ -23,4 +20,3 @@ equation
 
 \input{chapters/attacks/perturbed-closed-loop-equation.tex}
 \input{chapters/diagrams/perturbed-block-diagram.tex}
-\input{chapters/attacks/perturbed-simulation.tex}

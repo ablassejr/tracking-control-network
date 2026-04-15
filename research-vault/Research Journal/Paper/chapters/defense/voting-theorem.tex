@@ -1,38 +1,6 @@
-\subsection{Convergence Analysis}
-
-\begin{theorem}[Convergence of the Defended System]
-	\label{thm:defended_convergence}
-	Let $p \in [1, n], n=3$ be the set of three parallel processing units(PPU), each independently
-	computing the ideal tracking error $p_i(k)$ according to \eqref{eq:channel_error}.
-	At most one PPU is corrupted by an adversarial attack, described by \eqref{eq:attacked_system}.
-	If the system is deployed with the voting scheme described by \eqref{eq:pairwise_disagreement},
-	\eqref{eq:pair_selection} to identify and exclude the corrupted PPU,
-	then computes the true tracking error with \eqref{eq:defended_error},
-	then the defended closed-loop system \eqref{eq:defended_closed_loop}
-	is almost surely identical to the nominal system \eqref{eq:closed_loop}.
-\end{theorem}
-
-\begin{proof}
-	Without loss of generality, let PPU $3$ be corrupted by Gaussian
-	noise with mean $0$ and $\sigma = 2$. PPUs 1 and 2 are ideal, meaning $\delta_1(k) = \delta_2(k) = 0$.
-	The pairwise disagreements are
-	\begin{align}
-		V_{12}(k) & = \|\delta_1(k) - \delta_2(k)\|^2 = 0                       \\
-		\label{eq:v12_dist}
-		V_{13}(k) & = \|\delta_3(k)\|^2 \sim \sigma^2 \chi^2(1), \quad \sigma=2 \\
-		\label{eq:v13_dist}
-		V_{23}(k) & = \|\delta_3(k)\|^2 \sim \sigma^2 \chi^2(1), \quad \sigma=2 \\
-		\label{eq:v23_dist}
-	\end{align}
-	Since $V_{12}(k) < V_{13}(k) \text{ and } V_{12}(k) < V_{23}(k)$ with
-	probability $1$, the minimum-variance pair selection \eqref{eq:pair_selection}
-	almost surely selects the clean pair and excludes the corrupted PPU.
-	When sensors $1$ and $2$ are selected,
-	\[
-		\hat{e}(k) = \frac{e_1(k) + e_2(k)}{2}
-		= \frac{e(k) + e(k)}{2} = e(k),
-	\]
-	according to \eqref{eq:defended_error}. Since $\hat{e}(k) = e(k)$,
-	the defended system \eqref{eq:defended_closed_loop} reduces to
-	the nominal system \eqref{eq:closed_loop}.
-\end{proof}
+% The formal convergence analysis has been replaced by the rounding
+% description in voting-scheme.tex. The correctness of the defense follows
+% directly from the rounding expression \eqref{eq:rounding_defense}:
+% when |epsilon(k)| < 1/2, the rounding recovers sgn(e(k)) exactly,
+% and the defended system equals the unperturbed system.
+% Simulations below confirm this numerically.

@@ -57,19 +57,20 @@ t(i+1)=t(i)+dt;
     r2(i+1)=2.752;
    end
 
-if (y(i)-r2(i) + epsilon)>0
+if (y(i)-r2(i))>0
 S(i)=1;
-elseif (y(i)-r2(i) + epsilon)<0
+elseif (y(i)-r2(i))<0
 S(i)=-1;
 else
 S(i)=0;
 end
+S_noisy(i)=S(i)+epsilon;
 
 u1(i)=0;
-u2(i)=-1/g2(i)*(-betta*S(i)+r2(i+1)-r2(i)-f2(i));
+u2(i)=-1/g2(i)*(-betta*S_noisy(i)+r2(i+1)-r2(i)-f2(i));
 
 x(i+1)=f1(i);
-y(i+1)=y(i)+dt*(-betta*S(i)+r2(i+1)-r2(i)+deltaEpsilon) ;
+y(i+1)=y(i)+dt*(-betta*S_noisy(i)+r2(i+1)-r2(i)) ;
 
 %x(i+1)=r1(i+1);
 %y(i+1)=r2(i+1);
@@ -89,7 +90,7 @@ axis([0 n 0 0.8])
 legend('x_1','r_1')
 grid
 ylabel('x_1,r_1')
-xlabel('k (time steps)')
+xlabel('k')
 set(gca,'FontSize',22)
 
 figure(2)
@@ -100,7 +101,7 @@ hold off
 axis([0 n 0 6])
 ylabel('x_2, r_2')
 legend('x_2','r_2')
-xlabel('k (time steps)')
+xlabel('k')
 grid
 set(gca,'FontSize',22)
 

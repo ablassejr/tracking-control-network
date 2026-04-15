@@ -2,11 +2,10 @@
 	\label{eq:attacked_system}
 	\tilde{x}(k+1) = x(k) + \tau \bigl[ f(x(k)) + g(x(k)) \tilde{u}(k) \bigr],
 \end{equation}
-where
+\noindent where
 \begin{align*}
-	\tilde{u}(k) & = g(x(k))^{-1} \bigl(-f(x(k)) + \Delta r(k) - \beta \operatorname{sgn}(\tilde{e}(k))\bigr), \\
-	\tilde{e}(k) & = e(k) + \epsilon(k),                                                                       \\
+	\tilde{u}(k) & = g(x(k))^{-1} \bigl(-f(x(k)) + \Delta r(k) - \beta \bigl(\operatorname{sgn}(e(k)) + \epsilon(k)\bigr)\bigr), \\
 	e(k)         & = x(k) - r(k),
 \end{align*}
-and $\epsilon(k)$ is distributed as the standard gaussian
-distribution with mean 0 across 2 standard deviations.
+and $\epsilon(k)$ is a random noise with normal distribution,
+zero mean and standard deviation $\sigma$.

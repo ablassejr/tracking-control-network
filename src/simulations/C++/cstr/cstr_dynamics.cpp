@@ -64,11 +64,11 @@ void attackedSystemFunction(SimSettings &settings,
              internalConditions.Da * (1 - *prevX1) *
                  exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
 
-    // x2 closed-loop dynamics with additive noise on error channel
+    // x2 closed-loop dynamics with additive noise on sgn output
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
         *prevX2 +
-        settings.tau * (-internalConditions.beta * sgn(e2 + noise) + *deltaR2);
+        settings.tau * (-internalConditions.beta * (sgn(e2) + noise) + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
@@ -78,7 +78,7 @@ void defendedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> attackNoise(0.0, 2);
+  std::normal_distribution<double> attackNoise(0.0, 0.3);
   std::default_random_engine randomNumberGenerator;
 
   for (int i = 1; i < settings.timeSteps; i++) {
@@ -91,25 +91,19 @@ void defendedSystemFunction(SimSettings &settings,
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
 
-    // n=3 parallel processing units computing error independently
-    // Clean units are ideal (no noise), corrupted unit has σ²_a = 4
-    double e2_ch1 = e2;
-    double e2_ch2 = e2;
-    double e2_ch3 = e2 + attackNoise(randomNumberGenerator);
+    // Additive noise (sigma=0.3) on sgn output, then rounding defense
+    double s_clean = sgn(e2);
+    double noise = attackNoise(randomNumberGenerator);
+    double s_noisy = s_clean + noise;
 
-    // Pairwise disagreement: V_ij = (e_i - e_j)^2
-    double v12 = (e2_ch1 - e2_ch2) * (e2_ch1 - e2_ch2);
-    double v13 = (e2_ch1 - e2_ch3) * (e2_ch1 - e2_ch3);
-    double v23 = (e2_ch2 - e2_ch3) * (e2_ch2 - e2_ch3);
-
-    // Select minimum-variance pair and average
-    double e2_hat;
-    if (v12 <= v13 && v12 <= v23) {
-      e2_hat = (e2_ch1 + e2_ch2) / 2.0;
-    } else if (v13 <= v23) {
-      e2_hat = (e2_ch1 + e2_ch3) / 2.0;
+    // Rounding defense (eq:rounding_defense): recover sgn(e) from noisy output
+    int s_hat;
+    if (s_noisy > 0.5) {
+      s_hat = 1;
+    } else if (s_noisy < -0.5) {
+      s_hat = -1;
     } else {
-      e2_hat = (e2_ch2 + e2_ch3) / 2.0;
+      s_hat = 0;
     }
 
     // x1 open-loop natural dynamics (unchanged)
@@ -120,11 +114,11 @@ void defendedSystemFunction(SimSettings &settings,
              internalConditions.Da * (1 - *prevX1) *
                  exp(*prevX2 / (1 + *prevX2 / internalConditions.gamma)));
 
-    // x2 closed-loop dynamics with defended error, clean deltaReference
+    // x2 closed-loop dynamics with defended sgn output
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
         *prevX2 +
-        settings.tau * (-internalConditions.beta * sgn(e2_hat) + *deltaR2);
+        settings.tau * (-internalConditions.beta * s_hat + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
