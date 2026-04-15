@@ -1,18 +1,22 @@
-The corresponding functional block-diagram of the defended nonlinear system is
-presented in Fig.~\ref{fig:defended-system}. The diagram extends the attacked
-system (Fig.~\ref{fig:attacked-system}) by adding three parallel processing
-units and a voter block $V$. Each processing unit independently computes
-the tracking error $e_i(k)$; one unit is
-corrupted by the adversarial perturbation. The voter block receives all three
-error signals, selects the minimum-variance pair via
-(equation), and outputs the defended error $\hat{e}(k)$. The
-remainder of the control path is identical
-to the nominal system in Fig.~\ref{fig:clean-system}.
-
+\par
+The corresponding functional block-diagram of the defended system
+described by \eqref{eq:rounding_defense}--\eqref{eq:defended_closed_loop}
+is presented in Fig.~\ref{fig:defended-system}. Compared with the
+adversarially perturbed system, the
+diagram introduces a rounding block $R$ placed after the noisy signal
+function output $\widetilde{s}(k) = \operatorname{sgn}(e(k)) + \epsilon(k)$.
+The rounding block maps $\widetilde{s}(k)$ to the defended output
+$\hat{s}(k) \in \{-1, 0, +1\}$ according to \eqref{eq:rounding_defense},
+recovering the correct signal function value when
+$|\epsilon(k)| < \tfrac{1}{2}$. The defended output $\hat{s}(k)$ is then
+passed to the amplification block $\beta$ and the remaining control path,
+producing the defended control input $\hat{u}(k)$. All remaining blocks
+are identical to those of the unperturbed system.
 \begin{figure}[H]
 	\centering
-	\includesvg[width=0.9\textwidth]{defended-system}
-	\caption{Functional block-diagram of the controlled nonlinear system with
-		voting scheme defense.}
+	\fbox{\parbox{0.65\textwidth}{\centering\vspace{3cm}%
+		{\large [Defended-system block diagram placeholder]}%
+		\vspace{3cm}}}
+	\caption{The functional block-diagram of the discrete-time controlled system with rounding defense described by \eqref{eq:rounding_defense}--\eqref{eq:defended_closed_loop}.}
 	\label{fig:defended-system}
 \end{figure}

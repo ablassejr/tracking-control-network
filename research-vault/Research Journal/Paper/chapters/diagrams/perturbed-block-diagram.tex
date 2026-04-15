@@ -1,13 +1,16 @@
 The corresponding functional block-diagram of the adversarially perturbed
-system is presented in Fig.~\ref{fig:attacked-system}. Compared with the nominal
-system in Fig.~\ref{fig:clean-system}, the diagram introduces an additive
-stochastic perturbation $\epsilon(k)$ injected into the error channel $e(k)$,
-producing the perturbed error $\tilde{e}(k)$
+system is presented in Fig.~\ref{fig:attacked-system}. Compared with the unperturbed
+system, the diagram introduces an additive
+stochastic perturbation $\epsilon(k)$ on the output of the signal function
+$\operatorname{sgn}(e(k))$, producing the perturbed signal
+$\operatorname{sgn}(e(k)) + \epsilon(k)$
 and the perturbed control input $\tilde{u}(k)$. All remaining blocks
-are identical to those of the nominal system.
+are identical to those of the unperturbed system.
 \begin{figure}[H]
 	\centering
-	\includesvg[width=0.7\textwidth]{attacked-system}
-	\caption{Functional block-diagram of the controlled nonlinear system under adversarial perturbation.}
+	\fbox{\parbox{0.65\textwidth}{\centering\vspace{3cm}%
+		{\large [Perturbed-system block diagram placeholder]}%
+		\vspace{3cm}}}
+	\caption{The functional block-diagram of the discrete-time controlled system under adversarial perturbation described by \eqref{eq:attacked_system} and \eqref{eq:perturbed_closed_loop}.}
 	\label{fig:attacked-system}
 \end{figure}
