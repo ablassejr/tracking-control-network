@@ -5,7 +5,7 @@ set datafile separator ","
 set terminal pngcairo size 1400,1050 enhanced font "Arial,24"
 set grid
 
-set xlabel "k (time steps)"
+set xlabel "k"
 set xrange [0:45000]
 set xtics 0,5000,45000
 

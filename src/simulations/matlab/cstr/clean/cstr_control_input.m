@@ -83,7 +83,7 @@ end
 figure(1)
 plot(1:length(u),u,'b-')
 ylabel('u')
-xlabel('k (time steps)')
+xlabel('k')
 axis([1 n-1 -350 400])
 grid
 set(gca,'FontSize',22)
@@ -91,7 +91,7 @@ set(gca,'FontSize',22)
 figure(2)
 plot(1:length(u),u,'b-')
 ylabel('u')
-xlabel('k (time steps)')
+xlabel('k')
 axis([1 100 -350 400])
 grid
 set(gca,'FontSize',22)

@@ -83,7 +83,7 @@ axis([0 n 0 0.8])
 legend('x_1','r_1')
 grid
 ylabel('x_1,r_1')
-xlabel('k (time steps)')
+xlabel('k')
 set(gca,'FontSize',22)
 
 figure(2)
@@ -94,7 +94,7 @@ hold off
 axis([0 n 0 5])
 ylabel('x_2, r_2')
 legend('x_2','r_2')
-xlabel('k (time steps)')
+xlabel('k')
 grid
 set(gca,'FontSize',22)
 

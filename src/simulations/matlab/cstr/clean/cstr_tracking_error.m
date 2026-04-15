@@ -80,7 +80,7 @@ end
 figure(1)
 plot(1:n,e1,'-','Color',[0.494,0.184,0.556])
 ylabel('e_1')
-xlabel('k (time steps)')
+xlabel('k')
 axis([0 n -0.5 0.4])
 grid
 set(gca,'FontSize',22)
@@ -88,7 +88,7 @@ set(gca,'FontSize',22)
 figure(2)
 plot(1:n,e2,'-','Color',[0.494,0.184,0.556])
 ylabel('e_2')
-xlabel('k (time steps)')
+xlabel('k')
 axis([0 n -3 2.5])
 grid
 set(gca,'FontSize',22)

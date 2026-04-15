@@ -5,7 +5,7 @@ set datafile separator ","
 set terminal pngcairo size 1400,1050 enhanced font "Arial,24"
 set grid
 
-set xlabel "k (time steps)"
+set xlabel "k"
 set ylabel "u"
 
 set output outdir."/cxxplot_fig2b.png"
