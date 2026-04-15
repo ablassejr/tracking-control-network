@@ -1,9 +1,15 @@
-\subsection{Simulation of Nominal CSTR System}
+\subsection{Simulation of Unperturbed System}
+
+A Continuous Stirred-Tank Reactor (CSTR) is a chemical engineering system in
+which reactants are continuously fed into a well-mixed vessel and products are
+continuously withdrawn, maintaining a homogeneous composition throughout the
+reactor volume. The CSTR is a standard benchmark for nonlinear control because
+its dynamics exhibit strong nonlinearity and coupling between states.
 
 The operation of the discrete-time controlled nonlinear system described by
 \eqref{systemModel} and control equation \eqref{eq:control_function}
 using a nonlinear cooling CSTR adopted from
-\cite{yan2011model},\cite{soukkou2008optimal},\cite{juang2007recurrent} was
+\cite{yan2011model,soukkou2008optimal,juang2007recurrent} was
 simulated in \cite{tymoshchuk2024tracking}. The dynamics of the reactor can
 be described in normalized form by \eqref{systemModel}, where
 \begin{equation}
@@ -18,7 +24,7 @@ be described in normalized form by \eqref{systemModel}, where
 	\mathbf{g} =
 	\begin{bmatrix}
 		0 \\ \lambda
-	\end{bmatrix}
+	\end{bmatrix},
 \end{equation}
 with $\alpha = 1.0$, $\lambda = 0.3$, $\gamma = 20.0$,
 $B = 1.0$, $D = 0.072$, $\beta = 100$, $\tau = 0.001$\,s,
@@ -38,68 +44,66 @@ The purpose is to track the reference trajectories
 	\begin{cases}
 		2.7520, & \text{if } 0 \leq t \leq 15 \\
 		4.7052, & \text{if } 15 < t < 30      \\
-		2.7520, & \text{if } 30 \leq t < 45
+		2.7520, & \text{if } 30 \leq t < 45.
 	\end{cases}
 \end{equation}
 
 The trajectories of state variables $x_1(t)$, $x_2(t)$ obtained based on
 \eqref{systemModel} and control equation \eqref{eq:control_function}
 and the reference trajectories $r_1(t)$, $r_2(t)$ are presented in
-Fig.~\ref{fig:nominal-state-tracking}.
+Fig.~\ref{fig:unperturbed-state-tracking}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_time_vs_x1_r1}
-	\caption{Conversion $x_1$ and reference $r_1$ trajectories for the nominal CSTR.}
-	\label{fig:nominal-state-tracking}
-	\label{fig:nominal-x1-r1}
+	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the unperturbed CSTR.}
+	\label{fig:unperturbed-state-tracking}
+	\label{fig:unperturbed-x1-r1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_time_vs_x2_r2}
-	\caption{Temperature $x_2$ and reference $r_2$ trajectories for the nominal CSTR.}
-	\label{fig:nominal-x2-r2}
+	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the unperturbed CSTR.}
+	\label{fig:unperturbed-x2-r2}
 \end{figure}
 
 The control input $u(k)$ produced by the tracking control law
-\eqref{eq:control_function} is shown in Fig.~\ref{fig:nominal-control-input}.
-The full-range view reveals the initial transient and the step-change
-responses at $t = 15$\,s and $t = 30$\,s, while the zoomed view
-highlights the high-frequency switching(chattering) characteristic of the
-sliding-mode controller.
+\eqref{eq:control_function} is shown in Fig.~\ref{fig:unperturbed-control-input}.
+The initial transient and the step-change responses at $t = 15$\,s and
+$t = 30$\,s are visible, along with the high-frequency switching
+(chattering) characteristic of the sliding-mode controller.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_fig2b}
-	\caption{Control input $u(k)$ over the full simulation horizon.}
-	\label{fig:nominal-control-input}
+	\caption{Trajectory of control $u(t)$.}
+	\label{fig:unperturbed-control-input}
 	\label{fig:control-input-full}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_fig2b_zoomed}
-	\caption{Control input $u(k)$, zoomed to $k \in [0, 100]$.}
+	\caption{Trajectory of control $u(t)$ for $k \in [0, 100]$.}
 	\label{fig:control-input-zoomed}
 \end{figure}
 
-The tracking errors $e_1(k) = x_1(k) - r_1(k)$ and $e_2(k) = x_2(k) - r_2(k)$
-are presented in Fig.~\ref{fig:nominal-tracking-error}. Both errors converge
-to zero between reference changes, confirming the finite-time convergence
-property of the sliding-mode control law \eqref{eq:error_dynamics}.
+The tracking errors are presented in Fig.~\ref{fig:unperturbed-tracking-error}.
+Both errors converge to zero between reference changes, confirming the
+finite-time convergence property of the control law \eqref{eq:error_dynamics}.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_fig2c_e1}
-	\caption{Conversion tracking error $e_1$.}
-	\label{fig:nominal-tracking-error}
+	\caption{Trajectory of tracking error $e_1(t)$.}
+	\label{fig:unperturbed-tracking-error}
 	\label{fig:tracking-error-e1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_fig2c_e2}
-	\caption{Temperature tracking error $e_2$.}
+	\caption{Trajectory of tracking error $e_2(t)$.}
 	\label{fig:tracking-error-e2}
 \end{figure}

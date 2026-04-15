@@ -6,158 +6,31 @@
 
 To verify the simulation results and assess computational efficiency, the
 MATLAB reference implementation was ported to C++. The port uses Eigen
-matrices for a column-major $2 \times N$ data layout (row~0: conversion
-$x_1$, row~1: temperature $x_2$), pre-computes the reference difference
+matrices for a column-major $2 \times N$ data layout (row~0: state
+$x_1$, row~1: state $x_2$), pre-computes the reference difference
 matrix $\Delta R$ before the simulation loop, and replaces MATLAB's
 conditional signum with a branchless arithmetic template. Gnuplot replaces
 MATLAB's native plotting for publication-quality figures.
 
 \subsection{Output Comparison}
 
-Fig.~\ref{fig:state-comparison} compares the nominal state trajectories
-from both implementations.
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_x1_r1}
-		\caption{MATLAB, conversion $x_1$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x1_r1_comparison}
-		\caption{C++, conversion $x_1$.}
-	\end{subfigure}
-	\par\medskip
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_x2_r2}
-		\caption{MATLAB, temperature $x_2$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_time_vs_x2_r2_comparison}
-		\caption{C++, temperature $x_2$.}
-	\end{subfigure}
-	\caption{Nominal CSTR state trajectories: MATLAB (left) vs.\ C++ (right).
-		Both use identical parameters and initial conditions $x(0) = \mathbf{0}$.}
-	\label{fig:state-comparison}
-\end{figure}
-
-Fig.~\ref{fig:control-comparison} compares the control input $u(k)$.
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2b}
-		\caption{MATLAB, full range.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_fig2b_comparison}
-		\caption{C++, full range.}
-	\end{subfigure}
-	\par\medskip
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2b_zoomed}
-		\caption{MATLAB, zoomed $k \in [0, 100]$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_fig2b_zoomed_comparison}
-		\caption{C++, zoomed $k \in [0, 100]$.}
-	\end{subfigure}
-	\caption{Control input $u(k)$: MATLAB (left) vs.\ C++ (right).
-		Both produce identical control signals.}
-	\label{fig:control-comparison}
-\end{figure}
-
-Fig.~\ref{fig:error-comparison} compares the tracking errors.
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2c_e1}
-		\caption{MATLAB, error $e_1$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_fig2c_e1_comparison}
-		\caption{C++, error $e_1$.}
-	\end{subfigure}
-	\par\medskip
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2c_e2}
-		\caption{MATLAB, error $e_2$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_fig2c_e2_comparison}
-		\caption{C++, error $e_2$.}
-	\end{subfigure}
-	\caption{Tracking errors: MATLAB (left) vs.\ C++ (right).
-		Both produce identical error trajectories.}
-	\label{fig:error-comparison}
-\end{figure}
-
-Fig.~\ref{fig:attacked-comparison} compares the attacked state
-trajectories. Because each run draws independent noise samples, exact
-numerical equivalence is not expected; the qualitative degradation pattern
-is consistent across both implementations.
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x1_r1}
-		\caption{MATLAB, attacked $x_1$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x1_r1_comparison}
-		\caption{C++, attacked $x_1$.}
-	\end{subfigure}
-	\par\medskip
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{matlab_fig2a_attacked_tracking_x2_r2}
-		\caption{MATLAB, attacked $x_2$.}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[t]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{cxxplot_attacked_time_vs_x2_r2_comparison}
-		\caption{C++, attacked $x_2$.}
-	\end{subfigure}
-	\caption{Attacked CSTR state trajectories ($\sigma = 2$): MATLAB (left)
-		vs.\ C++ (right). Both exhibit the same tracking degradation pattern.}
-	\label{fig:attacked-comparison}
-\end{figure}
+The C++ implementation produces state trajectories, control inputs, and
+tracking errors that are visually indistinguishable from the MATLAB reference.
+Element-wise comparison (see Numerical Validation below) confirms that the
+unperturbed outputs agree to machine precision. For the attacked simulation,
+because each run draws independent noise samples, exact numerical equivalence
+is not expected; however, the qualitative degradation pattern is consistent
+across both implementations. Since the graphs are the same, only the C++
+outputs are shown in the simulation sections of the main text.
 
 \subsection{Numerical Validation}
 
-Element-wise comparison of the nominal CSV outputs yields a maximum
-deviation of approximately $10^{-15}$ across all state variables, consistent
-with IEEE~754 double-precision machine epsilon
-($\approx 2.22 \times 10^{-16}$). The two implementations compute identical
+Element-wise comparison of the unperturbed outputs yields a maximum
+deviation on the order of $10^{-15}$ across all state variables, consistent
+with IEEE~754 double-precision machine epsilon of
+$2.22 \times 10^{-16}$. The two implementations produce identical
 floating-point results up to rounding in the final digits.
 
 \subsection{Runtime Performance}
 
 \input{chapters/migration/runtime_comparison_table}
-
-The C++ port achieves a \SpeedupNominal{} speedup on the nominal simulation and
-\SpeedupPerturbed{} on the perturbed simulation, primarily due to eliminating
-interpreter overhead and leveraging cache-friendly memory layout.

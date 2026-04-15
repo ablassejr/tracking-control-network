@@ -78,31 +78,25 @@
 
 % =============================================================================
 \begin{abstract}
-	A neural network (NN) tracking control for discrete-time nonlinear systems
-	with known internal dynamics is designed. The adversarial attack on the
-	tracking control NN is described by Gaussian distributed additive stochastic
-	noise. The adversarially perturbed system and the corresponding closed-loop
-	tracking dynamics are derived. A functional block-diagram of the controlled
-	nonlinear system is presented. Computer simulations of the controller operation
-	under nominal and adversarial conditions are provided. A redundant sensor voting scheme defense is proposed,
-	analyzed, and simulated, recovering nominal tracking performance under attack.
-	A C++ port of the simulation is validated against the MATLAB reference and
-	demonstrates significant runtime speedup.
+	\input{chapters/abstract.tex}
 \end{abstract}
 % =============================================================================
 \noindent \textbf{Keywords:}
 control system, neural network, adversarial attack,
-Gaussian noise, discrete-time nonlinear system, tracking control,
-sensor voting scheme
+discrete-time nonlinear system, tracking control,
+signal function, rounding defense
 % =============================================================================
 \section*{Introduction}
 \input{chapters/introduction/intro.tex}
-\newpage
 \input{chapters/attacks/adversarial-attacks.tex}
 \input{chapters/defense/defense.tex}
-\input{chapters/migration/migration.tex}
+\input{chapters/simulation.tex}
+
 \newpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
+
+\appendix
+\input{chapters/migration/migration.tex}
 
 \end{document}

@@ -1,0 +1,15 @@
+A neural network (NN) tracking control for discrete-time nonlinear systems
+with known internal dynamics is designed. The adversarial attack on the
+tracking control NN is modeled as additive stochastic noise injected into
+the signal function of the controller. The adversarially perturbed system
+and the corresponding closed-loop tracking dynamics are derived, and the
+resulting degradation in tracking performance is demonstrated. The defense
+is based on rounding the noisy output of the signal function: if the
+absolute value of the noisy input is less than one half, the output is
+rounded to zero; otherwise it is rounded to plus or minus one according
+to standard rounding rules. When this condition is satisfied, the defended
+system recovers the exact behavior of the unperturbed system. Simulations
+confirm that the defended controller recovers unperturbed tracking
+performance under attack. A C++ port of the simulation is validated against
+the MATLAB reference implementation, achieving element-wise agreement to
+machine precision (Appendix~\ref{sec:cpp-implementation}).
