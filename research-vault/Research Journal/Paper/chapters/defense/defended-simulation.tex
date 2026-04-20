@@ -12,23 +12,22 @@ the signal function value whenever the perturbation does not cross the
 nearest decision boundary, yielding correct recovery at approximately
 $84\%$ of time steps.
 
-Fig.~\ref{fig:defended-state-tracking} presents the defended state trajectories.
-The state variables $x_1(t)$ and $x_2(t)$ exhibit substantially improved
-tracking relative to the undefended attacked system, confirming that the
-rounding defense provides effective mitigation at the theoretical recovery
-threshold.
+Fig.~\ref{fig:composite-attack-defense} presents the defended state
+trajectory $x_1(t)$ overlaid with the attacked trajectory for direct
+comparison (top panel), along with tracking error $e_1(t)$ for both
+systems (bottom panel). The defended trace exhibits substantially
+improved tracking relative to the undefended attacked system,
+confirming that the rounding defense provides effective mitigation
+at the theoretical recovery threshold.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x1_r1}
-	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the defended CSTR.}
-	\label{fig:defended-state-tracking}
-	\label{fig:defended-x1-r1}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_defended_time_vs_x2_r2}
-	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the defended CSTR.}
-	\label{fig:defended-x2-r2}
+	\includegraphics[width=0.85\textwidth]{cxxplot_composite_combined}
+	\caption{Comparison of attacked and defended CSTR trajectories.
+		Top: state $x_1$ under attack (solid blue) and under
+		rounding defense (solid orange) against reference $r_1$
+		(dashed black). Bottom: tracking error $e_1(t) = x_1(t) -
+		r_1(t)$ under attack (blue) vs defense (orange) over the
+		full trajectory.}
+	\label{fig:composite-attack-defense}
 \end{figure}
