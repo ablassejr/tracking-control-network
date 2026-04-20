@@ -1,3 +1,5 @@
+# DEPRECATED 2026-04-20: no longer referenced by Main.tex after figure consolidation. See cstr_fig_clean.gp and cstr_fig_composite.gp.
+
 if (!exists("csv_attacked")) csv_attacked = "cstr_state_tracking_attacked_cpp_output.csv"
 if (!exists("outdir")) outdir = "`echo $IMAGES_DIR`"
 
