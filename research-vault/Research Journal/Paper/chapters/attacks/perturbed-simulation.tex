@@ -6,22 +6,8 @@ Gaussian noise with $\sigma = 0.5$ is injected into the output of the signal
 function, introducing a random perturbation to the control signal at each
 time step.
 
-Fig.~\ref{fig:attacked-state-tracking} presents the attacked state
-trajectories. Both state variables $x_1(t)$ and $x_2(t)$ exhibit degraded
-tracking with visible oscillations around the reference trajectories
-$r_1(t)$ and $r_2(t)$.
+The attacked CSTR exhibits degraded tracking with visible
+oscillations of $x_1(t)$ around the reference trajectory $r_1(t)$.
+A direct comparison against the defended system is shown in
+Fig.~\ref{fig:composite-attack-defense}.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x1_r1}
-	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the attacked CSTR ($\sigma = 0.5$).}
-	\label{fig:attacked-state-tracking}
-	\label{fig:attacked-x1-r1}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x2_r2}
-	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the attacked CSTR ($\sigma = 0.5$).}
-	\label{fig:attacked-x2-r2}
-\end{figure}
