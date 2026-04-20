@@ -72,7 +72,7 @@ def create_chart(
     bars = ax.bar(labels, averages, color=colors[: len(labels)])
 
     ax.set_title(title)
-    ax.set_ylabel("Average Execution Time (seconds)")
+    ax.set_ylabel("Average Execution Time")
     ax.grid(axis="y", linestyle="--", alpha=0.35)
 
     for bar, value in zip(bars, averages):
@@ -131,7 +131,7 @@ def _create_svg_chart(
     elements.append(
         f'<text x="{margin_left - 55}" y="{margin_top - 20}" text-anchor="start" '
         f'font-family="Helvetica, Arial, sans-serif" font-size="14" fill="#333">'
-        "Seconds</text>"
+        "s</text>"
     )
 
     for tick in range(6):

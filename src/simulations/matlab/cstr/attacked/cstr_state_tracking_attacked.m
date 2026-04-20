@@ -30,6 +30,9 @@ m(i+1)=m(i)+1;
 sigma = 2;
 epsilon_prev = epsilon;
 epsilon = sigma * randn();
+while abs(epsilon) >= 0.5
+    epsilon = sigma * randn();
+end
 deltaEpsilon = epsilon - epsilon_prev;
 
 g1(i)=0;

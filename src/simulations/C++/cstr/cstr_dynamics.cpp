@@ -41,8 +41,9 @@ void attackedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> epsilon(0.0, 2);
+  std::normal_distribution<double> epsilon(0.0, 0.5);
   std::default_random_engine randomNumberGenerator;
+  double noise;
 
   for (int i = 1; i < settings.timeSteps; i++) {
     prevX1 = &stateConditions.stateMatrix(0, i - 1);
@@ -54,7 +55,9 @@ void attackedSystemFunction(SimSettings &settings,
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
 
-    double noise = epsilon(randomNumberGenerator);
+    do {
+      noise = epsilon(randomNumberGenerator);
+    } while (std::abs(noise) >= 0.5);
 
     // x1 open-loop natural dynamics
     stateConditions.stateMatrix(0, i) =
@@ -67,8 +70,8 @@ void attackedSystemFunction(SimSettings &settings,
     // x2 closed-loop dynamics with additive noise on sgn output
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
-        *prevX2 +
-        settings.tau * (-internalConditions.beta * (sgn(e2) + noise) + *deltaR2);
+        *prevX2 + settings.tau *
+                      (-internalConditions.beta * (sgn(e2) + noise) + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
@@ -78,8 +81,9 @@ void defendedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> attackNoise(0.0, 0.3);
+  std::normal_distribution<double> attackNoise(0.0, 0.5);
   std::default_random_engine randomNumberGenerator;
+  double noise;
 
   for (int i = 1; i < settings.timeSteps; i++) {
     prevX1 = &stateConditions.stateMatrix(0, i - 1);
@@ -91,9 +95,11 @@ void defendedSystemFunction(SimSettings &settings,
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
 
-    // Additive noise (sigma=0.3) on sgn output, then rounding defense
+    // Additive noise (sigma=0.5) on sgn output, then rounding defense
     double s_clean = sgn(e2);
-    double noise = attackNoise(randomNumberGenerator);
+    do {
+      noise = attackNoise(randomNumberGenerator);
+    } while (std::abs(noise) >= 0.5);
     double s_noisy = s_clean + noise;
 
     // Rounding defense (eq:rounding_defense): recover sgn(e) from noisy output
@@ -117,8 +123,7 @@ void defendedSystemFunction(SimSettings &settings,
     // x2 closed-loop dynamics with defended sgn output
     deltaR2 = &stateConditions.deltaReference(1, i - 1);
     stateConditions.stateMatrix(1, i) =
-        *prevX2 +
-        settings.tau * (-internalConditions.beta * s_hat + *deltaR2);
+        *prevX2 + settings.tau * (-internalConditions.beta * s_hat + *deltaR2);
 
     stateConditions.time = i * settings.tau;
   }
