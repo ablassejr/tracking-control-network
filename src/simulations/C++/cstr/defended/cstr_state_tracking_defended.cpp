@@ -2,6 +2,8 @@
 #include <Eigen/Dense>
 #include <chrono>
 #include <fstream>
+#include <iomanip>
+#include <vector>
 
 int main() {
   SimSettings settings;
@@ -46,6 +48,29 @@ int main() {
         << stateConditions.referenceMatrix(0, i) << ","
         << stateConditions.referenceMatrix(1, i) << "," << e1 << "," << e2
         << "\n";
+  }
+
+  std::vector<double> controlVector;
+  for (int i = 0; i < settings.timeSteps - 1; i++) {
+    double x = stateConditions.stateMatrix(0, i);
+    double y = stateConditions.stateMatrix(1, i);
+    double r2i = stateConditions.referenceMatrix(1, i);
+    double deltaR2 = stateConditions.deltaReference(1, i);
+    double f2 =
+        y +
+        settings.tau * (-internalConditions.alpha * y +
+                        internalConditions.B * internalConditions.Da * (1 - x) *
+                            std::exp(y / (1 + y / internalConditions.gamma)));
+    double e2 = y - r2i;
+    double S = (e2 > 0) ? 1.0 : (e2 < 0 ? -1.0 : 0.0);
+    controlVector.push_back(-(1.0 / internalConditions.lambda) *
+                            (-internalConditions.beta * S + deltaR2 - f2));
+  }
+
+  std::ofstream csv_ctrl("cstr_control_input_defended_cpp_output.csv");
+  csv_ctrl << std::setprecision(15);
+  for (int i = 0; i < settings.timeSteps - 1; i++) {
+    csv_ctrl << i * settings.tau << "," << controlVector[i] << "\n";
   }
 
   return 0;
