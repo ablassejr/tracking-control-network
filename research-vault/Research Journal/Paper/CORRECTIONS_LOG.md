@@ -100,20 +100,20 @@
 
 ### Implemented (LaTeX text changes)
 
-- [x] 1. **Abstract** — Remove CSTR, remove numerical values (537×, 477×, ≈10⁻¹⁵), use qualitative language only. ✅ 2026-04-10
-- [x] 2. **Abstract** — Replace convergence theorem claim with rounding-based defense description. ✅ 2026-04-10
-- [x] 3. **Abstract** — Add 1–2 sentences describing rounding defense (|ε| < ½ → correct rounding). ✅ 2026-04-10
-- [x] 4. **Keywords** — Remove "Gaussian noise", "voting scheme defense", "parallel processing unit"; add "signal function", "rounding defense". ✅ 2026-04-10
-- [x] 5. **PGD reference** — Changed to citation-only: "is described in [7]". ✅ 2026-04-10
-- [x] 6. **CSTR description** — Added CSTR definition paragraph before simulation example (was removed from intro). ✅ 2026-04-10
-- [x] 7. **Remove "horizon"/"zoomed"** — Removed from all captions and descriptions. ✅ 2026-04-10
-- [x] 8. **Remove redundant axis labels** — Simplified body text that repeated ordinate axis markings. ✅ 2026-04-10
-- [x] 9. **"Defense mechanism" → "Rounding of signal function"** — Section title, intro contribution, all references updated. ✅ 2026-04-10
-- [x] 10. **Consolidate structure** — Separated theory from simulations. New structure: Intro → Attacks → Defense → Simulation Example → C++ Implementation. ✅ 2026-04-10
-- [x] 11. **Replace voting theorem/proof** — Replaced with rounding expression (eq. for ŝ(k) with if-else cases). ✅ 2026-04-10
-- [x] 12. **Migration section** — Removed all duplicate MATLAB/C++ side-by-side figures. Stated equivalence in text. ✅ 2026-04-10
-- [x] 13. **Abbreviations** — Verified: NN decoded in abstract + intro, CSTR decoded before first use in simulation, PGD decoded in attacks section. ✅ 2026-04-10
-- [x] 14. **Notation** — Fixed "≈.22" in braces to conventional "$2.22 \times 10^{-16}$". ✅ 2026-04-10
+-   **Abstract** — Remove CSTR, remove numerical values (537×, 477×, ≈10⁻¹⁵), use qualitative language only.
+-   **Abstract** — Replace convergence theorem claim with rounding-based defense description.
+-   **Abstract** — Add 1–2 sentences describing rounding defense (|ε| < ½ → correct rounding). 
+-   **Keywords** — Remove "Gaussian noise", "voting scheme defense", "parallel processing unit"; add "signal function", "rounding defense". 
+-   **PGD reference** — Changed to citation-only: "is described in [7]". 
+-   **CSTR description** — Added CSTR definition paragraph before simulation example (was removed from intro). 
+-   **Remove "horizon"/"zoomed"** — Removed from all captions and descriptions. 
+-   **Remove redundant axis labels** — Simplified body text that repeated ordinate axis markings. 
+-   **"Defense mechanism" → "Rounding of signal function"** — Section title, intro contribution, all references updated. 
+-   **Consolidate structure** — Separated theory from simulations. New structure: Intro → Attacks → Defense → Simulation Example → C++ Implementation. 
+-   **Replace voting theorem/proof** — Replaced with rounding expression (eq. for ŝ(k) with if-else cases).
+-   **Migration section** — Removed all duplicate MATLAB/C++ side-by-side figures. Stated equivalence in text. 
+-   **Abbreviations** — Verified: NN decoded in abstract + intro, CSTR decoded before first use in simulation, PGD decoded in attacks section. 
+-   **Notation** — Fixed "≈.22" in braces to conventional "$2.22 \times 10^{-16}$". 
 
 ### Batch 3 — Appendix conversion + noise model alignment (2026-04-15)
 
@@ -140,5 +140,4 @@ See `DEFERRED_TASKS.md` for full list including:
 - D1–D5: Block diagram restructuring (Draw.io)
 - ~~C1–C4: Code changes (noise on sgn, rounding defense, regenerate figures)~~ → Completed in Batch 3
 - P1–P3: Poster work
-- A1–A4: Administrative/journal tasks
-- S1–S3: Structural decisions
+

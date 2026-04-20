@@ -2,16 +2,21 @@
 
 The rounding defense~\eqref{eq:rounding_defense} is applied to the CSTR
 system from \eqref{eq:cstr_dynamics}. Additive Gaussian noise with
-$\sigma = 0.3$ is injected into the output of the signal function. Because
-$\sigma < \tfrac{1}{2}$, the condition $|\epsilon(k)| < \tfrac{1}{2}$ holds
-with high probability ($\approx 90\%$ of time steps), and the rounding
-operation recovers the correct signal function value at those steps.
+$\sigma = 0.5$ is injected into the output of the signal function, the same
+perturbation magnitude as in the attacked system. Because
+$\sigma = \tfrac{1}{2}$, the sufficient condition
+$|\epsilon(k)| < \tfrac{1}{2}$ holds at approximately $68\%$ of time steps.
+During active tracking where
+$\operatorname{sgn}(e(k)) \in \{-1, +1\}$, the rounding correctly recovers
+the signal function value whenever the perturbation does not cross the
+nearest decision boundary, yielding correct recovery at approximately
+$84\%$ of time steps.
 
 Fig.~\ref{fig:defended-state-tracking} presents the defended state trajectories.
-Because the rounding correctly recovers $\operatorname{sgn}(e(k))$ for the
-vast majority of time steps, the closed-loop dynamics closely approximate
-the unperturbed system~\eqref{eq:closed_loop}, and the state variables
-$x_1(t)$ and $x_2(t)$ recover near-unperturbed tracking performance.
+The state variables $x_1(t)$ and $x_2(t)$ exhibit substantially improved
+tracking relative to the undefended attacked system, confirming that the
+rounding defense provides effective mitigation at the theoretical recovery
+threshold.
 
 \begin{figure}[H]
 	\centering

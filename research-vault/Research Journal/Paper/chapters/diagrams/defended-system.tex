@@ -1,22 +1,23 @@
 \par
-The corresponding functional block-diagram of the defended system
-described by \eqref{eq:rounding_defense}--\eqref{eq:defended_closed_loop}
-is presented in Fig.~\ref{fig:defended-system}. Compared with the
-adversarially perturbed system, the
-diagram introduces a rounding block $R$ placed after the noisy signal
-function output $\widetilde{s}(k) = \operatorname{sgn}(e(k)) + \epsilon(k)$.
-The rounding block maps $\widetilde{s}(k)$ to the defended output
-$\hat{s}(k) \in \{-1, 0, +1\}$ according to \eqref{eq:rounding_defense},
-recovering the correct signal function value when
-$|\epsilon(k)| < \tfrac{1}{2}$. The defended output $\hat{s}(k)$ is then
-passed to the amplification block $\beta$ and the remaining control path,
-producing the defended control input $\hat{u}(k)$. All remaining blocks
-are identical to those of the unperturbed system.
+The functional block-diagram of the defended system described by
+\eqref{eq:noisy_sgn}--\eqref{eq:defended_closed_loop} is presented
+in Fig.~\ref{fig:defended-system}. The tracking error~$e(k)$ enters
+the signal function block~$\operatorname{sgn}$, whose output is
+subject to the additive stochastic perturbation~$\epsilon(k)$,
+producing the noisy signal~$\widetilde{s}(k)$
+from~\eqref{eq:noisy_sgn}. The noisy signal is rounded to the
+defended value~$\hat{s}(k)$ according
+to~\eqref{eq:rounding_defense}. The defended output is then passed
+to the amplification block~$\beta$. The amplified signal, together
+with the reference increment~$\Delta r$ and the state-dependent
+drift~$f(x(k))$, enters the LAESS block, which combines these
+with~$g(x(k))$ to compute the defended control
+input~$\hat{u}(k)$.
 \begin{figure}[H]
 	\centering
-	\fbox{\parbox{0.65\textwidth}{\centering\vspace{3cm}%
-		{\large [Defended-system block diagram placeholder]}%
-		\vspace{3cm}}}
-	\caption{The functional block-diagram of the discrete-time controlled system with rounding defense described by \eqref{eq:rounding_defense}--\eqref{eq:defended_closed_loop}.}
+	\includesvg[width=0.9\textwidth]{defended-system}
+	\caption{Functional block-diagram of the discrete-time controlled
+		system with rounding defense described by
+		\eqref{eq:rounding_defense}--\eqref{eq:defended_closed_loop}.}
 	\label{fig:defended-system}
 \end{figure}

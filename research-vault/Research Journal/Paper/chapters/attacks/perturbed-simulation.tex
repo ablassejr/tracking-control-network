@@ -1,16 +1,20 @@
 \subsection{Simulation of Attacked System}
 
-The same CSTR plant and parameters are used. Additive Gaussian noise with
-$\sigma = 2$ is injected into the signal function. The trajectories of
-state variables under adversarial perturbation are presented in
-Fig.~\ref{fig:attacked-state-tracking}. Both state variables exhibit
-degraded tracking performance, with visible oscillations around the
-reference trajectories.
+The CSTR system from \eqref{eq:cstr_dynamics} is simulated under the
+perturbed closed-loop dynamics~\eqref{eq:perturbed_closed_loop}. Additive
+Gaussian noise with $\sigma = 0.5$ is injected into the output of the signal
+function, introducing a random perturbation to the control signal at each
+time step.
+
+Fig.~\ref{fig:attacked-state-tracking} presents the attacked state
+trajectories. Both state variables $x_1(t)$ and $x_2(t)$ exhibit degraded
+tracking with visible oscillations around the reference trajectories
+$r_1(t)$ and $r_2(t)$.
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x1_r1}
-	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ under adversarial perturbation ($\sigma = 2$).}
+	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the attacked CSTR ($\sigma = 0.5$).}
 	\label{fig:attacked-state-tracking}
 	\label{fig:attacked-x1-r1}
 \end{figure}
@@ -18,6 +22,6 @@ reference trajectories.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.75\textwidth]{cxxplot_attacked_time_vs_x2_r2}
-	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ under adversarial perturbation ($\sigma = 2$).}
+	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the attacked CSTR ($\sigma = 0.5$).}
 	\label{fig:attacked-x2-r2}
 \end{figure}

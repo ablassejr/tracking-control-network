@@ -29,6 +29,15 @@ be described in normalized form by \eqref{systemModel}, where
 with $\alpha = 1.0$, $\lambda = 0.3$, $\gamma = 20.0$,
 $B = 1.0$, $D = 0.072$, $\beta = 100$, $\tau = 0.001$\,s,
 and $x_1(1) = x_2(1) = 0$.
+Here, $x_1$ and $x_2$ denote the dimensionless reactant concentration and
+reactor temperature, respectively;
+$\alpha$ is the dilution rate;
+$D$ is the Damk\"ohler number;
+$\gamma$ is the dimensionless activation energy;
+$B$ is the dimensionless adiabatic temperature rise;
+and $\lambda$ is the dimensionless heat transfer coefficient.
+The learning rate $\beta$ is defined in~\eqref{eq:control_function},
+and $\tau$ is the discretization time step.
 
 The purpose is to track the reference trajectories
 \begin{equation}

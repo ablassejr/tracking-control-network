@@ -30,9 +30,9 @@ This paper builds upon \cite{tymoshchuk2024tracking} with the following contribu
 	\item An adversarial attack on the error channel is modeled as additive
 	      Gaussian noise, and the resulting perturbed closed-loop dynamics are derived.
 	\item A defense based on rounding the noisy output of the signal function
-	      is proposed. When the noise magnitude is less than one half, standard
-	      rounding recovers the correct signal function output, and the defended
-	      system behaves identically to the unperturbed system.
+	      is proposed. At each time step where the noise magnitude is less than
+	      one half, the rounding recovers the correct signal function output, and
+	      the defended dynamics reduce to the unperturbed system.
 	\item Both the unperturbed and defended simulations are validated in C++ against
 	      the MATLAB reference, achieving element-wise agreement to machine precision
 	      (Appendix~\ref{sec:cpp-implementation}).
