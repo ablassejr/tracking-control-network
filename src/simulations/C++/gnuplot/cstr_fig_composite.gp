@@ -1,11 +1,9 @@
 # Figure 2: Composite perturbed vs recovered CSTR (2-panel multiplot)
 # Panel 1 (top): x1 attacked + x1 defended + r1, full x-range, with legend
-# Panel 2 (bottom): u attacked + u defended, zoomed to startup, with legend
+# Panel 2 (bottom): tracking error e_1 attacked + defended, full x-range, with legend
 
 if (!exists("csv_state_atk")) csv_state_atk = "cstr_state_tracking_attacked_cpp_output.csv"
 if (!exists("csv_state_def")) csv_state_def = "cstr_state_tracking_defended_cpp_output.csv"
-if (!exists("csv_ctrl_atk"))  csv_ctrl_atk  = "cstr_control_input_attacked_cpp_output.csv"
-if (!exists("csv_ctrl_def"))  csv_ctrl_def  = "cstr_control_input_defended_cpp_output.csv"
 if (!exists("outdir"))        outdir        = "`echo $IMAGES_DIR`"
 
 set datafile separator ","
@@ -32,17 +30,17 @@ plot csv_state_atk using ($1/0.001):2 with lines lw 3 lc rgb "#0072BD" title "Pe
      csv_state_def using ($1/0.001):2 with lines lw 3 lc rgb "#D95319" title "Recovered", \
      csv_state_atk using ($1/0.001):4 with lines lw 3 dt 2 lc rgb "#000000" notitle
 
-# Panel 2: control input, both conditions, zoomed
+# Panel 2: tracking error e_1, both conditions overlaid, full x-range
 set tmargin at screen 0.44
 set bmargin at screen 0.12
 set xlabel "k"
-set xrange [0:100]
-set xtics 0,20,100
-set ylabel "u"
-set yrange [-350:400]
-set ytics -300,100,400
+set xrange [0:45000]
+set xtics 0,10000,40000
+set ylabel "e_1"
+set yrange [-0.5:0.4]
+set ytics -0.5,0.1,0.4
 set key top right opaque box
-plot csv_ctrl_atk using ($1/0.001):2 with lines lw 3 lc rgb "#0072BD" title "Perturbed", \
-     csv_ctrl_def using ($1/0.001):2 with lines lw 3 lc rgb "#D95319" title "Recovered"
+plot csv_state_atk using ($1/0.001):6 with lines lw 3 lc rgb "#0072BD" title "Perturbed", \
+     csv_state_def using ($1/0.001):6 with lines lw 3 lc rgb "#D95319" title "Recovered"
 
 unset multiplot

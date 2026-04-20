@@ -1,9 +1,8 @@
 # Figure 1: Clean CSTR simulation (2-panel multiplot)
 # Panel 1 (top): state x1 + reference r1, full x-range
-# Panel 2 (bottom): control u, zoomed to startup transient
+# Panel 2 (bottom): tracking error e_1 = x_1 - r_1, full x-range
 
 if (!exists("csv_state")) csv_state = "cstr_state_tracking_cpp_output.csv"
-if (!exists("csv_ctrl"))  csv_ctrl  = "cstr_control_input_cpp_output.csv"
 if (!exists("outdir"))    outdir    = "`echo $IMAGES_DIR`"
 
 set datafile separator ","
@@ -29,16 +28,16 @@ unset key
 plot csv_state using ($1/0.001):2 with lines lw 3 lc rgb "#0072BD" notitle, \
      csv_state using ($1/0.001):4 with lines lw 3 dt 2 lc rgb "#000000" notitle
 
-# Panel 2: control input, zoomed
+# Panel 2: tracking error e_1, full x-range
 set tmargin at screen 0.44
 set bmargin at screen 0.12
 set xlabel "k"
-set xrange [0:100]
-set xtics 0,20,100
-set ylabel "u"
-set yrange [-350:400]
-set ytics -300,100,400
+set xrange [0:45000]
+set xtics 0,10000,40000
+set ylabel "e_1"
+set yrange [-0.5:0.4]
+set ytics -0.5,0.1,0.4
 unset key
-plot csv_ctrl using ($1/0.001):2 with lines lw 3 lc rgb "#0072BD" notitle
+plot csv_state using ($1/0.001):6 with lines lw 3 lc rgb "#0072BD" notitle
 
 unset multiplot
