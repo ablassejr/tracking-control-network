@@ -57,62 +57,21 @@ The purpose is to track the reference trajectories
 	\end{cases}
 \end{equation}
 
-The trajectories of state variables $x_1(t)$, $x_2(t)$ obtained based on
+The trajectory of state variable $x_1(t)$ obtained based on
 \eqref{systemModel} and control equation \eqref{eq:control_function}
-and the reference trajectories $r_1(t)$, $r_2(t)$ are presented in
-Fig.~\ref{fig:unperturbed-state-tracking}.
+and the reference trajectory $r_1(t)$ are presented in
+Fig.~\ref{fig:unperturbed-combined} (top panel). The tracking error
+$e_1(t) = x_1(t) - r_1(t)$ is shown in the bottom panel, confirming
+the finite-time convergence property of the control law
+\eqref{eq:error_dynamics}: the error spikes at each reference
+transition and decays to zero between transitions.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_time_vs_x1_r1}
-	\caption{Trajectory of state $x_1(t)$ and reference $r_1(t)$ for the unperturbed CSTR.}
-	\label{fig:unperturbed-state-tracking}
-	\label{fig:unperturbed-x1-r1}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_time_vs_x2_r2}
-	\caption{Trajectory of state $x_2(t)$ and reference $r_2(t)$ for the unperturbed CSTR.}
-	\label{fig:unperturbed-x2-r2}
-\end{figure}
-
-The control input $u(k)$ produced by the tracking control law
-\eqref{eq:control_function} is shown in Fig.~\ref{fig:unperturbed-control-input}.
-The initial transient and the step-change responses at $t = 15$\,s and
-$t = 30$\,s are visible, along with the high-frequency switching
-(chattering) characteristic of the sliding-mode controller.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_fig2b}
-	\caption{Trajectory of control $u(t)$.}
-	\label{fig:unperturbed-control-input}
-	\label{fig:control-input-full}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_fig2b_zoomed}
-	\caption{Trajectory of control $u(t)$ for $k \in [0, 100]$.}
-	\label{fig:control-input-zoomed}
-\end{figure}
-
-The tracking errors are presented in Fig.~\ref{fig:unperturbed-tracking-error}.
-Both errors converge to zero between reference changes, confirming the
-finite-time convergence property of the control law \eqref{eq:error_dynamics}.
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_fig2c_e1}
-	\caption{Trajectory of tracking error $e_1(t)$.}
-	\label{fig:unperturbed-tracking-error}
-	\label{fig:tracking-error-e1}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=0.75\textwidth]{cxxplot_fig2c_e2}
-	\caption{Trajectory of tracking error $e_2(t)$.}
-	\label{fig:tracking-error-e2}
+	\includegraphics[width=0.85\textwidth]{cxxplot_clean_combined}
+	\caption{Unperturbed CSTR simulation. Top: state $x_1(t)$
+		(solid blue) vs reference $r_1(t)$ (dashed black). Bottom:
+		tracking error $e_1(t) = x_1(t) - r_1(t)$ over the full
+		trajectory.}
+	\label{fig:unperturbed-combined}
 \end{figure}
