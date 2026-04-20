@@ -65,6 +65,8 @@ run = [
   "gnuplot -e \"csv='cstr_control_input_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_control_input.gp",
   "gnuplot -e \"csv='cstr_tracking_error_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_tracking_error.gp",
   "gnuplot -e \"csv_defended='cstr_state_tracking_defended_cpp_output.csv'; csv_attacked='cstr_state_tracking_attacked_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_state_tracking_defended.gp",
+  "gnuplot -e \"csv_state='cstr_state_tracking_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_fig_clean.gp",
+  "gnuplot -e \"csv_state_atk='cstr_state_tracking_attacked_cpp_output.csv'; csv_state_def='cstr_state_tracking_defended_cpp_output.csv'; outdir='$PAPER_DIR/figures/images'\" gnuplot/cstr_fig_composite.gp",
 ]
 
 [tasks.matlab-clean]
