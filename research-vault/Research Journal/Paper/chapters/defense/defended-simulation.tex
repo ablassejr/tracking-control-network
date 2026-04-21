@@ -13,8 +13,8 @@ nearest decision boundary, yielding correct recovery at approximately
 $84\%$ of time steps.
 
 Fig.~\ref{fig:composite-attack-defense} presents the defended state
-trajectory $x_1(t)$ overlaid with the attacked trajectory for direct
-comparison (top panel), along with tracking error $e_1(t)$ for both
+trajectory $x_2(t)$ overlaid with the attacked trajectory for direct
+comparison (top panel), along with tracking error $e_2(t)$ for both
 systems (bottom panel). The defended trace exhibits substantially
 improved tracking relative to the undefended attacked system,
 confirming that the rounding defense provides effective mitigation
@@ -24,10 +24,10 @@ at the theoretical recovery threshold.
 	\centering
 	\includegraphics[width=0.85\textwidth]{cxxplot_composite_combined}
 	\caption{Comparison of attacked and defended CSTR trajectories.
-		Top: state $x_1$ under attack (solid blue) and under
-		rounding defense (solid orange) against reference $r_1$
-		(dashed black). Bottom: tracking error $e_1(t) = x_1(t) -
-		r_1(t)$ under attack (blue) vs defense (orange) over the
+		Top: state $x_2$ under attack (solid blue) and under
+		rounding defense (solid orange) against reference $r_2$
+		(dashed black). Bottom: tracking error $e_2(t) = x_2(t) -
+		r_2(t)$ under attack (blue) vs defense (orange) over the
 		full trajectory.}
 	\label{fig:composite-attack-defense}
 \end{figure}

@@ -57,11 +57,11 @@ The purpose is to track the reference trajectories
 	\end{cases}
 \end{equation}
 
-The trajectory of state variable $x_1(t)$ obtained based on
+The trajectory of state variable $x_2(t)$ obtained based on
 \eqref{systemModel} and control equation \eqref{eq:control_function}
-and the reference trajectory $r_1(t)$ are presented in
+and the reference trajectory $r_2(t)$ are presented in
 Fig.~\ref{fig:unperturbed-combined} (top panel). The tracking error
-$e_1(t) = x_1(t) - r_1(t)$ is shown in the bottom panel, confirming
+$e_2(t) = x_2(t) - r_2(t)$ is shown in the bottom panel, confirming
 the finite-time convergence property of the control law
 \eqref{eq:error_dynamics}: the error spikes at each reference
 transition and decays to zero between transitions.
@@ -69,9 +69,9 @@ transition and decays to zero between transitions.
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.85\textwidth]{cxxplot_clean_combined}
-	\caption{Unperturbed CSTR simulation. Top: state $x_1(t)$
-		(solid blue) vs reference $r_1(t)$ (dashed black). Bottom:
-		tracking error $e_1(t) = x_1(t) - r_1(t)$ over the full
+	\caption{Unperturbed CSTR simulation. Top: state $x_2(t)$
+		(solid blue) vs reference $r_2(t)$ (dashed black). Bottom:
+		tracking error $e_2(t) = x_2(t) - r_2(t)$ over the full
 		trajectory.}
 	\label{fig:unperturbed-combined}
 \end{figure}
