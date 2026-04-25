@@ -1,0 +1,184 @@
+\ProvidesPackage{beamerthemePoster}
+
+\RequirePackage[most]{tcolorbox}
+\RequirePackage{fontspec}
+\RequirePackage{xcolor}
+\RequirePackage{calc}
+\RequirePackage{enumitem}
+\RequirePackage{microtype}
+
+\definecolor{posternavy}{HTML}{123A70}
+\definecolor{posternavydeep}{HTML}{0C2A55}
+\definecolor{posternavysoft}{HTML}{E8EEF7}
+\definecolor{posterrule}{HTML}{B7C4D6}
+\definecolor{posteraccent}{HTML}{C89B3C}
+\definecolor{posterink}{HTML}{111821}
+\definecolor{posterinksecondary}{HTML}{2A3240}
+\definecolor{postermuted}{HTML}{5A6575}
+\definecolor{posterpage}{HTML}{F4F5F7}
+\definecolor{posterpanelbg}{HTML}{FFFFFF}
+\definecolor{posterpanelborder}{HTML}{CFD6E1}
+
+\colorlet{posterblue}{posternavy}
+\colorlet{posterborder}{posternavy}
+\colorlet{postertext}{posterink}
+
+\setbeamercolor{background canvas}{bg=posterpage}
+\setbeamercolor{normal text}{fg=posterink,bg=posterpage}
+\setbeamercolor{title}{fg=posterink}
+\setbeamercolor{author}{fg=posterink}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{footline}{}
+
+\newfontfamily\serifbody{SourceSerif4}[
+  UprightFont = *-Regular,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-RegularIt,
+  BoldItalicFont = *-BoldIt,
+  Ligatures = TeX,
+  Numbers = OldStyle
+]
+\newfontfamily\serifbodylining{SourceSerif4}[
+  UprightFont = *-Regular,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-RegularIt,
+  BoldItalicFont = *-BoldIt,
+  Ligatures = TeX
+]
+\newfontfamily\sansdisplay{Inter}[
+  UprightFont = *-Regular,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-Italic,
+  BoldItalicFont = *-BoldItalic,
+  Ligatures = TeX
+]
+\newfontfamily\sansheading{Inter}[
+  UprightFont = *-SemiBold,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-SemiBoldItalic,
+  BoldItalicFont = *-BoldItalic,
+  Ligatures = TeX,
+  LetterSpace = 2.5
+]
+\newfontfamily\sansheadingtight{Inter}[
+  UprightFont = *-Bold,
+  BoldFont    = *-ExtraBold,
+  ItalicFont  = *-BoldItalic,
+  Ligatures = TeX,
+  LetterSpace = 1.0
+]
+\newfontfamily\monospec{JetBrainsMono}[
+  UprightFont = *-Regular,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-Italic,
+  BoldItalicFont = *-BoldItalic,
+  Ligatures = TeX,
+  Scale = 0.92
+]
+
+\setmainfont{SourceSerif4}[
+  UprightFont = *-Regular,
+  BoldFont    = *-Bold,
+  ItalicFont  = *-RegularIt,
+  BoldItalicFont = *-BoldIt,
+  Ligatures = TeX
+]
+
+\newcommand{\postertitlefont}{\sansheadingtight\bfseries\fontsize{48}{57}\selectfont}
+\newcommand{\posterauthorfont}{\serifbodylining\fontsize{32}{40}\selectfont}
+\newcommand{\postercontactfont}{\monospec\fontsize{26}{32}\selectfont}
+\newcommand{\postersectionfont}{\sansheading\fontsize{30}{36}\selectfont}
+\newcommand{\posterbodyfont}{\serifbody\fontsize{23}{32}\selectfont}
+\newcommand{\posterequationfont}{\serifbody\fontsize{25}{34}\selectfont}
+\newcommand{\posterfigcapfont}{\serifbody\fontsize{21}{28}\selectfont}
+\newcommand{\posterreffont}{\serifbody\fontsize{22}{31}\selectfont}
+\newcommand{\posterequationlabelfont}{\monospec\fontsize{23}{26}\selectfont}
+
+\newtcolorbox{posterheaderbox}[1][]{
+  enhanced jigsaw,
+  sharp corners,
+  boxrule=0pt,
+  colframe=posternavy,
+  colback=posternavy,
+  coltext=white,
+  left=18mm,
+  right=18mm,
+  top=7mm,
+  bottom=7mm,
+  before skip=0pt,
+  after skip=0pt,
+  #1
+}
+
+\newtcolorbox{posterpanel}[2][]{
+  enhanced jigsaw,
+  sharp corners,
+  boxrule=0.6pt,
+  colframe=posterpanelborder,
+  colback=posterpanelbg,
+  colbacktitle=posternavy,
+  coltitle=white,
+  title={#2},
+  center title,
+  fonttitle=\postersectionfont,
+  fontupper=\posterbodyfont,
+  before upper=\raggedright\setlength{\parskip}{0.55em}\setlength{\parindent}{0pt},
+  left=10mm,
+  right=10mm,
+  top=7mm,
+  bottom=7mm,
+  toptitle=5mm,
+  bottomtitle=5mm,
+  before skip=0pt,
+  after skip=0pt,
+  #1
+}
+
+\newtcolorbox{posterplainbox}[1][]{
+  enhanced jigsaw,
+  sharp corners,
+  boxrule=0.6pt,
+  colframe=posterpanelborder,
+  colback=posterpanelbg,
+  left=8mm,
+  right=8mm,
+  top=7mm,
+  bottom=7mm,
+  before skip=0pt,
+  after skip=0pt,
+  #1
+}
+
+\newtcolorbox{postereqbox}[2][]{
+  enhanced jigsaw,
+  sharp corners,
+  boxrule=0pt,
+  colback=posternavysoft,
+  colframe=posternavysoft,
+  borderline west={3pt}{0pt}{posteraccent},
+  left=10mm,
+  right=28mm,
+  top=1.2mm,
+  bottom=1.2mm,
+  before skip=2mm,
+  after skip=2mm,
+  fontupper=\posterequationfont\centering,
+  overlay={
+    \node[anchor=east, xshift=-5mm, text=postermuted,
+          font=\posterequationlabelfont]
+          at (frame.east) {#2};
+  },
+  #1
+}
+
+\newcommand{\posterfigcaption}[2]{%
+  \par\vspace{2mm}%
+  {\posterfigcapfont\color{posterinksecondary}%
+   \textbf{\color{posterink}#1}\ #2\par}%
+}
+
+\setlist[itemize]{leftmargin=*, itemsep=0.45em, topsep=0.15em,
+  label=\textcolor{posternavy}{\rule[0.25ex]{0.35em}{0.35em}}}
+
+\endinput
