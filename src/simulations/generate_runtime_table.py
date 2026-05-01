@@ -28,7 +28,7 @@ class ComparisonRow:
 
 LOG_CONFIG = [
     {
-        "name": "Nominal",
+        "name": "Unperturbed",
         "cpp_log": "C++/cpp_output.log",
         "matlab_log": "matlab/cstr/clean/matlab_output.log",
     },

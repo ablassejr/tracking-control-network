@@ -50,7 +50,7 @@ run = [
 
 [tasks.generate-table]
 description = "Generate LaTeX runtime comparison table from logs"
-depends = ["run-clean", "run-attacked"]
+depends = ["run-clean", "run-attacked", "matlab-clean", "matlab-attacked"]
 run = [
   "python3 $SIM_ROOT/generate_runtime_table.py --base-dir $SIM_ROOT --output \"$PAPER_DIR/chapters/migration/runtime_comparison_table.tex\"",
 ]
@@ -88,8 +88,6 @@ description = "Build, run all simulations, validate, and generate runtime table"
 depends = [
   "validate",
   "generate-table",
-  "matlab-clean",
-  "matlab-attacked",
   "plot",
   "run-defended",
 ]
