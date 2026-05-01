@@ -15,8 +15,9 @@ requires that, under the influence of such perturbations, tracking performance
 remains acceptable within certain conditions. These conditions vary and are dependent
 upon the designed control law's inherent robustness, the magnitude and nature of
 the perturbation, and the performance metrics required of the system for safe operation.
-The channel of attack chosen for this analysis is the error dynamics of the tracking
-control system described in \eqref{eq:error_dynamics}~\cite{tymoshchuk2024tracking}.
+The channel of attack chosen for this analysis is the output of the signal
+function in the tracking control system described by
+\eqref{eq:error_dynamics}~\cite{tymoshchuk2024tracking}.
 \par
 A tracking control neural network (NN) for the known affine in the inputs, discrete-time
 nonlinear system was presented in \cite{tymoshchuk2024tracking}. The paper describes
@@ -27,15 +28,18 @@ in finite time. The method is inherently robust to bounded uncertainties and dis
 \par
 This paper builds upon \cite{tymoshchuk2024tracking} with the following contributions:
 \begin{enumerate}
-	\item An adversarial attack on the error channel is modeled as additive
-	      Gaussian noise, and the resulting perturbed closed-loop dynamics are derived.
+		\item An adversarial attack on the output of the signal function is
+		      modeled as additive Gaussian noise, and the resulting perturbed
+		      closed-loop dynamics are derived.
 	\item A defense based on rounding the noisy output of the signal function
 	      is proposed. At each time step where the noise magnitude is less than
 	      one half, the rounding recovers the correct signal function output, and
 	      the defended dynamics reduce to the unperturbed system.
-	\item Both the unperturbed and defended simulations are validated in C++ against
-	      the MATLAB reference, achieving element-wise agreement to machine precision
-	      (Appendix~\ref{sec:cpp-implementation}).
+	\item The unperturbed simulation is validated in C++ against the MATLAB
+	      reference with agreement to machine precision; the defended
+	      C++ response is then compared against the same nominal reference because
+	      the recovery condition reduces the defended dynamics to the unperturbed
+	      system (Appendix~\ref{sec:cpp-implementation}).
 \end{enumerate}
 \section{A Discrete Time Tracking Control Neural Network}
 Discrete-time neural networks, when compared to their continuous-time counterparts,

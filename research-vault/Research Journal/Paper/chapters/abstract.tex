@@ -7,6 +7,8 @@ resulting degradation in tracking performance is demonstrated. The defense
 is based on rounding the noisy output of the signal function. When the
 perturbation magnitude is less than one half, the rounding recovers the
 correct signal function value, and the defended closed-loop dynamics reduce
-to the unperturbed system. A C++ port of the simulation is validated against
-the MATLAB reference implementation, achieving element-wise agreement to
-machine precision (Appendix~\ref{sec:cpp-implementation}).
+to the unperturbed system. The nominal C++ simulation is validated against
+the MATLAB reference implementation with agreement to machine
+precision, and the defended C++ response is compared against the nominal
+reference implied by the rounding-recovery condition
+(Appendix~\ref{sec:cpp-implementation}).

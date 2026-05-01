@@ -1,24 +1,22 @@
 \subsection{Simulation of Defended System}
 
 The rounding defense~\eqref{eq:rounding_defense} is applied to the CSTR
-system from \eqref{eq:cstr_dynamics}. Additive Gaussian noise with
-$\sigma = 0.5$ is injected into the output of the signal function, the same
-perturbation magnitude as in the attacked system. Because
-$\sigma = \tfrac{1}{2}$, the sufficient condition
-$|\epsilon(k)| < \tfrac{1}{2}$ holds at approximately $68\%$ of time steps.
-During active tracking where
-$\operatorname{sgn}(e(k)) \in \{-1, +1\}$, the rounding correctly recovers
-the signal function value whenever the perturbation does not cross the
-nearest decision boundary, yielding correct recovery at approximately
-$84\%$ of time steps.
+system from \eqref{eq:cstr_dynamics} using the same rejection-sampled
+disturbance as the attacked simulation, so $|\epsilon(k)| < \tfrac{1}{2}$
+holds by construction at every time step. The sufficient condition of the
+rounding defense is therefore satisfied at every $k$, and
+$\hat{s}(k) = \operatorname{sgn}(e(k))$ exactly. The defended closed-loop
+state equation~\eqref{eq:defended_closed_loop} consequently reduces to the
+unperturbed closed-loop system~\eqref{eq:closed_loop} at every step, and
+the defended trajectory coincides with the unperturbed response over the
+full simulation.
 
 Fig.~\ref{fig:composite-attack-defense} presents the defended state
 trajectory $x_2(t)$ overlaid with the attacked trajectory for direct
 comparison (top panel), along with tracking error $e_2(t)$ for both
-systems (bottom panel). The defended trace exhibits substantially
-improved tracking relative to the undefended attacked system,
-confirming that the rounding defense provides effective mitigation
-at the theoretical recovery threshold.
+systems (bottom panel). The defended trace reproduces the unperturbed
+reference response, while the attacked trace exhibits the degraded
+tracking of the undefended system.
 
 \begin{figure}[H]
 	\centering

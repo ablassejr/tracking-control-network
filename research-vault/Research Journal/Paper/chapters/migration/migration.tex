@@ -34,3 +34,9 @@ floating-point results up to rounding in the final digits.
 \subsection{Runtime Performance}
 
 \input{chapters/migration/runtime_comparison_table}
+
+The runtime speedup is computed as the MATLAB elapsed time divided by the C++
+elapsed time for the same $45{,}000$-step CSTR simulation workload. The resulting
+ratios show that the C++ implementation reduces elapsed simulation time by
+approximately two orders of magnitude in both the unperturbed and perturbed
+configurations.

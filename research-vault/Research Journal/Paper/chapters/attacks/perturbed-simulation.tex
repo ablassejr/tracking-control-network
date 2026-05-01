@@ -1,13 +1,13 @@
 \subsection{Simulation of Attacked System}
 
 The CSTR system from \eqref{eq:cstr_dynamics} is simulated under the
-perturbed closed-loop dynamics~\eqref{eq:perturbed_closed_loop}. Additive
-Gaussian noise with $\sigma = 0.5$ is injected into the output of the signal
-function, introducing a random perturbation to the control signal at each
-time step.
+perturbed closed-loop dynamics~\eqref{eq:perturbed_closed_loop}. At each
+time step, the additive disturbance $\epsilon(k)$ is drawn from a zero-mean
+Gaussian source with standard deviation $\sigma = 1$ and rejection-sampled
+to satisfy $|\epsilon(k)| < \tfrac{1}{2}$, so the perturbation is bounded by
+the rounding-recovery threshold in every realization.
 
 The attacked CSTR exhibits degraded tracking with visible
 oscillations of $x_2(t)$ around the reference trajectory $r_2(t)$.
 A direct comparison against the defended system is shown in
 Fig.~\ref{fig:composite-attack-defense}.
-
