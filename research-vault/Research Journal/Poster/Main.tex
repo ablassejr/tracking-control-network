@@ -22,9 +22,9 @@
 
 \newlength{\postergap}      \setlength{\postergap}{0.7cm}
 \newlength{\headerh}        \setlength{\headerh}{9.2cm}
-\newlength{\rowAh}          \setlength{\rowAh}{14.0cm}
-\newlength{\rowBh}          \setlength{\rowBh}{48.0cm}
-\newlength{\rowCh}          \setlength{\rowCh}{13.0cm}
+\newlength{\rowAh}          \setlength{\rowAh}{13.1cm}
+\newlength{\rowBh}          \setlength{\rowBh}{52.1cm}
+\newlength{\rowCh}          \setlength{\rowCh}{11.1cm}
 \newlength{\innergap}       \setlength{\innergap}{0.55cm}
 
 \newcommand{\figinline}[2][0.95\linewidth]{%
@@ -33,291 +33,294 @@
 
 \begin{document}
 \begin{frame}[t]
-\vspace*{-0.2cm}
-\begin{center}
-\begin{minipage}{0.975\textwidth}
+	\vspace*{-0.2cm}
+	\begin{center}
+		\begin{minipage}{0.975\textwidth}
 
-\begin{posterheaderbox}
-  \begin{minipage}[c]{0.18\linewidth}
-    \raggedright
-    \begin{minipage}[c]{0.46\linewidth}\centering
-      \colorbox{white}{\rule{0pt}{2.9cm}\includegraphics[width=0.90\linewidth,height=2.7cm,keepaspectratio]{cahsi.png}\rule{0pt}{0pt}\hspace{0.15cm}}
-    \end{minipage}\hfill
-    \begin{minipage}[c]{0.46\linewidth}\centering
-      \colorbox{white}{\rule{0pt}{2.9cm}\includegraphics[width=0.90\linewidth,height=2.7cm,keepaspectratio]{tamuv.jpg}\rule{0pt}{0pt}\hspace{0.15cm}}
-    \end{minipage}
-  \end{minipage}\hfill
-  \begin{minipage}[c]{0.70\linewidth}\centering
-    {\postertitlefont\color{white}%
-      \MakeUppercase{An Analysis and Simulation of Defending Tracking Control Neural Network}\\[0.15cm]
-      \MakeUppercase{for Known Affine Discrete-Time Nonlinear Systems Against Adversarial Attacks}\par}
-    \vspace{0.45cm}
-    {\posterauthorfont\color{white}\textbf{Ablasse Kingcaid-Ouedraogo}, University of North Texas\par}
-    {\posterauthorfont\color{white}Mentor: Dr.\ Pavlo Tymoshchuk, University of North Texas\par}
-    \vspace{0.20cm}
-    {\postercontactfont\color{white!88}KingcaidOuedraogoA@uhv.edu\ \textperiodcentered\ Pavlo.Tymoshchuk@unt.edu\par}
-  \end{minipage}\hfill
-  \begin{minipage}[c]{0.10\linewidth}\centering
-    \colorbox{white}{\rule{0pt}{3.3cm}\includegraphics[width=0.85\linewidth,height=3.1cm,keepaspectratio]{nsf.png}\rule{0pt}{0pt}\hspace{0.15cm}}
-  \end{minipage}
-\end{posterheaderbox}
+			\begin{posterheaderbox}
+				\begin{minipage}[c]{0.18\linewidth}
+					\raggedright
+					\begin{minipage}[c]{0.46\linewidth}\centering
+						\colorbox{white}{\rule{0pt}{4.5cm}\includegraphics[width=1.0\linewidth,height=4.2cm,keepaspectratio]{cahsi.png}\rule{0pt}{0pt}\hspace{0.15cm}}
+					\end{minipage}\hfill
+					\begin{minipage}[c]{0.46\linewidth}\centering
+						\colorbox{white}{\rule{0pt}{4.5cm}\includegraphics[width=1.0\linewidth,height=4.2cm,keepaspectratio]{tamuv.jpg}\rule{0pt}{0pt}\hspace{0.15cm}}
+					\end{minipage}
+				\end{minipage}\hfill
+				\begin{minipage}[c]{0.70\linewidth}\centering
+					{\postertitlefont\color{white}%
+						\MakeUppercase{An Analysis and Simulation of Defending Tracking Control Neural Network}\\[0.15cm]
+						\MakeUppercase{for Known Affine Discrete-Time Nonlinear Systems Against Adversarial Attacks}\par}
+					\vspace{0.45cm}
+					{\posterauthorfont\color{white}\textbf{Ablasse Kingcaid-Ouedraogo}, University of North Texas\par}
+					{\posterauthorfont\color{white}Mentor: Dr.\ Pavlo Tymoshchuk, University of North Texas\par}
+					\vspace{0.20cm}
+					{\postercontactfont\color{white!88}KingcaidOuedraogoA@uhv.edu\ \textperiodcentered\ Pavlo.Tymoshchuk@unt.edu\par}
+				\end{minipage}\hfill
+				\begin{minipage}[c]{0.10\linewidth}\centering
+					\colorbox{white}{\rule{0pt}{4.8cm}\includegraphics[width=0.95\linewidth,height=4.5cm,keepaspectratio]{nsf.png}\rule{0pt}{0pt}\hspace{0.15cm}}
+				\end{minipage}
+			\end{posterheaderbox}
 
-\vspace{\postergap}
+			\vspace{\postergap}
 
-%% ===== Row A: Abstract | Introduction =====
-\begin{minipage}[t][\rowAh]{\linewidth}
-\begin{columns}[T,totalwidth=\linewidth]
-  \begin{column}{0.495\linewidth}
-    \begin{posterpanel}[height=\rowAh]{Abstract}
-      A neural network (NN) tracking control for discrete-time nonlinear
-      systems with known internal dynamics is designed. The adversarial attack
-      on the tracking control NN is modeled as additive stochastic noise
-      injected into the output of the signal function of the controller. The
-      adversarially perturbed system and the corresponding closed-loop tracking
-      dynamics are derived, and the resulting degradation in tracking
-      performance is demonstrated. The defense is based on rounding the noisy
-      output of the signal function. When the perturbation magnitude is less
-      than one half, the rounding recovers the correct signal function value,
-      and the defended closed-loop dynamics reduce to the unperturbed system.
-      The simulation is implemented in both MATLAB and C++; element-wise
-      agreement of the state trajectories to machine precision is obtained,
-      and the elapsed time of the C++ implementation is less than that of the
-      MATLAB implementation by approximately two orders of magnitude.
-    \end{posterpanel}
-  \end{column}
-  \begin{column}{0.495\linewidth}
-    \begin{posterpanel}[height=\rowAh]{Introduction}
-      The tracking control problem is one of the most fundamental practical
-      problems in control theory, where the goal is to design a controller
-      that allows a system to follow a desired trajectory or reference signal
-      over time. In recent years, neural networks have been increasingly used
-      in control systems due to their ability to approximate complex nonlinear
-      functions and adapt to changing conditions. However, the use of neural
-      networks in control systems also introduces new vulnerabilities,
-      particularly to adversarial attacks. Small, practically undetectable
-      perturbations in the input of a neural network can lead to outsized
-      adverse effects on the output, which can be particularly problematic in
-      control systems where safety and reliability are paramount.
+			%% ===== Row A: Abstract | Introduction =====
+			\begin{minipage}[t][\rowAh]{\linewidth}
+				\begin{columns}[T,totalwidth=\linewidth]
+					\begin{column}{0.495\linewidth}
+						\begin{posterpanel}[height=\rowAh]{Abstract}
+							A neural network (NN) tracking control for discrete-time nonlinear
+							systems with known internal dynamics is designed. The adversarial attack
+							on the tracking control NN is modeled as additive stochastic noise
+							injected into the output of the signal function of the controller. The
+							adversarially perturbed system and the corresponding closed-loop tracking
+							dynamics are derived, and the resulting degradation in tracking
+							performance is demonstrated. The defense is based on rounding the noisy
+							output of the signal function. When the perturbation magnitude is less
+							than one half, the rounding recovers the correct signal function value,
+							and the defended closed-loop dynamics reduce to the unperturbed system.
+							The nominal MATLAB reference and the corresponding C++ implementation
+							agree to machine precision. The attacked implementations show the same
+							qualitative degradation pattern under independent stochastic samples,
+							while the defended C++ response coincides with the nominal reference
+							when the perturbation is inside the rounding-recovery threshold. The
+							elapsed time of the C++ implementation is less than that of the MATLAB
+							implementation by approximately two orders of magnitude.
+						\end{posterpanel}
+					\end{column}
+					\begin{column}{0.495\linewidth}
+						\begin{posterpanel}[height=\rowAh]{Introduction}
+							The tracking control problem is one of the most fundamental practical
+							problems in control theory, where the goal is to design a controller
+							that allows a system to follow a desired trajectory or reference signal
+							over time. In recent years, neural networks have been increasingly used
+							in control systems due to their ability to approximate complex nonlinear
+							functions and adapt to changing conditions. However, the use of neural
+							networks in control systems also introduces new vulnerabilities,
+							particularly to adversarial attacks. Small, practically undetectable
+							perturbations in the input of a neural network can lead to outsized
+							adverse effects on the output, which can be particularly problematic in
+							control systems where safety and reliability are paramount.
 
-      A tracking control neural network (NN) for the known affine in the
-      inputs, discrete-time nonlinear system was presented in~[1]. The paper
-      describes a method of tracking control that is of moderate complexity
-      and requires no training. This method uses a signum activation function
-      of the tracking error, as well as a diagonal matrix of the learning rate
-      parameters to drive the system state towards the reference trajectory in
-      finite time. The method is inherently robust to bounded uncertainties
-      and disturbances.
-    \end{posterpanel}
-  \end{column}
-\end{columns}
-\end{minipage}
+							A tracking control neural network (NN) for the known affine in the
+							inputs, discrete-time nonlinear system was presented in~[1]. The paper
+							describes a method of tracking control that is of moderate complexity
+							and requires no training. This method uses a signum activation function
+							of the tracking error, as well as a diagonal matrix of the learning rate
+							parameters to drive the system state towards the reference trajectory in
+							finite time. The method is inherently robust to bounded uncertainties
+							and disturbances.
+						\end{posterpanel}
+					\end{column}
+				\end{columns}
+			\end{minipage}
 
-\vspace{\postergap}
+			\vspace{\postergap}
 
-%% ===== Row B: Mathematical Model | Functional Description + Conclusions | Simulation Results =====
-\begin{minipage}[t][\rowBh]{\linewidth}
-\begin{columns}[T,totalwidth=\linewidth]
-  \begin{column}{0.328\linewidth}
-    \begin{posterpanel}[height=\rowBh]{Mathematical Model and Block Diagram}
-      The known affine in the inputs, discrete-time nonlinear system
-      obtained by Euler approximation can be presented as follows~[1]:
-      \begin{postereqbox}{(1)}
-        $x(k{+}1)=x(k)+\tau\bigl[f(x(k))+g(x(k))u(k)\bigr]$
-      \end{postereqbox}
-      where $x(k)$ is the discrete-time state, $f$ and $g$ are the internal
-      and coupling dynamics, $u(k)$ is the control input, $\tau$ is the
-      sampling step, and $e(k)=x(k)-r(k)$ is the tracking error with respect
-      to the reference $r(k)$. The control input is given by~[1]
-      \begin{postereqbox}{(2)}
-        $u(k)=g(x(k))^{-1}\bigl[-f(x(k))+\Delta r(k)-\beta\,\operatorname{sgn}(e(k))\bigr]$
-      \end{postereqbox}
-      where $\beta=\operatorname{diag}(\beta_1,\ldots,\beta_n)$ is the
-      diagonal matrix of learning-rate parameters and
-      $\Delta r(k)=r(k{+}1)-r(k)$ is the first-order finite difference of
-      the reference. Substituting~(2) into~(1) yields the tracking error
-      recursion
-      \begin{postereqbox}{(3)}
-        $e(k{+}1)=e(k)-\beta\,\operatorname{sgn}(e(k))$
-      \end{postereqbox}
-      The adversarial attack is modeled~[3] as an additive stochastic
-      perturbation $\epsilon(k)$ with normal distribution and zero mean,
-      injected at the output of the signal function:
-      \begin{postereqbox}{(4)}
-        $\widetilde{s}(k)=\operatorname{sgn}(e(k))+\epsilon(k)$
-      \end{postereqbox}
-      Since $\operatorname{sgn}(e(k))\in\{-1,0,+1\}$, the defended output
-      obtained by nearest-integer rounding
-      \begin{postereqbox}{(5)}
-        $\hat{s}(k)=\operatorname{round}(\widetilde{s}(k))$
-      \end{postereqbox}
-      satisfies $\hat{s}(k)=\operatorname{sgn}(e(k))$ whenever
-      $|\epsilon(k)|<\tfrac{1}{2}$, so the defended closed-loop state
-      equation reduces to the unperturbed system.
+			%% ===== Row B: Mathematical Model | Functional Description + Runtime + Conclusions | Simulation Results =====
+			\begin{minipage}[t][\rowBh]{\linewidth}
+				\begin{columns}[T,totalwidth=\linewidth]
+					\begin{column}{0.328\linewidth}
+						\begin{posterpanel}[height=\rowBh]{Mathematical Model and Block Diagram}
+							The known affine in the inputs, discrete-time nonlinear system
+							obtained by Euler approximation can be presented as follows~[1]:
+							\begin{postereqbox}{(1)}
+								$x(k{+}1)=x(k)+\tau\bigl[f(x(k))+g(x(k))u(k)\bigr]$
+							\end{postereqbox}
+							where $x(k)$ is the discrete-time state, $f$ and $g$ are the internal
+							and coupling dynamics, $u(k)$ is the control input, $\tau$ is the
+							sampling step, and $e(k)=x(k)-r(k)$ is the tracking error with respect
+							to the reference $r(k)$. The control input is given by~[1]
+							\begin{postereqbox}{(2)}
+								$u(k)=g(x(k))^{-1}\bigl[-f(x(k))+\Delta r(k)-\beta\,\operatorname{sgn}(e(k))\bigr]$
+							\end{postereqbox}
+							where $\beta=\operatorname{diag}(\beta_1,\ldots,\beta_n)$ is the
+							diagonal matrix of learning-rate parameters and
+							$\Delta r(k)=r(k{+}1)-r(k)$ is the first-order finite difference of
+							the reference. Substituting~(2) into~(1) yields the tracking error
+							recursion
+							\begin{postereqbox}{(3)}
+								$e(k{+}1)=e(k)-\beta\,\operatorname{sgn}(e(k))$
+							\end{postereqbox}
+							The adversarial attack is modeled~[3] as an additive stochastic
+							perturbation $\epsilon(k)$ with normal distribution, zero mean, and
+							standard deviation $\sigma=1$, injected at the output of the signal
+							function:
+							\begin{postereqbox}{(4)}
+								$\widetilde{s}(k)=\operatorname{sgn}(e(k))+\epsilon(k)$
+							\end{postereqbox}
+							Since $\operatorname{sgn}(e(k))\in\{-1,0,+1\}$, the defended output
+							obtained by nearest-integer rounding
+							\begin{postereqbox}{(5)}
+								$\hat{s}(k)=\operatorname{round}(\widetilde{s}(k))$
+							\end{postereqbox}
+							satisfies $\hat{s}(k)=\operatorname{sgn}(e(k))$ whenever
+							$|\epsilon(k)|<\tfrac{1}{2}$, so the defended closed-loop state
+							equation reduces to the unperturbed system.
 
-      The defended closed-loop functional block diagram derived from
-      equations~(1)--(5) is shown in Fig.~1.
+							The defended closed-loop functional block diagram derived from
+							equations~(1)--(5) is shown in Fig.~1.
 
-      \vspace{0.10cm}
-      \begin{center}\includesvg[width=0.90\linewidth,keepaspectratio]{defended-system}\end{center}
-      \posterfigcaption{Fig.\,1.}{Functional block diagram of the defended
-        closed-loop system, where $f$ and $g$ denote the internal and
-        coupling dynamics, $\beta$ the learning-rate matrix, $\Delta$ the
-        first-order finite difference of the reference, $\mathrm{S}$ the
-        signal function $\operatorname{sgn}(e(k))$, $\epsilon(k)$ the
-        adversarial disturbance, and $\mathrm{R}$ the nearest-integer
-        rounding defense.}
-    \end{posterpanel}
-  \end{column}
-  \begin{column}{0.328\linewidth}
-    \begin{minipage}[t][\rowBh][t]{\linewidth}
-      \begin{posterpanel}[height=0.560\rowBh]{Functional Description and Comparative Analysis}
-        The controller of Fig.~1 implements supervised learning of the state
-        $x(k)$ towards the reference $r(k)$ with learning rate $\beta$,
-        which determines the convergence rate of $e(k)$ to zero. The signum
-        activation function and the diagonal learning-rate matrix drive the
-        tracking error to zero in finite time and impart inherent
-        robustness to bounded uncertainties and disturbances~[1].
+							\vspace{0.10cm}
+							\begin{center}\includesvg[width=0.90\linewidth,keepaspectratio]{defended-system.svg}\end{center}
+							\posterfigcaption{Fig.\,1.}{Functional block diagram of the defended
+							closed-loop system. The block $\mathrm{S}$ computes
+							$\operatorname{sgn}(e(k))$, $\epsilon(k)$ is the zero-mean Gaussian
+							disturbance, $\mathrm{R}$ is nearest-integer rounding, $\Delta$
+							forms $r(k{+}1)-r(k)$, and LAESS applies the control law using
+							$f$, $g$, and $\beta$.}
+						\end{posterpanel}
+					\end{column}
+					\begin{column}{0.328\linewidth}
+						\begin{minipage}[t][\rowBh][t]{\linewidth}
+							\begin{posterpanel}[height=0.315\rowBh]{Functional Description and Comparative Analysis}
+								The controller of Fig.~1 moves the state $x(k)$ toward the
+								reference $r(k)$ through the signum activation function and the
+								diagonal learning-rate matrix $\beta$, which determine the
+								finite-time convergence of $e(k)$ to zero~[1]. Compared with
+								the neural-network optimal control approach of~[2], which minimizes
+								a quadratic cost functional and requires offline training, this
+								tracking controller has moderate complexity and requires no
+								training. The defended diagram extends the unperturbed system
+								of~[1] by adding the stochastic perturbation $\epsilon(k)$
+								after $\mathrm{S}$ and the rounding block $\mathrm{R}$. Compared
+								with the projected-gradient defense of~[4], the proposed defense
+								uses the discrete codomain $\{-1,0,+1\}$ of the signum activation
+								to obtain the recovery condition $|\epsilon(k)|<\tfrac{1}{2}$.
+							\end{posterpanel}
 
-        Compared with the neural network optimal control approach for
-        discrete-time nonlinear systems with known internal dynamics
-        in~[2], which minimizes a quadratic cost functional and requires
-        offline training, the controller of Fig.~1 is of moderate
-        complexity and requires no training. The block diagram differs from
-        the unperturbed analog of~[1] by the addition of the summation
-        block injecting $\epsilon(k)$ at the output of $\mathrm{S}$ and the
-        rounding block~$\mathrm{R}$ that defends the control law against
-        the additive perturbation. Compared with the projected gradient
-        descent defense of~[4], which is formulated for static
-        classification networks, the rounding defense exploits the discrete
-        codomain $\{-1,0,+1\}$ of the signum activation and admits a
-        closed-form recovery condition $|\epsilon(k)|<\tfrac{1}{2}$.
+							\vspace{\innergap}
 
-        The elapsed time of the full simulation in MATLAB and C++ is
-        compared in Table~1: the C++ implementation runs by approximately
-        two orders of magnitude faster.
+							\begin{posterpanel}[height=0.395\rowBh]{Runtime Comparison}
 
-        \vspace{0.10cm}
-        \begin{center}
-          \posterfigcapfont
-          \textbf{Table\,1.}~Elapsed time of the full CSTR simulation
-          ($n=45{,}000$ steps, $\tau=0.001$\,s).\par
-          \vspace{0.20cm}
-          \begin{tabular}{lcc}
-            \toprule
-            Configuration & MATLAB (s) & C++ (s) \\
-            \midrule
-            Unperturbed & $6.92\times10^{-1}$ & $1.29\times10^{-3}$ \\
-            Attacked    & $6.46\times10^{-1}$ & $1.35\times10^{-3}$ \\
-            \bottomrule
-          \end{tabular}
-        \end{center}
-      \end{posterpanel}
+								Simulation implementations of the unperturbed and perturbed
+								systems were developed in MATLAB and C++. The elapsed time
+								of the full CSTR simulation over $n=45{,}000$ steps with
+								time step $\tau=0.001$\,s is shown in Table~1. The results show that
+								the C++ implementation is approximately two orders of magnitude
+								faster for both configurations. The nominal state and tracking
+								error trajectories are identical between the MATLAB and C++
+								implementations to machine precision. For the attacked case,
+								independent stochastic samples give qualitatively consistent
+								but not identical trajectories.
 
-      \vspace{\innergap}
 
-      \begin{posterpanel}[height=0.425\rowBh]{Conclusions}
-        A defense based on rounding the noisy output of the signal function
-        of the tracking control neural network is formulated and analyzed
-        for known affine discrete-time nonlinear systems. The two main
-        results are: (i)~when the perturbation magnitude satisfies
-        $|\epsilon(k)|<\tfrac{1}{2}$, the rounding defense recovers the
-        clean signal value and the defended closed-loop dynamics coincide
-        with the unperturbed system; and (ii)~the C++ implementation
-        reproduces the MATLAB reference results with element-wise agreement
-        to machine precision while reducing the elapsed time of the full
-        simulation by approximately two orders of magnitude, enabling
-        embedded deployment without numerical degradation.
-      \end{posterpanel}
-    \end{minipage}
-  \end{column}
-  \begin{column}{0.328\linewidth}
-    \begin{posterpanel}[height=\rowBh]{Simulation Results}
-      The closed-loop dynamics are simulated on the continuous stirred-tank
-      reactor (CSTR) benchmark with $\alpha=1.0$, $\lambda=0.3$,
-      $\gamma=20.0$, $B=1.0$, $D=0.072$, $\beta=100$, and sampling step
-      $\tau=0.001$\,s, over $n=45{,}000$ iterations. At each time step a
-      Gaussian noise with zero mean and standard deviation $\sigma=0.5$ is
-      added to the output of the signal function as in~(4) and
-      rejection-sampled to satisfy $|\epsilon(k)|<\tfrac{1}{2}$, so the
-      perturbation is bounded by the rounding-recovery threshold in every
-      realization. Three configurations---unperturbed, attacked, and
-      defended---are simulated in both MATLAB and C++.
+								\vspace{\innergap}
 
-      \vspace{0.20cm}
-      \figinline[0.99\linewidth]{cxxplot_composite_combined.png}
-      \posterfigcaption{Fig.\,2.}{CSTR closed-loop response under additive
-        stochastic attack, with the tilde marking perturbed quantities and
-        the hat marking defended quantities: \textbf{(a)}~perturbed state
-        variable $\tilde{x}_2$ (solid blue) against reference $r_2$ (dashed
-        black); \textbf{(b)}~perturbed tracking error
-        $\tilde{e}_2(k)=\tilde{x}_2(k)-r_2(k)$ (blue) and defended tracking
-        error $\hat{e}_2(k)=\hat{x}_2(k)-r_2(k)$ (orange) over the full
-        trajectory of $n=45{,}000$ iterations.}
+								\centering
+								\posterfigcapfont
+								\textbf{Table\,1.}~Elapsed time of the full CSTR simulation
+								($n=45{,}000$ steps, $\tau=0.001$\,s).\par
+								\vspace{0.22cm}
+								\begin{tabular}{lcc}
+									\toprule
+									Configuration & MATLAB (s) & C++ (s)             \\
+									\midrule
+									Unperturbed   & $1.08$     & $4.11\times10^{-3}$ \\
+									Perturbed     & $1.16$     & $4.64\times10^{-3}$ \\
+									\bottomrule
+								\end{tabular}\par
+								\vspace{0.38cm}
+							\end{posterpanel}
 
-      \vspace{0.20cm}
-      As shown in Fig.~2(a), the attacked CSTR exhibits degraded tracking
-      with visible oscillations of $\tilde{x}_2$ around the reference
-      $r_2$. In Fig.~2(b), the defended tracking error $\hat{e}_2$
-      coincides with that of the unperturbed system at every step, while
-      the perturbed tracking error $\tilde{e}_2$ remains nonzero. The
-      state and tracking error trajectories are element-wise identical
-      between the MATLAB and C++ implementations to machine precision; the
-      corresponding elapsed-time comparison is reported in Table~1
-      (column~2).
-    \end{posterpanel}
-  \end{column}
-\end{columns}
-\end{minipage}
+							\vspace{\innergap}
 
-\vspace{\postergap}
+							\begin{posterpanel}[height=0.250\rowBh]{Conclusions}
+								A defense based on rounding the noisy output of the signal function
+								is formulated for known affine discrete-time nonlinear systems. The
+								two main results are: (i)~when the perturbation magnitude satisfies
+								$|\epsilon(k)|<\tfrac{1}{2}$, the rounding defense recovers the
+								clean signal value, so the defended closed-loop dynamics coincide
+								with the unperturbed system; and (ii)~the C++ implementation
+								reproduces the nominal MATLAB reference to machine precision while
+								substantially reducing elapsed simulation time. The attacked MATLAB
+								and C++ trajectories are not expected to be identical
+								unless the same stochastic samples are prescribed.
+							\end{posterpanel}
+						\end{minipage}
+					\end{column}
+					\begin{column}{0.328\linewidth}
+						\begin{posterpanel}[height=\rowBh]{Simulation Results}
+							The closed-loop dynamics are simulated on the continuous stirred-tank
+							reactor (CSTR) benchmark with $\alpha=1.0$, $\lambda=0.3$,
+							$\gamma=20.0$, $B=1.0$, $D=0.072$, $\beta=100$, and sampling step
+							$\tau=0.001$\,s, over $n=45{,}000$ iterations. At each time step a
+							Gaussian noise with zero mean and standard deviation $\sigma=1$ is
+							added to the output of the signal function as in~(4) and
+							rejection-sampled to satisfy $|\epsilon(k)|<\tfrac{1}{2}$, so the
+							perturbation is bounded by the rounding-recovery threshold on every
+							iteration. The defended system is simulated in C++ and
+							compared against the unperturbed reference system.
 
-%% ===== Row C: References | Future Work | Acknowledgements =====
-\begin{minipage}[t][\rowCh]{\linewidth}
-\begin{columns}[T,totalwidth=\linewidth]
-  \begin{column}{0.328\linewidth}
-    \begin{posterpanel}[height=\rowCh, fontupper=\posterreffont]{References}
-      [1] P.\ Tymoshchuk, ``A Tracking Control Neural Network for the Known
-      Affine in the Inputs Discrete-Time Nonlinear Systems,'' Tech. Rep.,
-      Univ.\ of North Texas, 2024.\par
-      [2] P.\ Tymoshchuk, ``Neural network optimal control for discrete-time
-      nonlinear systems with known internal dynamics,'' \textit{Neural
-      Comput.\ \& Appl.}, vol.~36, pp.~4421--4434, 2024.\par
-      [3] H.\ Hajri \textit{et~al.}, ``Neural adversarial attacks with random
-      noises,'' \textit{Int.\ J.\ Artif.\ Intell.\ Tools}, vol.~32, no.~6,
-      2023.\par
-      [4] A.\ Madry \textit{et~al.}, ``Towards deep learning models resistant
-      to adversarial attacks,'' arXiv:1706.06083, 2019.
-    \end{posterpanel}
-  \end{column}
-  \begin{column}{0.328\linewidth}
-    \begin{posterpanel}[height=\rowCh]{Future Work}
-      Future work extends the threat model from additive stochastic noise to
-      projected gradient descent (PGD) adversarial attacks~[4], analyzes
-      attacks injected directly on the state input $x(k)$ and the reference
-      trajectory $r(k)$ rather than at the output of the signal function,
-      generalizes the rounding defense to quantization-aware schemes for
-      continuous activations, and carries out hardware-in-the-loop
-      validation of the C++ controller on FPGA and Arduino targets,
-      including piezoelectric positioning stages.
-    \end{posterpanel}
-  \end{column}
-  \begin{column}{0.328\linewidth}
-    \begin{posterpanel}[height=\rowCh]{Acknowledgements}
-      \centering
-      This material is based upon work supported by the National Science
-      Foundation under Grant Numbers \textbf{CNS-2137791} and
-      \textbf{HRD-1834620}. Any opinions,
-      findings, and conclusions or recommendations expressed in this material
-      are those of the authors and do not necessarily reflect the views of the
-      National Science Foundation. The author thanks
-      \textbf{Dr.\ Pavlo Tymoshchuk} for mentorship and the sponsoring program
-      for research support.
-    \end{posterpanel}
-  \end{column}
-\end{columns}
-\end{minipage}
+							\vspace{0.20cm}
+							\figinline[0.88\linewidth]{cxxplot_composite_combined.png}
+							\posterfigcaption{Fig.\,2.}{CSTR closed-loop response under additive
+							stochastic attack, with the tilde marking perturbed quantities and
+							the hat marking defended quantities: \textbf{(a)}~perturbed state
+							$\tilde{x}_2$ against reference $r_2$; \textbf{(b)}~perturbed
+							tracking error $\tilde{e}_2$ and defended tracking error
+							$\hat{e}_2$ over $n=45{,}000$ iterations.}
 
-\end{minipage}
-\end{center}
+							\vspace{0.20cm}
+							As shown in Fig.~2(a), the attacked CSTR exhibits degraded tracking
+							with visible oscillations of $\tilde{x}_2$ around the reference
+							$r_2$. In Fig.~2(b), the defended tracking error $\hat{e}_2$
+							coincides with that of the unperturbed system at every step, while
+							the perturbed tracking error $\tilde{e}_2$ remains nonzero.
+						\end{posterpanel}
+					\end{column}
+				\end{columns}
+			\end{minipage}
+
+			\vspace{\postergap}
+
+			%% ===== Row C: References | Future Work | Acknowledgements =====
+			\begin{minipage}[t][\rowCh]{\linewidth}
+				\begin{columns}[T,totalwidth=\linewidth]
+					\begin{column}{0.328\linewidth}
+						\begin{posterpanel}[height=\rowCh, fontupper=\posterreffont]{References}
+							[1] P.\ Tymoshchuk, ``A Tracking Control Neural Network for the Known
+							Affine in the Inputs Discrete-Time Nonlinear Systems,'' Tech. Rep.,
+							Univ.\ of North Texas, 2024.\par
+							[2] P.\ Tymoshchuk, ``Neural network optimal control for discrete-time
+							nonlinear systems with known internal dynamics,'' \textit{Neural
+								Comput.\ \& Appl.}, vol.~36, pp.~4421--4434, 2024.\par
+							[3] H.\ Hajri \textit{et~al.}, ``Neural adversarial attacks with random
+							noises,'' \textit{Int.\ J.\ Artif.\ Intell.\ Tools}, vol.~32, no.~6,
+							2023.\par
+							[4] A.\ Madry \textit{et~al.}, ``Towards deep learning models resistant
+							to adversarial attacks,'' arXiv:1706.06083, 2019.
+						\end{posterpanel}
+					\end{column}
+					\begin{column}{0.328\linewidth}
+						\begin{posterpanel}[height=\rowCh]{Future Work}
+							Future work extends the threat model from additive stochastic noise to
+							projected gradient descent (PGD) adversarial attacks~[4], analyzes
+							attacks injected directly on the state input $x(k)$ and the reference
+							trajectory $r(k)$ rather than at the output of the signal function,
+							generalizes the rounding defense to quantization-aware schemes for
+							continuous activations, and carries out hardware-in-the-loop
+							validation of the C++ controller on FPGA and Arduino targets,
+							including piezoelectric positioning stages.
+						\end{posterpanel}
+					\end{column}
+					\begin{column}{0.328\linewidth}
+						\begin{posterpanel}[height=\rowCh]{Acknowledgements}
+							\centering
+							This material is based upon work supported by the National Science
+							Foundation under Grant Numbers \textbf{CNS-2137791} and
+							\textbf{HRD-1834620}. Any opinions,
+							findings, and conclusions or recommendations expressed in this material
+							are those of the authors and do not necessarily reflect the views of the
+							National Science Foundation. The author thanks
+							\textbf{Dr.\ Pavlo Tymoshchuk} for mentorship and the sponsoring program
+							for research support.
+						\end{posterpanel}
+					\end{column}
+				\end{columns}
+			\end{minipage}
+
+		\end{minipage}
+	\end{center}
 \end{frame}
 \end{document}
