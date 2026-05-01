@@ -14,7 +14,6 @@ set multiplot layout 2,1
 set grid
 set lmargin at screen 0.12
 set rmargin at screen 0.97
-
 # Panel 1: state tracking
 set tmargin at screen 0.96
 set bmargin at screen 0.58

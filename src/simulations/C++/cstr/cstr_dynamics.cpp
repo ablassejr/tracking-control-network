@@ -41,7 +41,7 @@ void attackedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> epsilon(0.0, 0.5);
+  std::normal_distribution<double> epsilon(0.0, 1.0);
   std::default_random_engine randomNumberGenerator;
   double noise;
 
@@ -81,7 +81,7 @@ void defendedSystemFunction(SimSettings &settings,
                             StateConditions &stateConditions,
                             InternalConditions &internalConditions) {
   double *prevX1, *prevX2, *x1Ref, *x2Ref, *deltaR2;
-  std::normal_distribution<double> attackNoise(0.0, 0.5);
+  std::normal_distribution<double> attackNoise(0.0, 1.0);
   std::default_random_engine randomNumberGenerator;
   double noise;
 
@@ -95,7 +95,7 @@ void defendedSystemFunction(SimSettings &settings,
     stateConditions.x2ErrorMatrix(1, i) = *x2Ref - *prevX2;
     stateConditions.x1ErrorMatrix(0, i) = *x1Ref - *prevX1;
 
-    // Additive noise (sigma=0.5) on sgn output, then rounding defense
+    // Additive noise on sgn output, then rounding defense.
     double s_clean = sgn(e2);
     do {
       noise = attackNoise(randomNumberGenerator);
